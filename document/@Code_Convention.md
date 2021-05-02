@@ -10,7 +10,8 @@
     - ex. isValid
 - DB 값 접근 변수는 DB 속성명과 동일하게 지정
 - JSONObject로 객체 받아올 경우 관련 DB 테이블 명과 동일하게 지정)
-  ![JSONObject 컨벤션 정의](/WishBoard/document/@Code_Convetion.md/code_convetion1.png)
+  ![JSONObject 컨벤션 정의](https://user-images.githubusercontent.com/68772751/116817388-111b0580-aba1-11eb-8605-e6bd1e1c5efa.png)
+
   
 # 2. 함수명 정의
 - `동사 + 명사`의 순서로 작성해서 **무슨 기능을 하는 함수인지 명확히 알아볼 수 있도록** 짔는다.
