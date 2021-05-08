@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.HomeFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/noto_sans_kr_bold"
+            android:text="Wish Board" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cart"
+                android:background="@android:color/transparent" />
+
+<!-- @ TODO : 장바구니 아이템 수 표시하는 이미지 뷰 위치 조정 해결 못함 -->
+            <ImageView
+               android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/item_cnt_circle"/>
+        </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/search"
+            android:background="@android:color/transparent" />
+
+        <ImageButton
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/more"
+            android:background="@android:color/transparent" />
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_marginBottom="10dp"
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="All"
+                 />
+
+            <Button
+                android:id="@+id/folder1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="옷"
+                />
+
+            <Button
+                android:id="@+id/folder2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="가방"
+                />
+
+            <Button
+                android:id="@+id/folder3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="신발"
+                />
+
+            <Button
+                android:id="@+id/folder4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="주얼리"
+                />
+
+            <Button
+                android:id="@+id/folder5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="화장품"
+                />
+
+            <Button
+                android:id="@+id/folder6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="가구"
+                />
+
+            <Button
+                android:id="@+id/folder7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="전자제품"
+                />
+
+            <Button
+                android:id="@+id/folder8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:background="@android:color/transparent"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="empty"
+                />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_wish_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="5dp"
+        android:scrollbarThumbVertical="@android:color/darker_gray"
+        android:scrollbars="vertical"/>
+</LinearLayout>
