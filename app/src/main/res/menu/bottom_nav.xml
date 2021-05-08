@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- @brief : 하단 네비게이션 메뉴 구성-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/selector_bottom_nav_home_icon"
+        android:state_selected="false"
+        android:title="home"/>
+    <item
+        android:id="@+id/new_item"
+        android:icon="@drawable/selector_bottom_nav_new_item_icon"
+        android:state_selected="false"
+        android:title="new_item" />
+    <item
+        android:id="@+id/folder"
+        android:icon="@drawable/selector_bottom_nav_folder_icon"
+        android:state_selected="false"
+        android:title="folder"/>
+    <item
+        android:id="@+id/noti"
+        android:icon="@drawable/selector_bottom_nav_noti_icon"
+        android:state_selected="false"
+        android:title="notification"/>
+    <item
+        android:id="@+id/my"
+        android:icon="@drawable/selector_bottom_my_icon"
+        android:state_selected="false"
+        android:title="my"/>
+</menu>
