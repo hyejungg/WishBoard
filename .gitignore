@@ -86,6 +86,6 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
-app/src/main/res/drawable*/
+app/src/main/res/drawable-*/
 app/src/main/res/font/
 app/src/main/res/mipmap*/
