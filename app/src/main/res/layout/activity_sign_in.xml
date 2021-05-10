@@ -134,8 +134,8 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_none"
                     android:drawableStart="@drawable/button_icon_kakao"
-                    android:paddingLeft="120dp"
-                    android:drawablePadding="-120dp"
+                    android:paddingLeft="100dp"
+                    android:drawablePadding="-95dp"
                     android:fontFamily="@font/nanum_square_b"
                     android:text="카카오로 가입하기"
                     android:textColor="@color/black" />
@@ -147,8 +147,8 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_none"
                     android:drawableStart="@drawable/button_icon_naver"
-                    android:paddingLeft="120dp"
-                    android:drawablePadding="-120dp"
+                    android:paddingLeft="100dp"
+                    android:drawablePadding="-95dp"
                     android:fontFamily="@font/nanum_square_b"
                     android:text="네이버로 가입하기"
                     android:textColor="@color/black" />
