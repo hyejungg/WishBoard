@@ -57,6 +57,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/item_price"
         app:layout_constraintStart_toEndOf="@id/item_price"
+        android:layout_marginLeft="2dp"
         android:textSize="13dp"
         android:textColor="@color/black"
         android:fontFamily="@font/nanum_square_r"
