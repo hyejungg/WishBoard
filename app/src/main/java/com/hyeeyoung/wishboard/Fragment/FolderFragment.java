@@ -6,8 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
+import com.hyeeyoung.wishboard.adapter.FolderAdapter;
+import com.hyeeyoung.wishboard.adapter.ItemAdapter;
+import com.hyeeyoung.wishboard.item.FoldersItem;
+import com.hyeeyoung.wishboard.item.WishItem;
+
+import java.util.ArrayList;
 
 public class FolderFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -50,9 +58,50 @@ public class FolderFragment extends Fragment {
         }
     }
 
+    private View view;
+    RecyclerView recyclerView;
+    FolderAdapter adapter;
+    private ArrayList<FoldersItem> foldersList;
+    private GridLayoutManager gridLayoutManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_folder, container, false);
+        view =  inflater.inflate(R.layout.fragment_folder, container, false);
+        init();
+
+        return view;
+    }
+
+    private void init(){
+        recyclerView = view.findViewById(R.id.recyclerview_folders_list);
+        foldersList = new ArrayList<>();
+        adapter = new FolderAdapter(foldersList);
+        recyclerView.setAdapter(adapter);
+        gridLayoutManager = new GridLayoutManager(this.getActivity(), 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
+
+        // @deprecated : add()
+        addItem(R.mipmap.ic_launcher, "name1", 32);
+        addItem(R.mipmap.ic_launcher, "name2", 1);
+        addItem(R.mipmap.ic_launcher, "name3", 5);
+        addItem(R.mipmap.ic_launcher, "name4", 2);
+        addItem(R.mipmap.ic_launcher, "name5", 124);
+        addItem(R.mipmap.ic_launcher, "name6", 5151);
+        addItem(R.mipmap.ic_launcher, "name7", 231);
+        addItem(R.mipmap.ic_launcher, "name8", 241);
+        addItem(R.mipmap.ic_launcher, "name9", 1);
+        addItem(R.mipmap.ic_launcher, "name10", 23);
+
+        adapter.notifyDataSetChanged();
+    }
+
+    // @deprecated
+    private void addItem(int icon, String name, int count) {
+        FoldersItem item = new FoldersItem();
+        item.setFolder_image(icon);
+        item.setFolder_name(name);
+        item.setItem_count(count);
+        foldersList.add(item);
     }
 }
