@@ -1,13 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Fragment.NewItemFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="new_item" />
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/noto_sans_kr_bold"
+            android:text="New Item"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <ImageButton
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/save" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/add_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:fontFamily="@font/nanum_square_eb"
+        android:text="2021.05.10"
+        android:textColor="@color/mediumGray" />
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_launcher" />
+
+<!--    @see : java에서 linearlayout 클릭 시 (폴더 버튼)    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/btn_folder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanum_square_eb"
+                android:text="Folder"
+                android:textColor="@color/black"
+                android:textSize="13dp"
+                android:drawableRight="@drawable/detail" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanum_square_eb"
+                android:text="Title"
+                android:textColor="@color/black"
+                android:textSize="13dp" />
+            <EditText
+                android:id="@+id/item_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:fontFamily="@font/nanum_square_eb"
+                android:background="@android:color/transparent"
+                android:hint="상품명을 입력해주세요."
+                android:textSize="13dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanum_square_eb"
+                android:text="Price"
+                android:textColor="@color/black"
+                android:textSize="13dp" />
+            <EditText
+                android:id="@+id/item_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:fontFamily="@font/nanum_square_eb"
+                android:background="@android:color/transparent"
+                android:hint="가격을 입력해주세요."
+                android:textSize="13dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanum_square_eb"
+                android:text="Url"
+                android:textColor="@color/black"
+                android:textSize="13dp" />
+            <EditText
+                android:id="@+id/item_url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:fontFamily="@font/nanum_square_eb"
+                android:background="@android:color/transparent"
+                android:hint="쇼핑몰 링크를 입력해주세요."
+                android:textSize="13dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btn_noti"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanum_square_eb"
+                android:text="Notification"
+                android:textColor="@color/black"
+                android:textSize="13dp"
+                android:drawableRight="@drawable/detail" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanum_square_eb"
+                android:text="Memo"
+                android:textColor="@color/black"
+                android:textSize="13dp"/>
+            <EditText
+                android:id="@+id/item_memo"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/nanum_square_eb"
+                android:background="@android:color/transparent"
+                android:hint="메모를 작성해주세요. (메모 내용으로도 검색할 수 있어요!)"
+                android:textSize="13dp" />
+        </LinearLayout>
+</LinearLayout>
+
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/recyclerview_wish_list"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:scrollbarFadeDuration="0"-->
+    <!--        android:scrollbarSize="5dp"-->
+    <!--        android:scrollbarThumbVertical="@android:color/darker_gray"-->
+    <!--        android:scrollbars="vertical"/>-->
+    </LinearLayout>
