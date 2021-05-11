@@ -1,13 +1,25 @@
 package com.hyeeyoung.wishboard.Fragment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
+import com.hyeeyoung.wishboard.adapter.ItemAdapter;
+import com.hyeeyoung.wishboard.adapter.NotiAdapter;
+import com.hyeeyoung.wishboard.item.NotiItem;
+import com.hyeeyoung.wishboard.item.WishItem;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,10 +66,55 @@ public class NotiFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    private View view;
+    RecyclerView recyclerView;
+    NotiAdapter adapter;
+    private ArrayList<NotiItem> notiList;
+    private LinearLayoutManager linearLayoutManager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_noti, container, false);
+        view = inflater.inflate(R.layout.fragment_noti, container, false);
+        init();
+        return view;
     }
+
+    private void init() {
+        recyclerView = view.findViewById(R.id.recyclerview_noti_list);
+        notiList = new ArrayList<>();
+        adapter = new NotiAdapter(notiList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        addNoti(R.drawable.sample, "가방", "[재입고 알림]", "1시간 전");
+        addNoti(R.drawable.sample, "가방", "[재입고 알림]", "1시간 전");
+        addNoti(R.drawable.sample, "가방", "[재입고 알림]", "1시간 전");
+        addNoti(R.drawable.sample, "가방", "[재입고 알림]", "1시간 전");
+        addNoti(R.drawable.sample, "가방", "[재입고 알림]", "1시간 전");
+        addNoti(R.drawable.sample, "가방", "[재입고 알림]", "1시간 전");
+        addNoti(R.drawable.sample, "가방", "[재입고 알림]", "1시간 전");
+        addNoti(R.drawable.sample, "가방", "[재입고 알림]", "1시간 전");
+
+        adapter.notifyDataSetChanged();
+    }
+    // @deprecated
+    private void addNoti(int icon, String mainText, String notiType, String notiDate) {
+        NotiItem item = new NotiItem();
+        item.setItem_image(icon);
+        item.setItem_name(mainText);
+        item.setNoti_type(notiType);
+        item.setNoti_date(notiDate);
+        notiList.add(item);
+    }
+
+    /* @deprecated
+    private void addItem(Drawable icon, String mainText, String subText) {
+        WishItem item = new WishItem();
+        item.setItem_image(icon);
+        item.setItem_name(mainText);
+        item.setItem_price(subText);
+        wishList.add(item);
+    }*/
 }
