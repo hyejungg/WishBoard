@@ -1,15 +1,19 @@
 package com.hyeeyoung.wishboard.Fragment;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hyeeyoung.wishboard.CartActivity;
+import com.hyeeyoung.wishboard.ItemDetailActivity;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.item.WishItem;
@@ -21,7 +25,7 @@ import java.util.ArrayList;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
     private Drawable img; // @ deprecated
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,7 +71,8 @@ public class HomeFragment extends Fragment {
     ItemAdapter adapter;
     private ArrayList<WishItem> wishList;
     private GridLayoutManager gridLayoutManager;
-
+    private Intent intent;
+    private ImageButton cart;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,31 +89,19 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         gridLayoutManager = new GridLayoutManager(this.getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
+        cart = view.findViewById(R.id.cart);
+        cart.setOnClickListener(this);
 
-        /* @deprecated
-        img = ResourcesCompat.getDrawable(getResources(), R.drawable.bag, null);
-        addItem(img, "name1", "100000");
-        addItem(img, "name2", "200000");
-        addItem(img, "name3", "300000");
-        addItem(img, "name4", "400000");
-        addItem(img, "name5", "500000");
-        addItem(img, "name6", "600000");
-        addItem(img, "name7", "700000");
-        addItem(img, "name8", "800000");
-        addItem(img, "name9", "900000");
-        addItem(img, "name10", "1000000");
-        */
-
-        addItem(R.mipmap.ic_launcher, "name1", "100000");
-        addItem(R.mipmap.ic_launcher, "name2", "200000");
-        addItem(R.mipmap.ic_launcher, "name3", "300000");
-        addItem(R.mipmap.ic_launcher, "name4", "400000");
-        addItem(R.mipmap.ic_launcher, "name5", "500000");
-        addItem(R.mipmap.ic_launcher, "name6", "600000");
-        addItem(R.mipmap.ic_launcher, "name7", "700000");
-        addItem(R.mipmap.ic_launcher, "name8", "800000");
-        addItem(R.mipmap.ic_launcher, "name9", "900000");
-        addItem(R.mipmap.ic_launcher, "name10", "1000000");
+        addItem(R.drawable.sample, "name1", "100000");
+        addItem(R.drawable.sample, "name2", "200000");
+        addItem(R.drawable.sample, "name3", "300000");
+        addItem(R.drawable.sample, "name4", "400000");
+        addItem(R.drawable.sample, "name5", "500000");
+        addItem(R.drawable.sample, "name6", "600000");
+        addItem(R.drawable.sample, "name7", "700000");
+        addItem(R.drawable.sample, "name8", "800000");
+        addItem(R.drawable.sample, "name9", "900000");
+        addItem(R.drawable.sample, "name10", "1000000");
         adapter.notifyDataSetChanged();
     }
 
@@ -118,14 +111,15 @@ public class HomeFragment extends Fragment {
         item.setItem_image(icon);
         item.setItem_name(mainText);
         item.setItem_price(subText);
-        wishList.add(item); }
-
-    /* @deprecated
-    private void addItem(Drawable icon, String mainText, String subText) {
-        WishItem item = new WishItem();
-        item.setItem_image(icon);
-        item.setItem_name(mainText);
-        item.setItem_price(subText);
         wishList.add(item);
-    }*/
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.cart:
+                intent = new Intent(v.getContext(), CartActivity.class);
+                v.getContext().startActivity(intent);
+        }
+    }
 }
