@@ -11,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.item.NotiItem;
-import com.hyeeyoung.wishboard.item.WishItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class NotiAdapter extends RecyclerView.Adapter<NotiAdapter.CustomViewHolder> {
     private ArrayList<NotiItem> notiList;
@@ -41,7 +39,7 @@ public class NotiAdapter extends RecyclerView.Adapter<NotiAdapter.CustomViewHold
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.noti_ltem, viewGroup, false);
+                .inflate(R.layout.noti_item, viewGroup, false);
 
         CustomViewHolder viewHolder = new CustomViewHolder(view);
 
