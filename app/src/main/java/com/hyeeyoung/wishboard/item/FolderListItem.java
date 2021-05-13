@@ -1,6 +1,6 @@
 package com.hyeeyoung.wishboard.item;
 
-public class FolderList {
+public class FolderListItem {
     private int folder_image;
     private String folder_name;
     private int checkbox;

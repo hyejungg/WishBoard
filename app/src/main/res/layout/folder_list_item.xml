@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp">
 
+    <ImageView
+        android:id="@+id/folder_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:id="@+id/folder_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="15dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/nanum_square_r"
+        android:text="카테고리명"
+        android:textColor="@color/black"
+        android:textSize="15dp" />
+
+    <ImageView
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:layout_marginTop="13dp"
+        android:src="@drawable/custom_checkbox"/>
 </LinearLayout>
