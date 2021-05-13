@@ -56,10 +56,11 @@
             android:id="@+id/recyclerview_folders_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
             android:scrollbarFadeDuration="0"
             android:scrollbarSize="5dp"
             android:scrollbarThumbVertical="@android:color/darker_gray"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical" />
 
     </LinearLayout>
 </LinearLayout>
