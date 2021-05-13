@@ -1,12 +1,17 @@
 package com.hyeeyoung.wishboard.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.hyeeyoung.wishboard.Folder.FolderList;
 import com.hyeeyoung.wishboard.R;
 
 /**
@@ -56,27 +61,23 @@ public class NewItemFragment extends Fragment {
     }
 
     private View view;
+    private LinearLayout btn_folder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_new_item, container, false);
-
-        view.setOnClickListener(onClickListener); // @see : 이렇게 되면 뷰 아무거나 클릭해도 onClick이 불릴 것 같음 어쨌든 수정 필요
+        btn_folder = (LinearLayout) view.findViewById(R.id.btn_folder);
+        btn_folder.setOnClickListener(onClickListener);
 
         return view;
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.btn_folder :
-                case R.id.item_name :
-                case R.id.item_price :
-                case R.id.item_url :
-                case R.id.btn_noti : // @see : 버튼 클릭 시 날짜 지정 / 상품 알림 유형 제시
-                case R.id.item_memo :
-            }
+//            Toast.makeText(getActivity(), "클릭", Toast.LENGTH_SHORT).show(); // @deprecated : click event test용
+            Intent intent = new Intent(getActivity(), FolderList.class);
+            startActivity(intent);
         }
     };
 }
