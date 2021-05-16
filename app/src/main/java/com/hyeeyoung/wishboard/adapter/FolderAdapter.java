@@ -10,13 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.item.FoldersItem;
-import com.hyeeyoung.wishboard.item.WishItem;
+import com.hyeeyoung.wishboard.model.FolderItem;
 
 import java.util.ArrayList;
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomViewHolder> {
-    private ArrayList<FoldersItem> folderList;
+    private ArrayList<FolderItem> folderList;
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView folder_image;
@@ -30,7 +29,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
             this.item_count = (TextView) view.findViewById(R.id.item_count);
         }
     }
-    public FolderAdapter(ArrayList<FoldersItem> data) {
+    public FolderAdapter(ArrayList<FolderItem> data) {
         this.folderList = data;
     }
 
@@ -47,7 +46,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        FoldersItem item = folderList.get(position);
+        FolderItem item = folderList.get(position);
         // @see: 카테고리 번호 별 아이템 사진 매칭?
         holder.folder_image.setImageResource(item.getFolder_image());
         holder.folder_name.setText(item.getFolder_name());

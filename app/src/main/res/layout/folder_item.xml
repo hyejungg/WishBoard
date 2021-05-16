@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
-    tools:context=".Fragment.FolderFragment">
+    android:layout_marginBottom="20dp">
 
     <!-- @brief : 폴더화면 아이템 리스트 중 아이템 하나의 뷰 -->
     <ImageView
