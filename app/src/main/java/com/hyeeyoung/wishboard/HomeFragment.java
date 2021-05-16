@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard.Fragment;
+package com.hyeeyoung.wishboard;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -12,11 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hyeeyoung.wishboard.CartActivity;
-import com.hyeeyoung.wishboard.ItemDetailActivity;
-import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
-import com.hyeeyoung.wishboard.item.WishItem;
+import com.hyeeyoung.wishboard.cart.CartActivity;
+import com.hyeeyoung.wishboard.model.WishItem;
 
 import java.util.ArrayList;
 

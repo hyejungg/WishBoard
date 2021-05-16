@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard.item;
+package com.hyeeyoung.wishboard.model;
 
 public class CartItem {
     private int item_image; // @param : 서버연동 후 String으로 변경 예정

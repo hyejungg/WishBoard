@@ -10,10 +10,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hyeeyoung.wishboard.Fragment.FolderFragment;
-import com.hyeeyoung.wishboard.Fragment.HomeFragment;
-import com.hyeeyoung.wishboard.Fragment.MyFragment;
 import com.hyeeyoung.wishboard.Fragment.NewItemFragment;
-import com.hyeeyoung.wishboard.Fragment.NotiFragment;
+import com.hyeeyoung.wishboard.noti.NotiFragment;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;

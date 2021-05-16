@@ -1,10 +1,12 @@
-package com.hyeeyoung.wishboard;
+package com.hyeeyoung.wishboard.detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+
+import com.hyeeyoung.wishboard.R;
 
 public class ItemDetailActivity extends AppCompatActivity {
     @Override

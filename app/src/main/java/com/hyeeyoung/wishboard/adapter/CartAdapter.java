@@ -1,6 +1,5 @@
 package com.hyeeyoung.wishboard.adapter;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hyeeyoung.wishboard.ItemDetailActivity;
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.item.CartItem;
+import com.hyeeyoung.wishboard.model.CartItem;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,7 @@
-package com.hyeeyoung.wishboard;
+package com.hyeeyoung.wishboard.cart;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,8 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.CartAdapter;
-import com.hyeeyoung.wishboard.item.CartItem;
+import com.hyeeyoung.wishboard.model.CartItem;
 
 import java.util.ArrayList;
 

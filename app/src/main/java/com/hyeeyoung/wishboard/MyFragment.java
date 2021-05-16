@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard.Fragment;
+package com.hyeeyoung.wishboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-
-import com.hyeeyoung.wishboard.R;
 
 /**
  * A simple {@link Fragment} subclass.
