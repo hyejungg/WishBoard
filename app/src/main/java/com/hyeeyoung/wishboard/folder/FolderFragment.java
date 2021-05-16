@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard.Fragment;
+package com.hyeeyoung.wishboard.folder;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.FolderAdapter;
-import com.hyeeyoung.wishboard.adapter.ItemAdapter;
-import com.hyeeyoung.wishboard.item.FoldersItem;
-import com.hyeeyoung.wishboard.item.WishItem;
+import com.hyeeyoung.wishboard.model.FolderItem;
+import com.hyeeyoung.wishboard.model.WishItem;
 
 import java.util.ArrayList;
 
@@ -61,7 +60,7 @@ public class FolderFragment extends Fragment {
     private View view;
     RecyclerView recyclerView;
     FolderAdapter adapter;
-    private ArrayList<FoldersItem> foldersList;
+    private ArrayList<FolderItem> foldersList;
     private GridLayoutManager gridLayoutManager;
 
     @Override
@@ -98,7 +97,7 @@ public class FolderFragment extends Fragment {
 
     // @deprecated
     private void addItem(int icon, String name, int count) {
-        FoldersItem item = new FoldersItem();
+        FolderItem item = new FolderItem();
         item.setFolder_image(icon);
         item.setFolder_name(name);
         item.setItem_count(count);

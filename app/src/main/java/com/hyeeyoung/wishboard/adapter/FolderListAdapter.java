@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.item.FolderListItem;
-import com.hyeeyoung.wishboard.item.FoldersItem;
+import com.hyeeyoung.wishboard.model.FolderListItem;
+import com.hyeeyoung.wishboard.model.FolderItem;
 
 import java.util.ArrayList;
 
