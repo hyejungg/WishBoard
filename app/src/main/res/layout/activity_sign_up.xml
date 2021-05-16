@@ -30,7 +30,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
@@ -124,7 +124,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:background="@drawable/button_green"
-            android:fontFamily="@font/nanum_square_b"
+            android:fontFamily="@font/nanum_square_eb"
+            android:textSize="15dp"
             android:text="가입하기"
             android:textColor="@color/black" />
 

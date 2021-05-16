@@ -49,6 +49,7 @@
                 android:textSize="15dp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -114,6 +115,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
                 <Button
@@ -122,43 +124,75 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_green"
-                    android:fontFamily="@font/nanum_square_b"
+                    android:fontFamily="@font/nanum_square_eb"
                     android:text="가입하기"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
 
-                <!-- @TODO : 이미지가 포함된 버튼 padding 적용. 이게 최선인가..? 논의 필요 -->
-                <Button
+                <FrameLayout
                     android:id="@+id/kakao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_none"
-                    android:drawableStart="@drawable/button_icon_kakao"
-                    android:paddingLeft="100dp"
-                    android:drawablePadding="-95dp"
-                    android:fontFamily="@font/nanum_square_b"
-                    android:text="카카오로 가입하기"
-                    android:textColor="@color/black" />
+                    android:onClick="onClick">
 
-                <Button
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:gravity="center" >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/button_icon_kakao" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nanum_square_eb"
+                            android:text="카카오로 가입하기"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <FrameLayout
                     android:id="@+id/naver"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_none"
-                    android:drawableStart="@drawable/button_icon_naver"
-                    android:paddingLeft="100dp"
-                    android:drawablePadding="-95dp"
-                    android:fontFamily="@font/nanum_square_b"
-                    android:text="네이버로 가입하기"
-                    android:textColor="@color/black" />
+                    android:onClick="onClick">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/button_icon_naver" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nanum_square_eb"
+                            android:text="네이버로 가입하기"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
-<LinearLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
@@ -178,9 +212,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@drawable/button_none"
-            android:fontFamily="@font/nanum_square_b"
+            android:fontFamily="@font/nanum_square_eb"
             android:text="이메일로 가입하기"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="15dp" />
 
     </LinearLayout>
 </LinearLayout>
