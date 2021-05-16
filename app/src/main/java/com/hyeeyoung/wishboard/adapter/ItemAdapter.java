@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.item.WishItem;
+import com.hyeeyoung.wishboard.model.WishItem;
 import java.util.ArrayList;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHolder> {

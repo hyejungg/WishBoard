@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard.item;
+package com.hyeeyoung.wishboard.model;
 
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;

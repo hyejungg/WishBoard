@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard.item;
+package com.hyeeyoung.wishboard.model;
 
 public class WishItem {
     //private String item_image @param : 추후 DB에서 이미지링크 가져올 경우 사용할 변수

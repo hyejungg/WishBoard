@@ -1,23 +1,22 @@
-package com.hyeeyoung.wishboard.Fragment;
+package com.hyeeyoung.wishboard.noti;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.adapter.NotiAdapter;
-import com.hyeeyoung.wishboard.item.NotiItem;
-import com.hyeeyoung.wishboard.item.WishItem;
+import com.hyeeyoung.wishboard.model.NotiItem;
+
+import com.hyeeyoung.wishboard.model.NotiItem;
+import com.hyeeyoung.wishboard.model.WishItem;
 
 import java.util.ArrayList;
 

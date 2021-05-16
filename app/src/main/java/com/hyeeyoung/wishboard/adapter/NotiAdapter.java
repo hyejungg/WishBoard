@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.item.NotiItem;
+import com.hyeeyoung.wishboard.model.NotiItem;
 
 import java.util.ArrayList;
 
