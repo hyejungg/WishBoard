@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard.Sign;
+package com.hyeeyoung.wishboard.sign;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.hyeeyoung.wishboard.R;
 
-public class SignUp extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     private String email; // @params : DB에 들어갈 사용자 email
     private String pw; // @params : DB에 들어갈 사용자 pw
