@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.folder.FolderList;
+import com.hyeeyoung.wishboard.folder.FolderListActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,7 +73,7 @@ public class NewItemFragment extends Fragment {
         @Override
         public void onClick(View view) {
 //            Toast.makeText(getActivity(), "클릭", Toast.LENGTH_SHORT).show(); // @deprecated : click event test용
-            Intent intent = new Intent(getActivity(), FolderList.class);
+            Intent intent = new Intent(getActivity(), FolderListActivity.class);
             startActivity(intent);
         }
     };

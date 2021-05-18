@@ -23,11 +23,14 @@
         android:textColor="@color/black"
         android:textSize="15dp" />
 
-    <ImageView
+    <RadioButton
         android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_weight="0"
         android:layout_marginTop="13dp"
-        android:src="@drawable/custom_checkbox"/>
+        android:onClick="onClick"
+        android:background="@drawable/unselect"
+        android:button="@android:color/transparent"
+        android:checked="false"/>
 </LinearLayout>
