@@ -127,7 +127,8 @@
             android:fontFamily="@font/nanum_square_eb"
             android:textSize="15dp"
             android:text="가입하기"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:onClick="onClick" />
 
     </LinearLayout>
 

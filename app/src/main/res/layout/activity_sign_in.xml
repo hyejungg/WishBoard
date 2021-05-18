@@ -111,7 +111,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/black" />
-
+            
+<!--    @ TODO : firebase를 이용한 OAuth 로그인으로 변경 예정-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,7 +128,8 @@
                     android:fontFamily="@font/nanum_square_eb"
                     android:text="가입하기"
                     android:textColor="@color/black"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    android:onClick="onClick"/>
 
                 <FrameLayout
                     android:id="@+id/kakao"
@@ -146,8 +148,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/button_icon_kakao" />
+                            android:layout_marginRight="10dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -176,8 +177,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/button_icon_naver" />
+                            android:layout_marginRight="10dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -215,7 +215,8 @@
             android:fontFamily="@font/nanum_square_eb"
             android:text="이메일로 가입하기"
             android:textColor="@color/black"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:onClick="onClick" />
 
     </LinearLayout>
 </LinearLayout>
