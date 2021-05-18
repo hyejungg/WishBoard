@@ -52,6 +52,7 @@
         android:src="@drawable/more"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/folder_name"
-        app:layout_constraintTop_toBottomOf="@id/folder_item" />
+        app:layout_constraintTop_toBottomOf="@id/folder_item"
+        android:onClick="onClick" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
