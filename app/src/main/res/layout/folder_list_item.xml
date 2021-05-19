@@ -2,35 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp">
-
-    <ImageView
+    android:layout_margin="15dp"
+    >
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/folder_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sample"
         android:background="@android:color/transparent"/>
 
-    <TextView
-        android:id="@+id/folder_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginLeft="15dp"
-        android:layout_gravity="center"
-        android:fontFamily="@font/nanum_square_r"
-        android:text="카테고리명"
-        android:textColor="@color/black"
-        android:textSize="15dp" />
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical">
 
-    <RadioButton
-        android:id="@+id/checkbox"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_weight="0"
-        android:layout_marginTop="13dp"
-        android:onClick="onClick"
-        android:background="@drawable/unselect"
-        android:button="@android:color/transparent"
-        android:checked="false"/>
+        <TextView
+            android:id="@+id/folder_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/nanum_square_r"
+            android:text="카테고리명"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <RadioButton
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:background="@drawable/unselect"
+            android:button="@android:color/transparent"
+            android:checked="false"/>
+    </LinearLayout>
 </LinearLayout>
