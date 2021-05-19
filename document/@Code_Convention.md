@@ -59,7 +59,7 @@
    |@subject|주제|
    |@goal|목적|
    |@author|작성자|
-   |@brieft|설명|
+   |@brief|설명|
    |@param|변수, 함수, 인자 설명|
    |@return|반환 값 설명|
    |@see|참고사항 설명|
