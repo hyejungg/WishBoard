@@ -47,10 +47,11 @@
             android:orientation="vertical"
             >
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@id/item_image"
+                    android:id="@+id/item_image"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -68,8 +69,7 @@
                     android:id="@+id/btn_folder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:onClick="onClick">
+                    android:layout_margin="15dp">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
