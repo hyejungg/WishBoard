@@ -81,16 +81,16 @@ public class FolderFragment extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 
         // @deprecated : add()
-        addItem(R.mipmap.ic_launcher, "name1", 32);
-        addItem(R.mipmap.ic_launcher, "name2", 1);
-        addItem(R.mipmap.ic_launcher, "name3", 5);
-        addItem(R.mipmap.ic_launcher, "name4", 2);
-        addItem(R.mipmap.ic_launcher, "name5", 124);
-        addItem(R.mipmap.ic_launcher, "name6", 5151);
-        addItem(R.mipmap.ic_launcher, "name7", 231);
-        addItem(R.mipmap.ic_launcher, "name8", 241);
-        addItem(R.mipmap.ic_launcher, "name9", 1);
-        addItem(R.mipmap.ic_launcher, "name10", 23);
+        addItem(R.drawable.sample, "name1", 32);
+        addItem(R.drawable.sample, "name2", 1);
+        addItem(R.drawable.sample, "name3", 5);
+        addItem(R.drawable.sample, "name4", 2);
+        addItem(R.drawable.sample, "name5", 124);
+        addItem(R.drawable.sample, "name6", 5151);
+        addItem(R.drawable.sample, "name7", 231);
+        addItem(R.drawable.sample, "name8", 241);
+        addItem(R.drawable.sample, "name9", 1);
+        addItem(R.drawable.sample, "name10", 23);
 
         adapter.notifyDataSetChanged();
     }
