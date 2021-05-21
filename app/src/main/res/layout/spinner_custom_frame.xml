@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center_vertical"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/spinner_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="2dp"
+        android:textSize="15dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/nanum_square_b"/>
+
+    <!-- @param : 스피너 화살표 -->
+    <ImageView
+        android:layout_width="13dp"
+        android:layout_height="10dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/drop"/>
+
+</LinearLayout>

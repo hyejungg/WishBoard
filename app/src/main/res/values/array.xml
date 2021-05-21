@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="noti_types_array">
+        <item>알림 유형 선택</item>
+        <item>재입고</item>
+        <item>오픈일</item>
+        <item>프리오더 마감</item>
+        <item>세일 시작</item>
+        <item>세일 마감</item>
+    </string-array>
+</resources>
