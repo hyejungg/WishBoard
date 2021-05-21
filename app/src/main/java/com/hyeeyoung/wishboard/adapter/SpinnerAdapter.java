@@ -51,6 +51,7 @@ public class SpinnerAdapter extends BaseAdapter {
         return view;
     }
 
+    // @param : 드롭다운으로 보여지는 스피너 아이템 레이아웃
     @Override
     public View getDropDownView(int position, View view, ViewGroup viewGroup) { //클릭 후 보여지는 레이아웃
         if(view==null){
