@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:padding="15dp"
+            android:background="@drawable/background_popup">
+
+            <ImageButton
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:onClick="onClick"
+                android:src="@drawable/x"
+                android:background="@android:color/transparent" />
+
+            <RelativeLayout
+                android:id="@+id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp">
+
+                <TextView
+                    android:id="@+id/item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/nanum_square_b"
+                    android:text="PRETZEL PUFF KNIT" />
+
+                <LinearLayout
+                    android:id="@+id/content_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/item_name"
+                    android:layout_marginTop="15dp"
+                    android:layout_centerHorizontal="true">
+
+                    <TextView
+                        android:id="@+id/item_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/item_name"
+                        android:textSize="15dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/nanum_square_eb"
+                        android:text="219,000" />
+
+                    <TextView
+                        android:id="@+id/won"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_alignTop="@id/item_price"
+                        android:layout_toRightOf="@id/item_price"
+                        android:textSize="15dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/nanum_square_b"
+                        android:text="원" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/noti_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/content_price">
+
+                    <!-- @param : android:background="@null" 기존 화살표 아이콘 제거 -->
+                    <Spinner
+                        android:id="@+id/noti_type_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1.5"
+                        android:layout_below="@id/content_price"
+                        android:background="@null"/>
+
+                    <!-- @see : https://hinos.tistory.com/18 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="2"
+                        android:paddingLeft="5dp">
+                        <NumberPicker
+                            android:id="@+id/num_picker_date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"/>
+                        <NumberPicker
+                            android:id="@+id/num_picker_hour"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/colon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="15dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/nanum_square_eb"
+                            android:text=":"/>
+                        <NumberPicker
+                            android:id="@+id/num_picker_minute"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/item_memo"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="15dp"
+                    android:padding="15dp"
+                    android:layout_below="@id/noti_content"
+                    android:gravity="center_vertical"
+                    android:textSize="15dp"
+                    android:textColorHint="@color/mediumGray"
+                    android:fontFamily="@font/nanum_square_b"
+                    android:hint="메모를 입력해보세요."
+                    android:inputType="text"/>
+    <!-- @deprecated : android:background="@drawable/background_memo" 배경추가할지 고민 중-->
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/add"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/content"
+                android:outlineProvider="none"
+                android:background="@drawable/button_green"
+                android:textSize="14dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nanum_square_eb"
+                android:text="위시리스트에 추가"
+                android:onClick="onClick"/>
+
+        </RelativeLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/item_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/sample" />
+    </FrameLayout>
+
+
+
+
+</RelativeLayout>
