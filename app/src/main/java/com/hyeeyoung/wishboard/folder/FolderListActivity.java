@@ -46,14 +46,14 @@ public class FolderListActivity extends AppCompatActivity {
 
 
         // @deprecated : add()
-        addItem(R.drawable.sample, "옷", true);
-        addItem(R.drawable.sample, "상의", true);
-        addItem(R.drawable.sample, "아우터", false);
-        addItem(R.drawable.sample, "하의", false);
-        addItem(R.drawable.sample, "가방", false);
-        addItem(R.drawable.sample, "신발", false);
-        addItem(R.drawable.sample, "장신구", false);
-        addItem(R.drawable.sample, "모자", false);
+        addItem(R.drawable.sample, "옷");
+        addItem(R.drawable.sample, "상의");
+        addItem(R.drawable.sample, "아우터");
+        addItem(R.drawable.sample, "하의");
+        addItem(R.drawable.sample, "가방");
+        addItem(R.drawable.sample, "신발");
+        addItem(R.drawable.sample, "장신구");
+        addItem(R.drawable.sample, "모자");
         adapter.notifyDataSetChanged();
     }
 
@@ -67,11 +67,11 @@ public class FolderListActivity extends AppCompatActivity {
         }
     }
     // @deprecated
-    private void addItem(int folder_image, String folder_name, boolean checkbox) {
+    private void addItem(int folder_image, String folder_name) {
         FolderListItem item = new FolderListItem();
         item.setFolderImage(folder_image);
         item.setFolderName(folder_name);
-        item.setCheckboxState(checkbox);
+//        item.setCheckedState(checkbox); @deprecated : check의 상태는 직접 선택하도록
         foldersList.add(item);
     }
 

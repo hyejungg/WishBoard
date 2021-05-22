@@ -3,20 +3,20 @@ package com.hyeeyoung.wishboard.model;
 public class FolderListItem {
     private int folder_image;
     private String folder_name;
-    private boolean checkbox;
+    private boolean btn_check;
 
-    public void FolderListItem(){}
+    public FolderListItem(){}
 
-    public void FolderListItem(int folder_image, String folder_name, boolean checkbox){
+    public FolderListItem(int folder_image, String folder_name, boolean btn_check){
         this.folder_image = folder_image;
         this.folder_name = folder_name;
-        this.checkbox = checkbox;
+        this.btn_check = btn_check;
     }
 
     public int getFolderImage(){return folder_image;}
     public void setFolderImage(int folder_image){this.folder_image = folder_image;}
     public String getFolderName(){return folder_name;}
     public void setFolderName(String folder_name){this.folder_name = folder_name;}
-    public boolean isCheckbox(){return checkbox; }
-    public void setCheckboxState(boolean checkbox){this.checkbox = checkbox;}
+    public boolean isChecked(){return btn_check; }
+    public void setCheckedState(boolean btn_check){this.btn_check = btn_check;}
 }
