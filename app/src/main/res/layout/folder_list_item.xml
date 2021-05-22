@@ -37,7 +37,5 @@
             android:state_checked="false"
             android:button="@drawable/custom_checkbox"
             android:background="@android:color/transparent"/>
-<!--            android:background="@drawable/unselect"
-            android:checked="false"/>-->
     </LinearLayout>
 </LinearLayout>
