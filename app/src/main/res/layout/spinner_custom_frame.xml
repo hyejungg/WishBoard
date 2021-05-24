@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:paddingLeft="13dp"
     android:paddingRight="13dp"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/spinner_text"
@@ -15,7 +16,8 @@
         android:paddingLeft="2dp"
         android:textSize="15dp"
         android:textColor="@color/black"
-        android:fontFamily="@font/nanum_square_b"/>
+        android:fontFamily="@font/nanum_square_b"
+        />
 
     <!-- @param : 스피너 화살표 -->
     <ImageView
