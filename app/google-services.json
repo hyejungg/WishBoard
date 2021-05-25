@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "673773641362",
+    "project_id": "wishboard-7d9a0",
+    "storage_bucket": "wishboard-7d9a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673773641362:android:a59ed3786280c77657104b",
+        "android_client_info": {
+          "package_name": "com.hyeeyoung.wishboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673773641362-jpgau40jj26iaifjbf4oal0qjahve6hu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hyeeyoung.wishboard",
+            "certificate_hash": "406f0585fdf7076ee5c5d5c2a3152c17cb9d9ec2"
+          }
+        },
+        {
+          "client_id": "673773641362-2hme8ujph8c3jhi6j71r3vv8sia1g5pt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbgjqniPPricw10cVv7Z1O7RP6YrQzelM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673773641362-2hme8ujph8c3jhi6j71r3vv8sia1g5pt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
