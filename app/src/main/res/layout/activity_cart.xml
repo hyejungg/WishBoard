@@ -3,105 +3,125 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp">
+        android:padding="15dp">
+
         <ImageButton
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
             android:onClick="onClick"
-            android:src="@drawable/back"
-            android:background="@android:color/transparent" />
+            android:src="@drawable/back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:textSize="20dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/noto_sans_kr_bold"
-            android:text="cart" />
+            android:text="cart"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <ImageButton
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="2dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/edit" />
 
     </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginBottom="15dp">
-        <!--@breif android:button="@null" : 커스텀 된 이미지가 체크박스의 크기에 맞게 들어간다.-->
-        <CheckBox
-            android:id="@+id/check_box"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:button="@null"
-            android:checked="false"
-            android:background="@drawable/custom_checkbox" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/check_box"
-            android:layout_marginLeft="5dp"
-            android:textSize="13dp"
-            android:textColor="@color/mediumGray"
-            android:fontFamily="@font/nanum_square_r"
-            android:text="전체선택" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="5dp"
-            android:textSize="13dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/nanum_square_b"
-            android:text="선택삭제" />
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/black">
-    </View>
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:paddingHorizontal="15dp">-->
+<!--        &lt;!&ndash;@breif android:button="@null" : 커스텀 된 이미지가 체크박스의 크기에 맞게 들어간다.&ndash;&gt;-->
+<!--        <CheckBox-->
+<!--            android:id="@+id/check_box"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:background="@drawable/custom_checkbox"-->
+<!--            android:button="@null"-->
+<!--            android:checked="false" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_toRightOf="@id/check_box"-->
+<!--            android:fontFamily="@font/nanum_square_r"-->
+<!--            android:text="전체선택"-->
+<!--            android:textColor="@color/mediumGray"-->
+<!--            android:textSize="13dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:fontFamily="@font/nanum_square_b"-->
+<!--            android:text="선택삭제"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="13dp" />-->
+<!--    </RelativeLayout>-->
+    <!--            <View-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="0.5dp"-->
+    <!--                android:background="@color/black" />-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_cart_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:background="@color/green">
+        android:layout_height="50dp"
+        android:background="@color/green"
+        android:padding="15dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_r"
-            android:text="TOTAL" />
+            android:text="TOTAL"
+            android:textColor="@color/black"
+            android:textSize="17dp" />
+
         <TextView
             android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/won"
-            android:textSize="17dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_eb"
-            android:text="238,000" />
+            android:text="238,000"
+            android:textColor="@color/black"
+            android:textSize="17dp" />
+
         <TextView
             android:id="@+id/won"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginLeft="2dp"
-            android:textSize="17dp"
+            android:layout_marginLeft="1dp"
+            android:fontFamily="@font/nanum_square_b"
+            android:text="원"
             android:textColor="@color/black"
-            android:fontFamily="@font/nanum_square_r"
-            android:text="원" />
+            android:textSize="17dp" />
     </RelativeLayout>
+
 </LinearLayout>
