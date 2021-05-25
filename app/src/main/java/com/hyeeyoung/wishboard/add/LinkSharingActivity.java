@@ -108,6 +108,7 @@ public class LinkSharingActivity extends AppCompatActivity {
         date.setDisplayedValues(dates); //@param : 디스플레이될 날짜 값 설정
         date.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
+
         // @brief : 시간 설정, 0~23시 까지 넘버피커 설정
         hour.setMinValue(0); // @param : 범위의 최소값을 설정
         hour.setMaxValue(23); // @param : 범위의 최댓값을 설정
