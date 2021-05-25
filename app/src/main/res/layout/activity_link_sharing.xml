@@ -1,180 +1,201 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<?xml version="1.0" encoding="utf-8"?><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--    android:layout_width="match_parent"-->
 <!--    android:layout_height="wrap_content">-->
 
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom">
-        <RelativeLayout
-            android:layout_width="match_parent"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/background_popup"
+        android:padding="15dp">
+
+        <ImageButton
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:padding="15dp"
-            android:background="@drawable/background_popup">
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:src="@drawable/x" />
 
-            <ImageButton
-                android:id="@+id/cancel"
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp">
+
+            <TextView
+                android:id="@+id/item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:onClick="onClick"
-                android:src="@drawable/x"
-                android:background="@android:color/transparent" />
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/nanum_square_b"
+                android:text="PRETZEL PUFF KNIT"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
 
-            <RelativeLayout
-                android:id="@+id/content"
+            <LinearLayout
+                android:id="@+id/content_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp">
+                android:layout_below="@id/item_name"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp">
 
                 <TextView
-                    android:id="@+id/item_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/nanum_square_b"
-                    android:text="PRETZEL PUFF KNIT" />
-
-                <LinearLayout
-                    android:id="@+id/content_price"
+                    android:id="@+id/item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/item_name"
-                    android:layout_marginTop="15dp"
-                    android:layout_centerHorizontal="true">
+                    android:fontFamily="@font/nanum_square_eb"
+                    android:text="219,000"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
 
-                    <TextView
-                        android:id="@+id/item_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/item_name"
-                        android:textSize="15dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/nanum_square_eb"
-                        android:text="219,000" />
-
-                    <TextView
-                        android:id="@+id/won"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="2dp"
-                        android:layout_alignTop="@id/item_price"
-                        android:layout_toRightOf="@id/item_price"
-                        android:textSize="15dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/nanum_square_b"
-                        android:text="원" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/noti_content"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/won"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_below="@id/content_price">
+                    android:layout_alignTop="@id/item_price"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@id/item_price"
+                    android:fontFamily="@font/nanum_square_b"
+                    android:text="원"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+            </LinearLayout>
 
-                    <!-- @param : android:background="@null" 기존 화살표 아이콘 제거 -->
-                    <Spinner
-                        android:id="@+id/noti_type_spinner"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1.5"
-                        android:layout_below="@id/content_price"
-                        android:background="@null"/>
+            <LinearLayout
+                android:id="@+id/noti_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/content_price"
+                android:gravity="center_vertical">
 
-                    <!-- @see : https://hinos.tistory.com/18 -->
+                <!-- @param : android:background="@null" 기존 화살표 아이콘 제거 -->
+                <Spinner
+                    android:id="@+id/noti_type_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/content_price"
+                    android:layout_weight="1.5"
+                    android:background="@null" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="2">
+
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
                         android:paddingLeft="5dp">
+
                         <NumberPicker
                             android:id="@+id/num_picker_date"
                             android:layout_width="0dp"
-                            android:layout_height="50dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="4"
-                            android:theme="@style/AppTheme.NumberPicker"/>
+                            android:selectionDividerHeight="0dp"
+                            android:theme="@style/AppTheme.NumberPicker" />
+
                         <TextView
                             android:id="@+id/invisible_colon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:visibility="invisible"
-                            android:textSize="15dp"
                             android:fontFamily="@font/nanum_square_eb"
-                            android:text=":"/>
+                            android:text=":"
+                            android:textSize="15dp"
+                            android:visibility="invisible" />
+
                         <NumberPicker
                             android:id="@+id/num_picker_hour"
                             android:layout_width="0dp"
-                            android:layout_height="50dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:theme="@style/AppTheme.NumberPicker"/>
+                            android:selectionDividerHeight="0dp"
+                            android:theme="@style/AppTheme.NumberPicker" />
+
                         <TextView
                             android:id="@+id/colon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:textSize="15dp"
-                            android:textColor="@color/black"
                             android:fontFamily="@font/nanum_square_eb"
-                            android:text=":"/>
+                            android:text=":"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+
                         <NumberPicker
                             android:id="@+id/num_picker_minute"
                             android:layout_width="0dp"
-                            android:layout_height="50dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:theme="@style/AppTheme.NumberPicker"/>
+                            android:selectionDividerHeight="0dp"
+                            android:theme="@style/AppTheme.NumberPicker" />
 
                     </LinearLayout>
-                </LinearLayout>
 
-                <EditText
-                    android:id="@+id/item_memo"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="15dp"
-                    android:padding="15dp"
-                    android:layout_below="@id/noti_content"
-                    android:gravity="center_vertical"
-                    android:textSize="15dp"
-                    android:textColorHint="@color/mediumGray"
-                    android:fontFamily="@font/nanum_square_b"
-                    android:hint="메모를 입력해보세요."
-                    android:inputType="text"/>
-    <!-- @deprecated : android:background="@drawable/background_memo" 배경추가할지 고민 중-->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="22.5dp"
+                        android:layout_gravity="top"
+                        android:background="@color/white" />
 
-            </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="22.5dp"
+                        android:layout_gravity="bottom"
+                        android:background="@color/white" />
+                </FrameLayout>
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/add"
+            <EditText
+                android:id="@+id/item_memo"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="15dp"
-                android:layout_below="@id/content"
-                android:outlineProvider="none"
-                android:background="@drawable/button_green"
-                android:textSize="14dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nanum_square_eb"
-                android:text="위시리스트에 추가"
-                android:onClick="onClick"/>
+                android:layout_below="@id/noti_content"
+                android:fontFamily="@font/nanum_square_b"
+                android:gravity="center_vertical"
+                android:hint="메모를 입력해보세요."
+                android:inputType="text"
+                android:paddingHorizontal="15dp"
+                android:textColorHint="@color/mediumGray"
+                android:textSize="15dp" />
+            <!-- @deprecated : android:background="@drawable/background_memo" 배경추가할지 고민 중-->
 
         </RelativeLayout>
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/item_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/sample" />
-    </FrameLayout>
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/button_green"
+            android:fontFamily="@font/nanum_square_eb"
+            android:onClick="onClick"
+            android:outlineProvider="none"
+            android:text="위시리스트에 추가"
+            android:textColor="@color/black"
+            android:textSize="14dp" />
+
+    </RelativeLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/item_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/sample" />
+</FrameLayout>
 
 
-
-
-<!--</RelativeLayout>-->
+    <!--</RelativeLayout>-->
