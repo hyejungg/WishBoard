@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginVertical="15dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
     tools:context=".detail.ItemDetailActivity"
     android:orientation="vertical"
     android:background="@color/white">
@@ -20,13 +21,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp">
+        android:paddingHorizontal="15dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="17dp"
+            android:textSize="15dp"
             android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_eb"
             android:text="니트 / 가디건" />
@@ -42,125 +45,140 @@
             android:text="21. 5. 5." />
 
     </LinearLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@id/item_image"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintDimensionRatio="1:1"
-                android:scaleType="center"
-                android:src="@drawable/sample"/>
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@id/item_image"
-                app:layout_constraintBottom_toBottomOf="@id/item_image"
-                android:layout_margin="15dp"
-                android:layout_gravity="right|bottom">
-
-                <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:src="@drawable/round_sticker" />
-                <TextView
-                    android:id="@+id/d_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textAllCaps="true"
-                    android:textSize="17dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/nanum_square_r"
-                    android:text="D-15" />
-            </FrameLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    <LinearLayout
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="15dp"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="true"
-            android:textSize="17dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/nanum_square_eb"
-            android:text="[GROVE] 21 S/S RIA CARDIGAN - IVORY" />
-
+        android:layout_weight="1">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/item_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nanum_square_eb"
-                android:text="129,000" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/won"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nanum_square_r"
-                android:text="원" />
+                <ImageView
+                    android:id="@id/item_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sample"/>
 
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/item_image"
+                    app:layout_constraintBottom_toBottomOf="@id/item_image"
+                    android:layout_margin="15dp"
+                    android:layout_gravity="right|bottom">
+
+                    <ImageView
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:src="@drawable/round_sticker" />
+                    <TextView
+                        android:id="@+id/d_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textAllCaps="true"
+                        android:textSize="17dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/nanum_square_b"
+                        android:text="D-15" />
+                </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="15dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textSize="20dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/nanum_square_eb"
+                    android:text="GROVE 21 S/S RIA CARDIGAN - IVORY" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
+
+                    <TextView
+                        android:id="@+id/item_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/nanum_square_b"
+                        android:text="129,000" />
+
+                    <TextView
+                        android:id="@+id/won"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:textSize="15dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/nanum_square_b"
+                        android:text="원" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
+                    <TextView
+                        android:id="@+id/noti_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/nanum_square_b"
+                        android:text="[프리오더 마감]" />
+
+                    <TextView
+                        android:id="@+id/noti_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="15dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/nanum_square_b"
+                        android:text="21. 5. 5. 10시" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:background="@drawable/background_tag"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/nanum_square_b"
+                    android:text="S사이즈" />
+            </LinearLayout>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
-            <TextView
-                android:id="@+id/noti_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nanum_square_b"
-                android:text="[프리오더 마감]" />
-
-            <TextView
-                android:id="@+id/noti_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textSize="15dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nanum_square_b"
-                android:text="21. 5. 5." />
-        </LinearLayout>
-        <TextView
-            android:id="@+id/tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:background="@color/pastelGreen"
-            android:textSize="15dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/nanum_square_r"
-            android:text="S사이즈" />
-    </LinearLayout>
+    </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp">
+        android:layout_marginTop="15dp"
+        android:paddingHorizontal="15dp">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -170,7 +188,7 @@
                 android:id="@+id/delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="2dp"
                 android:src="@drawable/delete"
                 android:background="@android:color/transparent" />
 
@@ -186,7 +204,7 @@
         <Button
             android:id="@+id/shopping"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:outlineProvider="none"
             android:background="@drawable/button_green"

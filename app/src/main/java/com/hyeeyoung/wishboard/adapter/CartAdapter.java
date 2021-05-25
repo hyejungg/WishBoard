@@ -1,5 +1,6 @@
 package com.hyeeyoung.wishboard.adapter;
 
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.cart_ltem, viewGroup, false);
+                .inflate(R.layout.cart_item, viewGroup, false);
 
         CustomViewHolder viewHolder = new CustomViewHolder(view);
 
@@ -49,12 +50,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomViewHolder viewholder, int position) {
+    public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         CartItem item = cartList.get(position);
-        viewholder.item_image.setImageResource(item.getItem_image());
-        viewholder.item_name.setText(item.getItem_name());
-        viewholder.total.setText(item.getTotal());
-        viewholder.quantity.setText(item.getQty()+"");
+        holder.item_image.setImageResource(item.getItem_image());
+        holder.item_name.setText(item.getItem_name());
+        holder.total.setText(item.getTotal());
+        holder.quantity.setText(item.getQty()+"");
     }
     @Override
     public int getItemCount() {

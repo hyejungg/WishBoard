@@ -1,5 +1,6 @@
 package com.hyeeyoung.wishboard.adapter;
 
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
         protected ImageView folder_image;
         protected TextView folder_name;
         protected TextView item_count;
+
 
         public CustomViewHolder(View view) {
             super(view);
