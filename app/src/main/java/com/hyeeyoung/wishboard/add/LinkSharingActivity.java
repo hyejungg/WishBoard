@@ -12,6 +12,7 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.hyeeyoung.wishboard.adapter.SpinnerAdapter;
 import com.hyeeyoung.wishboard.R;
 import java.text.DateFormat;
@@ -34,6 +35,13 @@ public class LinkSharingActivity extends AppCompatActivity {
     SpinnerAdapter spinner_adapter;
     TextView item_name;
     ImageView item_image;
+
+    // @param : 가져온 데이터를 화면에 보여주기 위해 변수 선언
+    TextView won;
+
+
+    // @param : 가져온 데이터 보관
+    String site_url = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,8 @@ public class LinkSharingActivity extends AppCompatActivity {
                 handleSendText(intent);
             } else if (type.startsWith("image/")) { // @breif : 전송데이터 타입이 이미지인 경우
                 handleSendImage(intent);
+            } else if (type.startsWith("text/xml")) { // @breif : 전송데이터 타입이 xml인 경우
+                handleSendXml(intent);
             }
         }
 
@@ -91,6 +101,7 @@ public class LinkSharingActivity extends AppCompatActivity {
 
         item_name = findViewById(R.id.item_name);
         item_image = findViewById(R.id.item_image);
+        won = findViewById(R.id.won);
     }
 
     // @FIXME : 알림 날짜 초기화 함수로 실행 시 앱 중단
@@ -155,10 +166,11 @@ public class LinkSharingActivity extends AppCompatActivity {
 
     // @param : 전송 중인 단일 텍스트 처리
     void handleSendText(Intent intent) {
+        site_url = intent.getStringExtra(Intent.EXTRA_TEXT); // @params : site url은 String에 보관. DB 저장용
         String sharedText = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (sharedText != null) {
             // @brief : 데이터 받은 후 UI 업데이트
-            item_name.setText(sharedText);
+            item_name.setText(sharedText); //url
             Log.i("LinkSharing", "handleSendText: "+item_name);
         }
     }
@@ -177,6 +189,20 @@ public class LinkSharingActivity extends AppCompatActivity {
 //            }catch (IOException e){
 //                e.printStackTrace();
 //            }
+            // @brief : 데이터 받은 후 UI 업데이트
+//            item_image.setImageURI(imageUri);
+        }
+    }
+
+    // @param : 전송 중인 Json, xml 데이터 처리
+    void handleSendXml(Intent intent) {
+        // @deprecated : json 값으로 가져올 경우 확인용
+        Log.i("item_name/xml", "handleSendXml");
+       String xml = intent.getStringExtra(Intent.EXTRA_TEXT);
+
+        if (xml != null) {
+            // @brief : 데이터 받은 후 UI 업데이트
+            Log.i("item_name/xml", xml);
         }
     }
 
