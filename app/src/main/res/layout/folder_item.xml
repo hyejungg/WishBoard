@@ -8,7 +8,7 @@
     android:background="@color/white">
 
     <!-- @brief : 폴더화면 아이템 리스트 중 아이템 하나의 뷰 -->
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/folder_item"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -25,11 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="15dp"
-        android:fontFamily="@font/nanum_square_b"
+        android:layout_marginTop="7.5dp"
+        android:fontFamily="@font/nanum_square_eb"
         android:text="폴더명"
         android:textColor="@color/black"
-        android:textSize="15dp"
+        android:textSize="13dp"
         app:layout_constraintStart_toStartOf="@id/folder_item"
         app:layout_constraintTop_toBottomOf="@id/folder_item" />
 
@@ -37,8 +37,8 @@
         android:id="@+id/item_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/nanum_square_eb"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/nanum_square_b"
         android:text="11"
         android:textColor="@color/mediumGray"
         android:textSize="13dp"
@@ -49,10 +49,9 @@
         android:id="@+id/more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:layout_marginRight="2dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/more"
+        android:src="@drawable/folder_more"
         app:layout_constraintRight_toRightOf="@id/folder_item"
         app:layout_constraintTop_toTopOf="@id/folder_name"
         app:layout_constraintTop_toBottomOf="@id/folder_item"
