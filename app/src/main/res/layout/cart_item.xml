@@ -2,39 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp"
+    android:padding="15dp"
     android:background="@color/white">
-    <RelativeLayout
-        android:id="@+id/select"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <CheckBox
-            android:id="@+id/check_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@null"
-            android:checked="false"
-            android:layout_centerVertical="true"
-            android:onClick="onClick"
-            android:background="@drawable/custom_checkbox" />
-        <ImageButton
-            android:id="@+id/x"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:onClick="onClick"
-            android:src="@drawable/x"
-            android:background="@android:color/transparent" />
-    </RelativeLayout>
 
     <ImageView
         android:id="@+id/item_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_below="@id/select"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginRight= "15dp"
         android:scaleType="centerCrop"
         android:src="@drawable/sample"/>
     <RelativeLayout
@@ -48,40 +23,51 @@
             android:layout_height="wrap_content"
             android:textSize="15dp"
             android:textColor="@color/black"
-            android:fontFamily="@font/nanum_square_r"
+            android:fontFamily="@font/nanum_square_b"
             android:text="ITEM NAME" />
-        <LinearLayout
+
+        <ImageButton
+            android:id="@+id/x"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentEnd="true"
+            android:onClick="onClick"
+            android:src="@drawable/x"
+            android:background="@android:color/transparent" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/item_image"
+        android:layout_alignBottom="@id/item_image"
+        android:layout_marginTop="10dp">
+        <ImageButton
+            android:id="@+id/minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_name"
-            android:layout_marginTop="10dp">
-            <ImageButton
-                android:id="@+id/minus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/minus"
-                android:background="@android:color/transparent" />
-            <TextView
-                android:id="@+id/quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="15dp"
-                android:textSize="15dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nanum_square_r"
-                android:text="1" />
-            <ImageButton
-                android:id="@+id/plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/plus"
-                android:background="@android:color/transparent" />
-        </LinearLayout>
-    </RelativeLayout>
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/minus"
+            android:background="@android:color/transparent" />
+        <TextView
+            android:id="@+id/quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="15dp"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/nanum_square_r"
+            android:text="1" />
+        <ImageButton
+            android:id="@+id/plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/plus"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,10 +87,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="1dp"
             android:textSize="17dp"
             android:textColor="@color/black"
-            android:fontFamily="@font/nanum_square_r"
+            android:fontFamily="@font/nanum_square_b"
             android:text="원" />
     </LinearLayout>
 </RelativeLayout>

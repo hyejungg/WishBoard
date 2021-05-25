@@ -3,23 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:padding="15dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/noto_sans_kr_bold"
-            android:text="Folder" />
+            android:text="Folder"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -29,38 +29,33 @@
                 android:id="@+id/cart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/cart"
-                android:background="@android:color/transparent" />
+                android:background="@android:color/transparent"
+                android:src="@drawable/cart" />
 
             <!-- @ TODO : 장바구니 아이템 수 표시하는 이미지 뷰 위치 조정 해결 못함 -->
             <ImageView
-                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/item_cnt_circle"/>
+                android:src="@drawable/item_cnt_circle"
+                android:visibility="invisible" />
         </FrameLayout>
 
         <ImageButton
             android:id="@+id/new_folder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/new_folder"
-            android:background="@android:color/transparent" />
+            android:background="@android:color/transparent"
+            android:src="@drawable/new_folder" />
     </LinearLayout>
-    <LinearLayout
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_folders_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_folders_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="7.5dp"
-            android:scrollbarFadeDuration="0"
-            android:scrollbarSize="5dp"
-            android:scrollbarThumbVertical="@android:color/darker_gray"
-            android:scrollbars="vertical" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:padding="7.5dp"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="5dp"
+        android:scrollbarThumbVertical="@android:color/darker_gray"
+        android:scrollbars="vertical" />
 </LinearLayout>
