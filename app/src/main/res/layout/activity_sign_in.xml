@@ -3,16 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="15dp"
     android:orientation="vertical"
     android:background="@color/white">
+
+    <!--    @TODO : margin을 최상위부모에 두면 15dp 부분이 white컬러 안들어감 수정했는데 요소들
+                    가운데로 이동시켜야 함     -->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_margin="15dp"
+        android:orientation="vertical"
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -112,11 +114,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/black" />
-            
+
 <!--    @ TODO : firebase를 이용한 OAuth 로그인으로 변경 예정-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
@@ -149,15 +152,16 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nanum_square_eb"
-                            android:text="카카오로 가입하기"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/button_kakao"/>
+                <!--    @TODO : 수정 에정 우선 test 코드                            -->
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/nanum_square_eb"-->
+<!--                            android:text="카카오로 가입하기"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textSize="15dp" />-->
                     </LinearLayout>
                 </FrameLayout>
 
@@ -191,33 +195,36 @@
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/nanum_square_r"
-            android:text="Wishboard가 처음이신가요?"
-            android:textColor="@color/black" />
-
-        <Button
-            android:id="@+id/btn_email_signup"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/button_none"
-            android:fontFamily="@font/nanum_square_eb"
-            android:text="이메일로 가입하기"
-            android:textColor="@color/black"
-            android:textSize="15dp"
-            android:onClick="onClick" />
+            android:gravity="bottom"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_above="@id/btn_email_signup"
+                android:layout_gravity="center"
+                android:fontFamily="@font/nanum_square_r"
+                android:text="Wishboard가 처음이신가요?"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/btn_email_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/button_none"
+                android:fontFamily="@font/nanum_square_eb"
+                android:text="이메일로 가입하기"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:onClick="onClick" />
+        </RelativeLayout>
     </LinearLayout>
+
+
 </LinearLayout>

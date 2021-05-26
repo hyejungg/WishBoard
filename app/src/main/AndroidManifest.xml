@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hyeeyoung.wishboard">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- @brief : 인터넷 접속 -->
@@ -13,7 +14,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="Instantiatable">
 
         <activity android:name=".add.LinkSharingActivity"
             android:theme="@style/AppThemePopup">
@@ -33,12 +35,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/xml" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/html" />
-            </intent-filter>
         </activity>
+        <activity android:name=".sign.SigninActivity"></activity>
+        <activity android:name=".sign.SignupActivity"></activity>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
@@ -50,6 +49,18 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+<!--     @ brief : kakao 로그인을 위해 Redirect URI 접근   -->
+        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="oauth"
+                    android:scheme="@string/kakao_app_key"
+                    />
             </intent-filter>
         </activity>
     </application>
