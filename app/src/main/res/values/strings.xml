@@ -2,4 +2,5 @@
     <string name="app_name">WishBoard</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="kakao_app_key">e5c80a93a90709e1f697d50166b62b30</string>
 </resources>

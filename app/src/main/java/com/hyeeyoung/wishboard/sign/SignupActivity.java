@@ -1,7 +1,6 @@
 package com.hyeeyoung.wishboard.sign;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,4 +32,6 @@ public class SignupActivity extends AppCompatActivity {
         });
 
     }
+
+
 }

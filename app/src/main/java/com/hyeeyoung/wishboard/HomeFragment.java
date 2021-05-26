@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
+import com.hyeeyoung.wishboard.sign.SigninActivity;
 
 import java.util.ArrayList;
 
@@ -71,6 +72,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private GridLayoutManager gridLayoutManager;
     private Intent intent;
     private ImageButton cart;
+    private ImageButton more;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -88,7 +90,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         gridLayoutManager = new GridLayoutManager(this.getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
         cart = view.findViewById(R.id.cart);
+        more = view.findViewById(R.id.more);
         cart.setOnClickListener(this);
+        more.setOnClickListener(this);
 
         addItem(R.drawable.sample, "name1", "100000");
         addItem(R.drawable.sample, "name2", "200000");
@@ -118,6 +122,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.cart:
                 intent = new Intent(v.getContext(), CartActivity.class);
                 v.getContext().startActivity(intent);
+                break;
+
+            // @deprecated
+                // @see : 우선 로그인 확인을 위해 임의의 버튼을 login 화면으로 연결되도록 설정
+            case R.id.more:
+                intent = new Intent(v.getContext(), SigninActivity.class);
+                v.getContext().startActivity(intent);
+                break;
         }
     }
 }

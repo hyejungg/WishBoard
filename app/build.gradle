@@ -24,10 +24,11 @@ android {
 
     defaultConfig {
         applicationId "com.hyeeyoung.wishboard"
-        minSdkVersion 22
+        minSdkVersion 19 // @see : 원래 22(롤리팝) -> kakao 로그인 기준 최소사항 19로 변경
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true // @see : 라이브러리를 추가하면서 dex 파일 내 제한된 메서드 개수(65,536)을 초과하여 -> 이 명령을 통해 파티션이 나눠지도록 컴파일
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -63,4 +64,11 @@ dependencies {
     // @brief : firebase
     implementation platform('com.google.firebase:firebase-bom:28.0.1')
     implementation 'com.google.firebase:firebase-analytics'
+
+    // @brief : kakao 로그인
+    implementation "com.kakao.sdk:v2-user:2.2.0"
+
+    // @breif : multidex 지원 라이브러리
+    // @see : kakao 로그인에 관한 라이브러리를 추가하면서 dex 파일 내 제한된 메서드 개수(65,536)을 초과하여 에러 해결을 위해 추가
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
