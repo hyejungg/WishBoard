@@ -53,11 +53,13 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/email" />
 
-            <TextView
+            <EditText
                 android:id="@+id/text_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:textSize="15dp"
                 android:layout_marginLeft="10dp"
                 android:hint="이메일을 입력해주세요." />
 
@@ -80,11 +82,13 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/pw" />
 
-            <TextView
+            <EditText
                 android:id="@+id/text_pw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:textSize="15dp"
                 android:layout_marginLeft="10dp"
                 android:hint="8자리 이상의 영문자, 숫자, 특수 문자 조합" />
 
@@ -107,12 +111,14 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/pw" />
 
-            <TextView
+            <EditText
                 android:id="@+id/text_pw_re"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"
                 android:layout_marginLeft="10dp"
+                android:textSize="15dp"
                 android:hint="비밀번호를 다시 입력해 주세요." />
 
         </LinearLayout>
