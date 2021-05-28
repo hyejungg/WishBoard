@@ -10,7 +10,8 @@
     <color name="mediumGray">#aaaaaa</color>
     <color name="realBlack">#000000</color>
     <color name="black">#292929</color>
-    <color name="white">#ffffff</color>
+    <color name="white">#ffffff</color>>
+    <color name="yellow">#FEE500</color>
     <color name="transparent">#00000000</color>
     <color name="semiTransparent">#1A000000</color>
 </resources>

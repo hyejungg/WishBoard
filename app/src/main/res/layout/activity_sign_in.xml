@@ -1,64 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <!--    @TODO : margin을 최상위부모에 두면 15dp 부분이 white컬러 안들어감 수정했는데 요소들
-                    가운데로 이동시켜야 함     -->
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:orientation="vertical"
-        android:background="@color/white">
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@color/white"
             android:orientation="vertical">
 
+            <!--    @brief : 제목 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_kr_bold"
+                        android:text="Wishboard"
+                        android:textColor="@color/black"
+                        android:textSize="25dp" />
+
+                    <!-- @TODO : Wishboard 제목 위에 초록색 점 추가해야 함 -->
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/item_cnt_circle"
+                        android:visibility="invisible" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/noto_sans_kr_bold"
-                    android:text="Wishboard"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/nanum_square_b"
+                    android:text="Wishboard로 간편하게\n흩어져있는 위시리스트를 통합 관리해보세요!"
                     android:textColor="@color/black"
-                    android:textSize="25dp" />
+                    android:textSize="15dp" />
 
-                <!-- @TODO : Wishboard 제목 위에 초록색 점 추가해야 함 -->
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/item_cnt_circle"
-                    android:visibility="invisible" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/nanum_square_b"
-                android:text="Wishboard로 간편하게\n흩어져있는 위시리스트를 통합 관리해보세요!"
-                android:textColor="@color/black"
-                android:textSize="15dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
+            <!--    @brief : 이메일주소 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,20 +65,20 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:src="@drawable/email" />
 
-                <TextView
-                    android:id="@+id/text_email"
+                <EditText
+                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:hint="이메일을 입력해주세요." />
-
             </LinearLayout>
 
             <View
@@ -87,6 +86,7 @@
                 android:layout_height="0.5dp"
                 android:background="@color/black" />
 
+            <!--    @brief : 패스워드 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,17 +94,18 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/pw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:src="@drawable/pw" />
 
-                <TextView
-                    android:id="@+id/text_pw"
+                <EditText
+                    android:id="@+id/pw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:textSize="15dp"
                     android:layout_marginLeft="10dp"
                     android:hint="8자리 이상의 영문자, 숫자, 특수 문자 조합" />
 
@@ -115,12 +116,13 @@
                 android:layout_height="0.5dp"
                 android:background="@color/black" />
 
-<!--    @ TODO : firebase를 이용한 OAuth 로그인으로 변경 예정-->
+            <!--    @brief : 3가지 버튼 -->
+            <!--    @ TODO : firebase를 이용한 OAuth 로그인으로 변경 예정-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginTop="15dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <Button
@@ -130,43 +132,50 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_green"
                     android:fontFamily="@font/nanum_square_eb"
+                    android:onClick="onClick"
                     android:text="가입하기"
                     android:textColor="@color/black"
-                    android:textSize="15dp"
-                    android:onClick="onClick"/>
+                    android:textSize="15dp" />
 
                 <FrameLayout
                     android:id="@+id/kakao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/button_none"
+                    android:background="@drawable/button_yellow"
                     android:onClick="onClick">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
-                        android:gravity="center" >
+                        android:gravity="center">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
-                            android:src="@drawable/button_kakao"/>
-                <!--    @TODO : 수정 에정 우선 test 코드                            -->
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:fontFamily="@font/nanum_square_eb"-->
-<!--                            android:text="카카오로 가입하기"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:textSize="15dp" />-->
+                            android:src="@drawable/kakao" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nanum_square_eb"
+                            android:text="카카오로 가입하기"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
                     </LinearLayout>
                 </FrameLayout>
 
+<!--                @TODO : firebase에서 제공하는 구글 로그인 btn ui 적용 안돼-->
+<!--                <com.google.android.gms.common.SignInButton-->
+<!--                    android:id="@+id/google"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="15dp"-->
+<!--                    android:layout_marginTop="18dp"/>-->
+
                 <FrameLayout
-                    android:id="@+id/naver"
+                    android:id="@+id/google"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -188,43 +197,43 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/nanum_square_eb"
-                            android:text="네이버로 가입하기"
+                            android:text="구글로 가입하기"
                             android:textColor="@color/black"
                             android:textSize="15dp" />
                     </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>
-        <RelativeLayout
+    </RelativeLayout>
+    <!--    @brief : 아래 버튼 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btn_email_signup"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:fontFamily="@font/nanum_square_r"
+            android:text="Wishboard가 처음이신가요?"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/btn_email_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_above="@id/btn_email_signup"
-                android:layout_gravity="center"
-                android:fontFamily="@font/nanum_square_r"
-                android:text="Wishboard가 처음이신가요?"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/btn_email_signup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/button_none"
-                android:fontFamily="@font/nanum_square_eb"
-                android:text="이메일로 가입하기"
-                android:textColor="@color/black"
-                android:textSize="15dp"
-                android:onClick="onClick" />
-        </RelativeLayout>
-    </LinearLayout>
-
-
-</LinearLayout>
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_none"
+            android:fontFamily="@font/nanum_square_eb"
+            android:onClick="onClick"
+            android:text="이메일로 가입하기"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+    </RelativeLayout>
+</RelativeLayout>

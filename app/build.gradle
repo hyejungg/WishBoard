@@ -67,8 +67,11 @@ dependencies {
 
     // @brief : kakao 로그인
     implementation "com.kakao.sdk:v2-user:2.2.0"
-
-    // @breif : multidex 지원 라이브러리
+    // @brief : multidex 지원 라이브러리
     // @see : kakao 로그인에 관한 라이브러리를 추가하면서 dex 파일 내 제한된 메서드 개수(65,536)을 초과하여 에러 해결을 위해 추가
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    // @brief : google 로그인
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.firebase:firebase-auth:19.0.0'
 }
