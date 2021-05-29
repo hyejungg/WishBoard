@@ -84,6 +84,7 @@
 
             <EditText
                 android:id="@+id/text_pw"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -113,6 +114,7 @@
 
             <EditText
                 android:id="@+id/text_pw_re"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -133,7 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/button_green"
+            android:background="@drawable/button_none"
             android:fontFamily="@font/nanum_square_eb"
             android:textSize="15dp"
             android:text="가입하기"
