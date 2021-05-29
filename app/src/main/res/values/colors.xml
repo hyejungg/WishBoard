@@ -8,6 +8,7 @@
     <color name="pastelGreen">#EEFEEF</color>
     <color name="lightGray">#E3E3E3</color>
     <color name="mediumGray">#aaaaaa</color>
+    <color name="darkGray">#858585</color>
     <color name="realBlack">#000000</color>
     <color name="black">#292929</color>
     <color name="white">#ffffff</color>
