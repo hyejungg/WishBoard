@@ -57,6 +57,10 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.22.2'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.20.1'
 
+    // @brief : retrofit을 사용해서 Node.js와 통신
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -71,4 +75,6 @@ dependencies {
     // @breif : multidex 지원 라이브러리
     // @see : kakao 로그인에 관한 라이브러리를 추가하면서 dex 파일 내 제한된 메서드 개수(65,536)을 초과하여 에러 해결을 위해 추가
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    
 }
