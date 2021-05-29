@@ -1,15 +1,12 @@
 package com.hyeeyoung.wishboard.sign;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -17,10 +14,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -29,7 +24,6 @@ import com.hyeeyoung.wishboard.R;
 import com.kakao.sdk.auth.LoginClient;
 import com.kakao.sdk.common.KakaoSdk;
 import com.kakao.sdk.user.UserApiClient;
-import com.kakao.sdk.user.model.User;
 
 public class SigninActivity extends AppCompatActivity {
     private Intent intent;
@@ -44,6 +38,7 @@ public class SigninActivity extends AppCompatActivity {
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth mAuth;
     private int RC_SIGN_IN = 1001; // @ brief : 성공코드 ...임의로 설정함
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +47,15 @@ public class SigninActivity extends AppCompatActivity {
 
         init();
 
-    }
+        // @TODO : goMainActivity() 수정 필요
+        //goMainActivity(user != null);
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // @brief : currentUser 정보 가져오기
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_signin:
+                // @brief : 로그인 처리
                 email = edit_email.getText().toString();
                 pw = edit_pw.getText().toString();
                 break;
@@ -106,22 +98,25 @@ public class SigninActivity extends AppCompatActivity {
                 });
                 break;
             case R.id.google:
-//                GoogleLogin googleLogin = new GoogleLogin(this);
                 initGoogle();
                 signInGoogle();
 
                 break;
             case R.id.btn_email_signup:
+                // @brief : 회원가입 처리
                 intent = new Intent(this, SignupActivity.class);
                 startActivity(intent);
                 break;
         }
     }
 
-    private void goMainActivity(){
+    private void goMainActivity(boolean isLogin){
+        Log.i("goMainActivity", String.valueOf(isLogin));
         // @brief : 로그인 성공 시 MainActivity로 이동
-        Intent goMain = new Intent(this, MainActivity.class);
-        startActivity(goMain);
+        if(isLogin) {
+            Intent goMain = new Intent(this, MainActivity.class);
+            startActivity(goMain);
+        }
     }
 
     private void init() {
@@ -172,19 +167,18 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("firebaseAuthWithGoogle", acct.getId());
         String acc_idToken = acct.getIdToken();
         // @brief : 구글로부터 로그인된 사용자의 정보(Credentail)을 얻어옴
         AuthCredential credential = GoogleAuthProvider.getCredential(acc_idToken, null);
-        // @brief : credentail를 사용하여 Firebase의 auth를 실행
+        /* @brief : credentail를 사용하여 Firebase의 auth를 실행
+                    signIn ~ 로그인 시도*/
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // @brief : 로그인 성공 시
                         Log.d("firebaseAuthWithGoogle", "signInWithCredential:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
+                        user = mAuth.getCurrentUser();
                         Toast.makeText(getApplicationContext(), "구글 로그인 성공", Toast.LENGTH_LONG).show();
-                        goMainActivity();
                     } else {
                         // @brief : 로그인 실패 시
                         Log.w("firebaseAuthWithGoogle", "signInWithCredential:failure", task.getException());
