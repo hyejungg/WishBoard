@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".sign.KakaoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_main"
         android:label="@string/app_name"
@@ -53,9 +54,10 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <!-- @ see : Redirect URI == kakao{네이티브 앱 키 값} -->
                 <data
                     android:host="oauth"
-                    android:scheme="@string/kakao_app_key" />
+                    android:scheme="kakaoe5c80a93a90709e1f697d50166b62b30" />
             </intent-filter>
         </activity>
 
