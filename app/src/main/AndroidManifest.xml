@@ -18,11 +18,18 @@
         android:theme="@style/AppTheme"
         tools:ignore="Instantiatable">
 
-        <activity android:name=".add.LinkSharingActivity"
+        <activity android:name=".IntroActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".add.LinkSharingActivity"
             android:theme="@style/AppThemePopup">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
@@ -37,22 +44,21 @@
                 <data android:mimeType="text/xml" />
             </intent-filter>
         </activity>
-        <activity android:name=".sign.SigninActivity"></activity>
-        <activity android:name=".sign.SignupActivity"></activity>
+
+        <activity android:name=".sign.SigninActivity" />
+        <activity android:name=".sign.SignupActivity" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
+
         <activity android:name=".detail.ItemDetailActivity" />
-        <activity android:name=".cart.CartActivity" /> <!-- <activity android:name=".folder.FolderList"></activity> -->
+        <activity android:name=".cart.CartActivity" />
         <activity android:name=".folder.FolderListActivity" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-<!--     @ brief : kakao 로그인을 위해 Redirect URI 접근   -->
+
+        <activity android:name=".MainActivity"/>
+
+        <!-- @ brief : kakao 로그인을 위해 Redirect URI 접근 -->
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -64,6 +70,6 @@
                     android:scheme="kakaoe5c80a93a90709e1f697d50166b62b30" />
             </intent-filter>
         </activity>
-    </application>
 
+    </application>
 </manifest>
