@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
-            android:src="@drawable/back" />
+            android:src="@drawable/back"
+            android:onClick="onClick"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,7 +55,7 @@
                 android:src="@drawable/email" />
 
             <EditText
-                android:id="@+id/text_email"
+                android:id="@+id/edit_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -83,7 +84,7 @@
                 android:src="@drawable/pw" />
 
             <EditText
-                android:id="@+id/text_pw"
+                android:id="@+id/edit_pw"
                 android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,7 +114,7 @@
                 android:src="@drawable/pw" />
 
             <EditText
-                android:id="@+id/text_pw_re"
+                android:id="@+id/edit_pw_re"
                 android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
