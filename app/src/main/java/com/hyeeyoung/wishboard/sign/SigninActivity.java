@@ -30,7 +30,7 @@ import com.kakao.sdk.user.model.User;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 
-public class SigninActivity extends AppCompatActivity{
+public class SigninActivity extends AppCompatActivity {
     private Intent intent;
 
     // @params : 서버와 연결하여 DB에 등록할 정보를 담는 변수
@@ -46,6 +46,7 @@ public class SigninActivity extends AppCompatActivity{
     private FirebaseAuth mAuth;
     private int RC_SIGN_IN = 1001; // @ brief : 성공코드 ...임의로 설정함
     private FirebaseUser user;
+
     // @params : kakao 로그인 관련 변수
 
 
@@ -56,15 +57,31 @@ public class SigninActivity extends AppCompatActivity{
 
         init();
 
-        /**
-         * @see : onCreate()될 때마다 updateKakaoLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
-         *        자동으로 로그인 정보를 가져옴
-         * */
-        updateKakaoLogin();
+//        /**
+//         * @see : onCreate()될 때마다 updateKakaoLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
+//         *        자동으로 로그인 정보를 가져옴
+//         * */
+//        updateKakaoLogin();
 
         // @TODO : goMainActivity() 수정 필요
         //goMainActivity(user != null);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /**
+         * @see : onStart()될 때마다 updateKakaoLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
+         *        자동으로 로그인 정보를 가져옴
+         * */
+        updateKakaoLogin();
+        /**
+         * @see : onStart()될 때마다 updateGoogleLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
+         *        자동으로 로그인 정보를 가져옴
+         * */
+        mAuth = FirebaseAuth.getInstance();
+        updateGoogleLogin();
     }
 
     public void onClick(View view) {
@@ -99,22 +116,20 @@ public class SigninActivity extends AppCompatActivity{
         edit_email = findViewById(R.id.email);
         edit_pw = findViewById(R.id.pw);
     }
+
     /**
      * @params : 메인액티비티로 넘기기 위한 함수
      **/
-    private void goMainActivity(boolean isLogin){
-        Log.i("goMainActivity", String.valueOf(isLogin));
+    private void goMainActivity() {
         // @brief : 로그인 성공 시 MainActivity로 이동
-        if(isLogin) {
-            Intent goMain = new Intent(this, MainActivity.class);
-            startActivity(goMain);
-        }
+        Intent goMain = new Intent(this, MainActivity.class);
+        startActivity(goMain);
     }
 
-    /**
-    * @params : kakao 로그인 관련 함수
-    **/
-    private void signInKakao(){
+    /****************************************
+     * @params : kakao 로그인 관련 함수
+     **/
+    private void signInKakao() {
         // @brief : 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
         if (LoginClient.getInstance().isKakaoTalkLoginAvailable(this))
             LoginClient.getInstance().loginWithKakaoTalk(this, callback);
@@ -126,44 +141,66 @@ public class SigninActivity extends AppCompatActivity{
      * @brief : 로그인 결과 수행에 관한 콜백메서드
      * @see : token이 전달되면 로그인 성공, token 전달 안되면 로그인 실패
      */
-    Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>(){
-        @Override
-        public Unit invoke(OAuthToken oAuthToken, Throwable throwable) {
-            if(oAuthToken != null){
-                Toast.makeText(SigninActivity.this, "카카오 로그인 성공", Toast.LENGTH_SHORT).show();
-                // @brief : 로그인 성공했으므로 메인엑티비티로 이동
-                goMainActivity(oAuthToken != null);
-            }
-            if(throwable != null){
-                Log.e("signInKakao()", throwable.getLocalizedMessage());
-                Toast.makeText(SigninActivity.this, "카카오 로그인 실패", Toast.LENGTH_SHORT).show();
-            }
-            updateKakaoLogin();
-            return null;
+    Function2<OAuthToken, Throwable, Unit> callback = (oAuthToken, throwable) -> {
+        if (oAuthToken != null) {
+            Toast.makeText(SigninActivity.this, "카카오 로그인 성공", Toast.LENGTH_SHORT).show();
         }
+        if (throwable != null) {
+            Log.e("signInKakao()", throwable.getLocalizedMessage());
+            Toast.makeText(SigninActivity.this, "카카오 로그인 실패", Toast.LENGTH_SHORT).show();
+        }
+        updateKakaoLogin();
+        return null;
     };
+
     // @brief : 로그인 여부를 확인 및 update UI
     private void updateKakaoLogin() {
-        UserApiClient.getInstance().me(new Function2<User, Throwable, Unit>() {
-            @Override
-            public Unit invoke(User user, Throwable throwable) {
-                if(user != null){
-                    // @brief : 로그인 성공
-                    Log.i("UserApiClient", user.toString());
-                    // @brief : 로그인한 유저의 email주소와 token 값 가져오기. pw는 제공 X
-                    email = user.getKakaoAccount().getEmail();
-                    token = String.valueOf(user.getId());
-                    pw = null;
-                }else {
-                    // @brief : 로그인 실패
+        UserApiClient.getInstance().me((user, throwable) -> {
+            if (user != null) {
+                // @brief : 로그인 성공
+                Log.i("UserApiClient", user.toString());
 
-                }
-                return null;
+                // @brief : 로그인 성공했으므로 메인엑티비티로 이동
+                goMainActivity();
+
+                // @brief : 로그인한 유저의 email주소와 token 값 가져오기. pw는 제공 X
+                email = user.getKakaoAccount().getEmail();
+                token = String.valueOf(user.getId());
+                pw = null;
+            } else {
+                // @brief : 로그인 실패
+
             }
+            return null;
         });
     }
 
-    /**
+    // @brief : 로그아웃
+    private void singOutKakao() {
+        UserApiClient.getInstance().logout((throwable) -> {
+            if (throwable != null) {
+                // @brief : 로그아웃 실패
+                Toast.makeText(this, "카카오 로그아웃을 실패했습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                // @brief : 로그아웃 성공
+                Toast.makeText(this, "카카오 로그아웃이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
+            }
+            return null;
+        });
+        // @brief : 카카오 연결 끊기
+        UserApiClient.getInstance().logout((throwable) -> {
+            if (throwable != null) {
+                // @brief : 연결 끊기 실패
+                Log.e("kakaoLogout", "연결 끊기 실패", throwable);
+            } else {
+                // @brief : 연결 끊기 성공
+                Log.e("kakaoLogout", "연결 끊기 성공. SDK에서 토큰 삭제");
+            }
+            return null;
+        });
+    }
+
+    /**********************************************
      * @params : google 로그인 관련 함수
      **/
     private void initGoogle() {
@@ -190,11 +227,12 @@ public class SigninActivity extends AppCompatActivity{
         if (requestCode == RC_SIGN_IN) {
             // @brief : 구글 로그인 결과
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            if(resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 try {
                     // @brief : 구글 로그인 성공 했다면 -> task의 정보를 가져옴
                     GoogleSignInAccount account = task.getResult(ApiException.class);
-                    Log.d("firebaseAuthWithGoogle", account.getId());
+                    Log.d("firebaseAuthWithGoogle", account.getIdToken());
+                    token = account.getIdToken();
                     firebaseAuthWithGoogle(account);
                 } catch (ApiException e) {
                     // @brief : 구글 로그인 실패 했다면
@@ -206,10 +244,12 @@ public class SigninActivity extends AppCompatActivity{
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         String acc_idToken = acct.getIdToken();
-        // @brief : 구글로부터 로그인된 사용자의 정보(Credentail)을 얻어옴
         AuthCredential credential = GoogleAuthProvider.getCredential(acc_idToken, null);
-        /* @brief : credentail를 사용하여 Firebase의 auth를 실행
-                    signIn ~ 로그인 시도*/
+        // @brief : credentail를 사용하여 Firebase의 auth를 실행하여 signIn ~ 로그인 시도
+        /**
+         * 사용자가 정상적으로 로그인한 후에 GoogleSignInAccount 개체에서 ID 토큰을 가져와서
+         * Firebase 사용자 인증 정보로 교환하고 Firebase 사용자 인증 정보를 사용해 Firebase에 인증.
+         */
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -217,7 +257,6 @@ public class SigninActivity extends AppCompatActivity{
                         Log.d("firebaseAuthWithGoogle", "signInWithCredential:success");
                         user = mAuth.getCurrentUser();
                         Toast.makeText(getApplicationContext(), "구글 로그인 성공", Toast.LENGTH_LONG).show();
-                        goMainActivity(user != null);
                     } else {
                         // @brief : 로그인 실패 시
                         Log.w("firebaseAuthWithGoogle", "signInWithCredential:failure", task.getException());
@@ -225,4 +264,15 @@ public class SigninActivity extends AppCompatActivity{
                     }
                 });
     }
+
+    private void updateGoogleLogin() {
+        if (mAuth != null)
+            goMainActivity();
+    }
+
+    // @brief : 로그아웃
+    private void singOutGoogle() {
+        mAuth.getInstance().signOut();
+    }
+
 }
