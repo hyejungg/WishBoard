@@ -3,11 +3,15 @@ package com.hyeeyoung.wishboard;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
+import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.sign.SigninActivity;
 
 import java.util.ArrayList;
@@ -66,13 +71,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
     private View view;
-    RecyclerView recyclerView;
+    RecyclerView recycler_view;
     ItemAdapter adapter;
-    private ArrayList<WishItem> wishList;
-    private GridLayoutManager gridLayoutManager;
+    private ArrayList<WishItem> wish_list;
+    private GridLayoutManager grid_layout_manager;
     private Intent intent;
-    private ImageButton cart;
-    private ImageButton more;
+    private ImageButton cart, more;
+    private Button[] buttons;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,27 +88,37 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void init() {
-        recyclerView = view.findViewById(R.id.recyclerview_wish_list);
-        wishList = new ArrayList<>();
-        adapter = new ItemAdapter(wishList);
-        recyclerView.setAdapter(adapter);
-        gridLayoutManager = new GridLayoutManager(this.getActivity(), 2);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        recycler_view = view.findViewById(R.id.recyclerview_wish_list);
+        wish_list = new ArrayList<>();
+        adapter = new ItemAdapter(wish_list);
+        recycler_view.setAdapter(adapter);
+        grid_layout_manager = new GridLayoutManager(this.getActivity(), 2);
+        recycler_view.setLayoutManager(grid_layout_manager);
         cart = view.findViewById(R.id.cart);
         more = view.findViewById(R.id.more);
+
+        // @param : 폴더리스트가 있는 가로 스크롤 뷰 내 버튼들
+        buttons = new Button[]{view.findViewById(R.id.all), view.findViewById(R.id.folder1), view.findViewById(R.id.folder2),
+                view.findViewById(R.id.folder3), view.findViewById(R.id.folder4), view.findViewById(R.id.folder5),
+                view.findViewById(R.id.folder6), view.findViewById(R.id.folder7), view.findViewById(R.id.folder8)};
+
+        // @brief : 리스너 등록
         cart.setOnClickListener(this);
         more.setOnClickListener(this);
+        for(int i = 0; i < buttons.length; i++){
+            buttons[i].setOnClickListener(this);
+        }
 
-        addItem(R.drawable.sample, "name1", "100000");
-        addItem(R.drawable.sample, "name2", "200000");
-        addItem(R.drawable.sample, "name3", "300000");
-        addItem(R.drawable.sample, "name4", "400000");
-        addItem(R.drawable.sample, "name5", "500000");
-        addItem(R.drawable.sample, "name6", "600000");
-        addItem(R.drawable.sample, "name7", "700000");
-        addItem(R.drawable.sample, "name8", "800000");
-        addItem(R.drawable.sample, "name9", "900000");
-        addItem(R.drawable.sample, "name10", "1000000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
+        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
         adapter.notifyDataSetChanged();
     }
 
@@ -113,11 +128,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         item.setItem_image(icon);
         item.setItem_name(mainText);
         item.setItem_price(subText);
-        wishList.add(item);
+        wish_list.add(item);
     }
 
+    /*
+    * @brief : 우측상단 장바구니버튼과 더보기 버튼을 클릭했을 때, 특정 폴더를 클릭할 때의 동작을 지정
+    **/
     @Override
     public void onClick(View v) {
+
+        int position = 0; // @param : 버튼 배열 내 인덱스로 사용, 선택된 폴더의 인덱스를 표시
+
+        // @brief : 초기 폴더명 버튼 텍스트 컬러를 그레이로 지정
+        for(int i = 0; i < buttons.length ; i++){
+            buttons[i].setTextColor(ContextCompat.getColor(HomeFragment.this.getContext(), R.color.darkGray));
+        }
         switch (v.getId()){
             case R.id.cart:
                 intent = new Intent(v.getContext(), CartActivity.class);
@@ -130,6 +155,36 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 intent = new Intent(v.getContext(), SigninActivity.class);
                 v.getContext().startActivity(intent);
                 break;
+
+            // @brief : 선택된 폴더명의 폰트 컬러 블랙으로 변경, 나머지 폰트 컬러는 그레이
+            case R.id.all:
+                position = 0;
+                break;
+            case R.id.folder1:
+                position = 1;
+                break;
+            case R.id.folder2:
+                position = 2;
+                break;
+            case R.id.folder3:
+                position = 3;
+                break;
+            case R.id.folder4:
+                position = 4;
+                break;
+            case R.id.folder5:
+                position = 5;
+                break;
+            case R.id.folder6:
+                position = 6;
+                break;
+            case R.id.folder7:
+                position = 7;
+                break;
+            case R.id.folder8:
+                position = 8;
+                break;
         }
+        buttons[position].setTextColor(ContextCompat.getColor(HomeFragment.this.getContext(), R.color.black));
     }
 }
