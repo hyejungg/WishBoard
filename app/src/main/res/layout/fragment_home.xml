@@ -71,6 +71,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <!--@brief : 디폴트 폴더는 all, all만 폰트컬러를 블랙으로 지정-->
             <Button
                 android:id="@+id/all"
                 android:layout_width="wrap_content"
@@ -83,7 +85,7 @@
                 android:textColor="@color/black"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
-                android:text="All"
+                android:text="모든항목"
                  />
 
             <Button
@@ -95,10 +97,10 @@
                 android:minHeight="0dp"
                 android:background="@android:color/transparent"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGray"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
-                android:text="옷"
+                android:text="의류"
                 />
 
             <Button
@@ -110,7 +112,7 @@
                 android:minHeight="0dp"
                 android:background="@android:color/transparent"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGray"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
                 android:text="가방"
@@ -125,7 +127,7 @@
                 android:minHeight="0dp"
                 android:background="@android:color/transparent"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGray"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
                 android:text="신발"
@@ -140,7 +142,7 @@
                 android:minHeight="0dp"
                 android:background="@android:color/transparent"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGray"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
                 android:text="주얼리"
@@ -155,7 +157,7 @@
                 android:minHeight="0dp"
                 android:background="@android:color/transparent"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGray"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
                 android:text="화장품"
@@ -170,7 +172,7 @@
                 android:minHeight="0dp"
                 android:background="@android:color/transparent"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGray"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
                 android:text="가구"
@@ -185,7 +187,7 @@
                 android:minHeight="0dp"
                 android:background="@android:color/transparent"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGray"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
                 android:text="전자제품"
@@ -200,10 +202,10 @@
                 android:minHeight="0dp"
                 android:background="@android:color/transparent"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGray"
                 android:textAllCaps="false"
                 android:fontFamily="@font/nanum_square_b"
-                android:text="empty"
+                android:text="빈 항목"
                 />
 
         </LinearLayout>
