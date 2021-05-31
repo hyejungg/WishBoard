@@ -71,6 +71,11 @@ public class SignupActivity extends AppCompatActivity {
                 // @TODO: 해야 할 일
                 // @breif : 서버 연결하여 DB에 저장
 
+                /**
+                 * @see : 서버와 연결 성공하면 token 값을 생성, 이 값과 함께 db에 저장
+                 *         이후 이 token 값은 로그인 화면에서 사용?
+                 */
+
                 // @brief : 회원가입 성공하여 로그인 화면으로 이동
                 if(isCheckId && isCheckPw) {
                     Toast.makeText(this, "회원가입에 성공하였습니다!", Toast.LENGTH_SHORT).show();
