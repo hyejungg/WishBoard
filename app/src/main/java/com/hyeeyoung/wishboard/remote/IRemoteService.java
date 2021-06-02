@@ -12,7 +12,7 @@ import retrofit2.http.Path;
 public interface IRemoteService {
 
     //@brief : 네트워크 설정
-    String BASE_URL = "http://13.125.227.20:3000";
+    String BASE_URL = ""; // @brief : IP 주소 적기
 
     /*@brief : 각 요청 URL
     String NEW_ITEM_URL = BASE_URL+"/item/";
