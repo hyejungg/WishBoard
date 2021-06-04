@@ -1,5 +1,5 @@
 var express = require('express')
-var db = require('../db2')
+var db = require('../db')
 var router = express.Router(); // @brief : express.Router() : router 객체를 생성
 
 // @brief '/' : 함수가 적용되는 경로(라우트)

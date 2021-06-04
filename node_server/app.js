@@ -9,7 +9,7 @@ app.listen(port, () => {
 })
 //var db = require('./db'); // @brief : db pool 사용하기
 
-var db = require('./db2'); // @brief : db pool 사용하기
+var db = require('./db'); // @brief : db pool 사용하기
 // @brief 2.라우트할 모듈
 var root_router = require('./routes/root');
 var item = require('./routes/item');
