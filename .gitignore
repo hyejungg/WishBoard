@@ -89,3 +89,8 @@ lint/tmp/
 app/src/main/res/drawable-*/
 app/src/main/res/font/
 app/src/main/res/mipmap*/
+
+# server
+node_server/node_modules/
+node_server/db_config.js
+node_server/package*.json
