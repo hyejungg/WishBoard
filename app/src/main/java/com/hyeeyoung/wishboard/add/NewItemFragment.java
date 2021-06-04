@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -127,7 +126,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         WishItem wish_item = new WishItem();
         wish_item.user_id = "1";
         wish_item.folder_id = "1";
-        wish_item.item_img = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/20210519_095452";
+        wish_item.item_image = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/20210519_095452";
         wish_item.item_name = "TSHIRT - BIG APPLE - IVORY";
         wish_item.item_price = "39900";
         wish_item.item_url = "https://www.29cm.co.kr/product/1040132";
@@ -172,6 +171,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
+                    // @brief : 정상적으로 통신 성공한 경우
                     String seq = null;
                     try {
                         seq = response.body().string();
@@ -182,18 +182,20 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
 
                     wish_item.user_id = new_item.user_id;
                     wish_item.folder_id = new_item.folder_id;
-                    wish_item.item_img = new_item.item_img;
+                    wish_item.item_image = new_item.item_image;
                     wish_item.item_url = new_item.item_url;
                     wish_item.item_name = new_item.item_name;
                     wish_item.item_price = new_item.item_price;
                     wish_item.item_url = new_item.item_url;
                     Log.e("아이템 등록", "성공");
                 } else {
+                    // @brief : 통신에 실패한 경우
                     Log.e("아이템 등록", "오류");
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
                 Log.e("아이템 등록", "서버 연결 실패");
             }
         });

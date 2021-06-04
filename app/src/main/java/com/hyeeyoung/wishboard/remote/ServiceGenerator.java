@@ -13,7 +13,6 @@ public interface ServiceGenerator {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(IRemoteService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-//                .client(httpClient.build())
                 .build();
         return retrofit.create(serviceClass);
     }
