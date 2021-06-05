@@ -41,6 +41,11 @@ exports.connect = function () {
   });
 };
 
+// @brief : db connection pool 반환
+exports.releaseConn = function () {
+  conn.release();
+};
+
 exports.get = function () {
   return pool;
 };
