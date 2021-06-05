@@ -1,13 +1,18 @@
-var express = require('express')
-var db = require('../db')
+var express = require('express');
+var db = require('../db');
 var router = express.Router(); // @brief : express.Router() : router 객체를 생성
 
+router.get('/', function(req, res, next) {
+  res.send('item!!');
+});
+
 // @brief '/' : 함수가 적용되는 경로(라우트)
-router.get('/new', (req, res) => res.send('item!'))
+router.get('/new', (req, res) => res.send('item!'));
 
 // food/info
 router.post('/new', function(req, res, next) {
     if(!req.body.item_image){
+//	return console.log("400 : 정보가 없습니다.")
         return res.status(400).send("정보가 없습니다");
     }
 
