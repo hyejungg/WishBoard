@@ -2,17 +2,24 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser'); // @brief bodyParse : 요청의 본문에 있는 데이터를 해석해서 req.body 객체로 만들어주는 미들웨어
+var path = require('path');
 var port = 3000;
 
-app.listen(port, () => {
+app.listen(port, () => 
   console.log(`Example app listening at http://localhost:${port}`)
-})
+});
 //var db = require('./db'); // @brief : db pool 사용하기
 
 var db = require('./db'); // @brief : db pool 사용하기
 // @brief 2.라우트할 모듈
 var root_router = require('./routes/root');
 var item = require('./routes/item');
+var user = require('./routes/user');
+var noti = require('./routes/noti');
+
+app.set('port', process.env.PORT || 3000);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -23,6 +30,9 @@ app.use(bodyParser.urlencoded({extended: false}));
  */
 app.use('/', root_router); 
 app.use('/item', item); //@ brief /new_item : 안드로이드에서 작성한 경로
+app.use('/user',user);
+app.use('/noti',noti);
+app.use(express.static(path.join(__dirname, 'public')));
 
 //@brief 4.데이터베이스 연결
 db.connect(function(err){
