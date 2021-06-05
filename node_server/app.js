@@ -7,7 +7,7 @@ var port = 3000;
 
 app.listen(port, () => 
   console.log(`Example app listening at http://localhost:${port}`)
-});
+);
 //var db = require('./db'); // @brief : db pool 사용하기
 
 var db = require('./db'); // @brief : db pool 사용하기
@@ -61,3 +61,4 @@ app.use(function(err, req, res, next) {
   });
   
 module.exports = app;
+
