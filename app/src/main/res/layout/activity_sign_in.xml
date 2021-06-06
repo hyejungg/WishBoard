@@ -107,7 +107,8 @@
                     android:background="@android:color/transparent"
                     android:textSize="15dp"
                     android:layout_marginLeft="10dp"
-                    android:hint="8자리 이상의 영문자, 숫자, 특수 문자 조합" />
+                    android:hint="8자리 이상의 영문자, 숫자, 특수 문자 조합"
+                    android:inputType="textPassword"/>
 
             </LinearLayout>
 

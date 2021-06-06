@@ -21,14 +21,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.hyeeyoung.wishboard.MainActivity;
 import com.hyeeyoung.wishboard.R;
+import com.hyeeyoung.wishboard.model.UserItem;
+import com.hyeeyoung.wishboard.remote.IRemoteService;
+import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.kakao.sdk.auth.LoginClient;
 import com.kakao.sdk.auth.model.OAuthToken;
-import com.kakao.sdk.common.KakaoSdk;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SigninActivity extends AppCompatActivity {
     private Intent intent;
@@ -37,6 +43,7 @@ public class SigninActivity extends AppCompatActivity {
     private String email;
     private String pw;
     private String token;
+    private UserItem user_item = new UserItem();
 
     private EditText edit_email;
     private EditText edit_pw;
@@ -47,8 +54,6 @@ public class SigninActivity extends AppCompatActivity {
     private int RC_SIGN_IN = 1001; // @ brief : 성공코드 ...임의로 설정함
     private FirebaseUser user;
 
-    // @params : kakao 로그인 관련 변수
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +61,6 @@ public class SigninActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         init();
-
-//        /**
-//         * @see : onCreate()될 때마다 updateKakaoLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
-//         *        자동으로 로그인 정보를 가져옴
-//         * */
-//        updateKakaoLogin();
 
         // @TODO : goMainActivity() 수정 필요
         //goMainActivity(user != null);
@@ -75,13 +74,13 @@ public class SigninActivity extends AppCompatActivity {
          * @see : onStart()될 때마다 updateKakaoLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
          *        자동으로 로그인 정보를 가져옴
          * */
-        updateKakaoLogin();
+//        updateKakaoLogin();
         /**
          * @see : onStart()될 때마다 updateGoogleLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
          *        자동으로 로그인 정보를 가져옴
          * */
         mAuth = FirebaseAuth.getInstance();
-        updateGoogleLogin();
+//        updateGoogleLogin();
     }
 
     public void onClick(View view) {
@@ -92,7 +91,7 @@ public class SigninActivity extends AppCompatActivity {
 
                 // @TODO: 해야 할 일
                 //  @brief : 서버와 연결하여 로그인 처리
-
+                signInWish(email, pw);
 
                 break;
             case R.id.kakao:
@@ -120,10 +119,50 @@ public class SigninActivity extends AppCompatActivity {
     /**
      * @params : 메인액티비티로 넘기기 위한 함수
      **/
-    private void goMainActivity() {
+    private void goMainActivity(boolean isLogin) {
         // @brief : 로그인 성공 시 MainActivity로 이동
-        Intent goMain = new Intent(this, MainActivity.class);
-        startActivity(goMain);
+        if(isLogin){
+            Intent goMain = new Intent(this, MainActivity.class);
+            Toast.makeText(this, "로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
+            startActivity(goMain);
+        }
+
+    }
+    /****************************************
+     * @params : wishboard 로그인 관련 함수
+     **/
+    private void signInWish(String email, String pw){
+        user_item.setEmail(email);
+        user_item.setPassword(pw);
+
+        IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
+        Call<ResponseBody> call = remote_service.signInUser(user_item);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    // @brief : 정상적으로 통신 성공한 경우
+                    String seq = null;
+                    try{
+                        seq = response.body().string();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    Log.i("Wish 로그인", "성공");
+                    goMainActivity(true);
+                }else{
+                    // @brief : 통신에 실패한 경우
+                    Log.e("Wish 로그인", "오류");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통신 실패 시 callback
+                Log.e("Wish 로그인", "서버 연결 실패");
+                t.fillInStackTrace();
+            }
+        });
     }
 
     /****************************************
@@ -143,11 +182,11 @@ public class SigninActivity extends AppCompatActivity {
      */
     Function2<OAuthToken, Throwable, Unit> callback = (oAuthToken, throwable) -> {
         if (oAuthToken != null) {
-            Toast.makeText(SigninActivity.this, "카카오 로그인 성공", Toast.LENGTH_SHORT).show();
+            Log.i("카카오 로그인", "성공");
         }
         if (throwable != null) {
+            Log.i("카카오 로그인", "실패");
             Log.e("signInKakao()", throwable.getLocalizedMessage());
-            Toast.makeText(SigninActivity.this, "카카오 로그인 실패", Toast.LENGTH_SHORT).show();
         }
         updateKakaoLogin();
         return null;
@@ -160,13 +199,13 @@ public class SigninActivity extends AppCompatActivity {
                 // @brief : 로그인 성공
                 Log.i("UserApiClient", user.toString());
 
-                // @brief : 로그인 성공했으므로 메인엑티비티로 이동
-                goMainActivity();
-
                 // @brief : 로그인한 유저의 email주소와 token 값 가져오기. pw는 제공 X
                 email = user.getKakaoAccount().getEmail();
                 token = String.valueOf(user.getId());
                 pw = null;
+
+                // @brief : 로그인 성공했으므로 메인엑티비티로 이동
+                goMainActivity(user != null);
             } else {
                 // @brief : 로그인 실패
 
@@ -266,8 +305,7 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     private void updateGoogleLogin() {
-        if (mAuth != null)
-            goMainActivity();
+        goMainActivity(mAuth != null);
     }
 
     // @brief : 로그아웃
