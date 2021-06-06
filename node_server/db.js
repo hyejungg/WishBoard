@@ -13,6 +13,7 @@ var config = require("./db_config");
 
 // @brief : mysql connection pool 생성
 const pool = mysql.createPool(config);
+var conn;
 
 // @brief : 호스트 및 pool 연결 확인을 위한 console
 console.log(config.host);
@@ -36,7 +37,7 @@ exports.connect = function () {
     }
     if (connection) {
       console.log("DB connection Pool Success!");
-      return connection.release();
+      conn = connection;
     }
   });
 };
