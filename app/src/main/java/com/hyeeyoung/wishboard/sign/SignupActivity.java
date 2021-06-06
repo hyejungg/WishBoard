@@ -15,15 +15,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyeeyoung.wishboard.R;
+import com.hyeeyoung.wishboard.model.UserItem;
+import com.hyeeyoung.wishboard.remote.IRemoteService;
+import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
 
     private String email; // @params : DB에 들어갈 사용자 email
     private String pw; // @params : DB에 들어갈 사용자 pw
     private String pw_re;  //@deprecated : DB에 안넣고 이 안에서 유효성 검사 시 필요
+    private boolean option_noti = true; // @parmas : DB에 들어갈 사용자 option_noti //기본값 true
+    private UserItem user_item;
+
     private boolean isCheckPw = false;
     private boolean isCheckId = false;
 
@@ -34,7 +45,6 @@ public class SignupActivity extends AppCompatActivity {
 
     private Intent intent;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +54,8 @@ public class SignupActivity extends AppCompatActivity {
 
         edit_email.setOnFocusChangeListener((view, b) -> {
             email = edit_email.getText().toString();
+            // @deprecated : test 용
+//            email = "hyee1@sungshin.ac.kr";
             isValidId();
         });
     }
@@ -70,7 +82,7 @@ public class SignupActivity extends AppCompatActivity {
 
                 // @TODO: 해야 할 일
                 // @breif : 서버 연결하여 DB에 저장
-
+                save(email, pw_re);
                 /**
                  * @see : 서버와 연결 성공하면 token 값을 생성, 이 값과 함께 db에 저장
                  *         이후 이 token 값은 로그인 화면에서 사용?
@@ -90,7 +102,7 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
     /**
-     *@brief : 아이디 유효성 검사
+     *@prams : 아이디 유효성 검사 함수
      * */
     private void isValidId() {
         Pattern EMAIL_PATTENRN = Patterns.EMAIL_ADDRESS;
@@ -103,11 +115,14 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
     /**
-     *@brief : 비밀번호 유효성 검사
+     *@prams : 비밀번호 유효성 검사 함수
      * */
     private void isValidPassWd(){
         pw = edit_pw.getText().toString();
         pw_re = edit_pw_re.getText().toString();
+        // @deprecated : test 용
+//        pw = "abcde2021!";
+//        pw_re = "abcde2021!";
 
         // @brief :
         Pattern PASSWORD_PATTENRN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&]).{8}.$");
@@ -138,5 +153,37 @@ public class SignupActivity extends AppCompatActivity {
             edit_pw_re.setText("");
         }
 
+    }
+    /**
+     * @prams : Retrofit을 이용하여 서버에 데이터 값 저장하는 함수
+     * */
+    private void save(String email, String pw_re){
+        user_item = new UserItem(null, email, pw_re, true, ""); //option_noti는 초기값 true
+
+        // @brief : Retrofit
+        IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
+        Call<ResponseBody> call = remote_service.signUpUser(user_item);
+        call.enqueue(new Callback<ResponseBody>(){
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    String seq = null;
+                    try{
+                        seq = response.body().string();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    Log.i("회원정보 등록", seq);
+                }else{
+                    Log.e("회원정보 등록", "Retrofit 통신 실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e("회원정보 등록", "서버 연결 실패");
+            }
+        });
     }
 }
