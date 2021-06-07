@@ -48,27 +48,31 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp">
 
-                <TextView
+                <EditText
                     android:id="@+id/item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/item_name"
+                    android:inputType="number"
+                    android:hint="가격을 입력해주세요."
+                    android:background="@null"
+                    android:textAlignment="center"
                     android:fontFamily="@font/nanum_square_eb"
-                    android:text=""
+                    android:textColorHint="@color/mediumGray"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/won"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/item_price"
-                    android:layout_marginLeft="2dp"
-                    android:layout_toRightOf="@id/item_price"
-                    android:fontFamily="@font/nanum_square_b"
-                    android:text="원"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
+<!--                <TextView-->
+<!--                    android:id="@+id/won"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignTop="@id/item_price"-->
+<!--                    android:layout_marginLeft="2dp"-->
+<!--                    android:layout_toRightOf="@id/item_price"-->
+<!--                    android:fontFamily="@font/nanum_square_b"-->
+<!--                    android:text="원"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="15dp" />-->
             </LinearLayout>
 
             <LinearLayout

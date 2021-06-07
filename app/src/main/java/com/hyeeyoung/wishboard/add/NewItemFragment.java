@@ -5,8 +5,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -25,26 +29,18 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.hyeeyoung.wishboard.R;
+
 import com.hyeeyoung.wishboard.config.WindowPermission;
 import com.hyeeyoung.wishboard.folder.FolderListActivity;
+
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.AwsS3Service;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -64,6 +60,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "NewItemFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -108,14 +105,16 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
     private ImageView item_image;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
-    private String time_stamp;
-    WishItem wish_item; //@brief : 서버연동 시 사용, 추가
+    private String time_stamp, image_path;
+    private WishItem wish_item; //@brief : 서버연동 시 사용, 추가
 
     // @ brief : 카메라, 갤러리 접근
+    private File file;
     private Uri img_uri, photo_uri, album_uri;
     private String current_photo_path;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,7 +128,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         item_name = (EditText) view.findViewById(R.id.item_name);
         item_price = (EditText) view.findViewById(R.id.item_price);
         item_url = (EditText) view.findViewById(R.id.item_url);
-        item_memo = (EditText) view.findViewById(R.id.item_url);
+        item_memo = (EditText) view.findViewById(R.id.item_memo);
         item_image = (ImageView) view.findViewById(R.id.item_image);
         item_image_layout.setOnClickListener(this);
         btn_folder.setOnClickListener(this);
@@ -145,7 +144,6 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
 //                Manifest.permission.SYSTEM_ALERT_WINDOW
         );
 
-        //wish_item = getWishItem(); //@brief : 서버연동 시 사용, 추가
         return view;
     }
 
@@ -155,49 +153,74 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
      */
     private WishItem getWishItem() {
         WishItem wish_item = new WishItem();
-        wish_item.user_id = "1";
+
+        wish_item.user_id = "1"; // @TODO : 회원정보와 연동필요
         wish_item.folder_id = "1";
-        wish_item.item_image = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/20210519_095452";
-        wish_item.item_name = "TSHIRT - BIG APPLE - IVORY";
-        wish_item.item_price = "39900";
-        wish_item.item_url = "https://www.29cm.co.kr/product/1040132";
-        wish_item.item_memo = "none";
-        /*
-        * @brief : 추후 사용예정
+        wish_item.item_image = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/20210519_095452";  // @TODO : S3 연동 필요
+
+        // @brief : 사용자가 입력한 아이템데이터 가져오기
         wish_item.item_name = item_name.getText().toString();
-        wish_item.item_price = item_price.getText().toString();
-        wish_item.item_url = item_url.getText().toString().replace(" ", "");
-        wish_item.item_memo = item_memo.getText().toString();
-        */
+        String get_item_price = item_price.getText().toString();
+        String get_item_url = item_url.getText().toString().replace(" ", ""); //@ @brief : 링크로 이동 시 공백에 의한 예외를 방지하기위해 공백 처리
+        String get_item_memo = item_memo.getText().toString();
+
+        // @brief : 추후 사용예정
+        // wish_item.item_image = image_path;
+
+        /**
+         * @brief : 아이템 가격, url, 메모에 대한 null값 예외처리
+         */
+
+        // @brief : 가격데이터 예외처리
+        if(get_item_price.isEmpty()){
+            wish_item.setItem_price(null);
+        } else{
+            wish_item.setItem_price(get_item_price);
+        }
+
+        // @brief : url데이터 예외처리
+        if(get_item_url.isEmpty()){
+            wish_item.setItem_url(null);
+        } else{
+            wish_item.setItem_url(get_item_url);
+        }
+
+        // @brief : 메모데이터 예외처리
+        if(get_item_memo.isEmpty()){
+            wish_item.item_memo = null;
+        } else{
+            wish_item.item_memo = get_item_memo;
+        }
         return wish_item;
     }
 
     /**
-     * @brief : 추후 사용예정, 사용자가 아이템 이름을 입력했는지를 확인
-     * @param : newItem 사용자가 새로 입력한 정보 객체
+     * @brief :사용자가 상품명을 입력했는지를 확인
+     * @param : wish_item 사용자가 새로 입력한 아이템 객체
      * @return : 입력하지 않았다면 true, 입력했다면 false
      */
-//    private boolean isNoName(WishItem new_item) {
-//        if ()) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+    private boolean isNoName(WishItem wish_item) {
+        if (wish_item.item_name.trim().isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     /**
-     * @brief : 사용자가 입력한 정보를 저장한다.
+     * @brief : 사용자가 입력한 정보를 저장
      */
     private void save() {
-        final WishItem new_item = getWishItem();
+        wish_item = getWishItem();
+        //wish_item = new WishItem("1","1", "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/20210519_095452",  "TSHIRT - BIG APPLE - IVORY", "39900", "https://www.29cm.co.kr/product/1040132", "none");
 
-        // @brief : 추후 사용예정, 아이템 이름을 입력하지 않은 경우
-//        if (!isNoName(newItem)) {
-//            Toast.makeText(getContext(), "아이템 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        // @brief : 아이템 이름을 입력하지 않은 경우
+        if (isNoName(wish_item)) {
+            Toast.makeText(getContext(), "아이템 이름을 입력해주세요.", Toast.LENGTH_SHORT).show(); // @brief : 아이템 정보 입력을 요구
+            return;
+        }
 
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
-        Call<ResponseBody> call = remote_service.insertItemInfo(new_item);
+        Call<ResponseBody> call = remote_service.insertItemInfo(wish_item);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -209,19 +232,18 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.e("Response 리턴값", seq);
+                    Log.e("아이템 등록", seq);
 
-                    wish_item.user_id = new_item.user_id;
-                    wish_item.folder_id = new_item.folder_id;
-                    wish_item.item_image = new_item.item_image;
-                    wish_item.item_url = new_item.item_url;
-                    wish_item.item_name = new_item.item_name;
-                    wish_item.item_price = new_item.item_price;
-                    wish_item.item_url = new_item.item_url;
-                    Log.e("아이템 등록", "성공");
+                    // @brief : 디스플레이된 데이터 리셋
+                    item_image.setImageResource(0);
+                    item_name.setText("");
+                    item_price.setText("");
+                    item_url.setText("");
+                    item_memo.setText("");
+
                 } else {
                     // @brief : 통신에 실패한 경우
-                    Log.e("아이템 등록", "오류");
+                    Log.e("아이템 등록", "Retrofit 통신 실패");
                 }
             }
             @Override
@@ -245,7 +267,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                  */
                 aws_s3.uploadFile(new File("sdcard/Download/sample.jpg"), time_stamp);
 
-                // 여기서 부터 테스트 코드
+                // @brief : 다이얼로그 디스플레이
                 makeDialog();
             break;
 
@@ -259,23 +281,22 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
 
             case R.id.save :
                 save();
-                //new JSONTask().execute("http://13.125.227.20:3000/new_item/add");// @brief : AsyncTask 시작
                 break;
         }
     }
     // @see : http://dailyddubby.blogspot.com/2018/04/107-tedpermission.html
     // @brief : 앨범 선택 클릭
     public void selectAlbum(){
-        //앨범 열기
+        // @brief : 앨범 열기
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.setType("image/*");
         startActivityForResult(intent, FROM_ALBUM);
     }
 
-    //사진 찍기 클릭
+    // @brief : 사진 찍기 클릭
     public void takePhoto(){
-        // 촬영 후 이미지 가져옴
+        // @brief : 촬영 후 이미지 가져옴
         String state = Environment.getExternalStorageState();
         if(Environment.MEDIA_MOUNTED.equals(state)){
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -334,6 +355,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         alert.show();
     }
 
+    // @TODO : 카메라와 갤러리에서 가져온 이미지 패스를 처리한 후 S3로 업로드 및 DB에 이미지 경로 저장
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -343,16 +365,46 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
 
         switch (requestCode){
             case FROM_ALBUM : {
-                //앨범에서 가져오기
+                // @brief : 앨범에서 가져오기
                 if(data.getData()!=null){
                     try{
                         File albumFile = null;
                         albumFile = createImageFile();
                         photo_uri = data.getData();
                         album_uri = Uri.fromFile(albumFile);
-                        galleryAddPic();
+                        //galleryAddPic();
+//
+//                        if (Build.VERSION.SDK_INT < 11) {
+//                            image_path = RealPathUtil.getRealPathFromURI_BelowAPI11(NewItemFragment.this.getContext(), photo_uri);
+//                            Log.d(TAG, Build.VERSION.SDK_INT + "");
+//                        } else if (Build.VERSION.SDK_INT < 19) {
+//                            Log.d(TAG, Build.VERSION.SDK_INT + "");
+//                            image_path = RealPathUtil.getRealPathFromURI_API11to18(NewItemFragment.this.getContext(), photo_uri);
+//                        } else {
+//                            Log.d(TAG, Build.VERSION.SDK_INT + "");
+//                            image_path = RealPathUtil.getRealPathFromURI_API19(NewItemFragment.this.getContext(), photo_uri);
+//                        }
+//                        Log.d(TAG, image_path);
+///**
+// * @param upload File : 이미지 파일 업로드
+// * @brief "sdcard/Download/sample.jpg" : 업로드 테스트를 위한 임시 파일 경로 지정, 에뮬레이터로 이미지 파일 드래그(파일 복사) 후 테스트 가능
+// */
+//
+//                        time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()); // @param time_stamp : 파일명 중복 방지를 위해 파일명으로 타임스탬프를 지정
+//                        aws_s3 = new AwsS3Service(getActivity().getApplicationContext()); // @param aws_s3 : @ s3 객체 생성
+//                        Bitmap bm;
+//                        try {
+//                            bm = getResizedBitmap(decodeUri(photo_uri), getResources().getDimensionPixelSize(R.dimen.idcard_pic_height), getResources().getDimensionPixelSize(R.dimen.idcard_pic_width));
+//                            item_image.setImageBitmap(bm);
+//                            file = new File(image_path);
+//                            aws_s3.uploadFile(new File(file.getName()), time_stamp);
+//                            break;
+//
+//                        } catch (FileNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
 
-                        //이미지뷰에 이미지 셋팅
+                        // @brief : 이미지뷰에 이미지 디스플레이
                         item_image.setImageURI(photo_uri);
                         //cropImage();
                     }catch (Exception e){
@@ -364,7 +416,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
             }
 
             case FROM_CAMERA : {
-                //촬영
+                // @brief : 촬영
                 try{
                     Log.v("알림", "FROM_CAMERA 처리");
                     galleryAddPic();
@@ -379,8 +431,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    // brief : 카메라로 촬영한 이미지 생성하기
-
+    // @brief : 카메라로 촬영한 이미지 생성하기
     public File createImageFile() throws IOException{
         String imgFileName = System.currentTimeMillis() + ".jpg";
         File imageFile= null;
@@ -399,7 +450,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
 
     }
 
-    // @ㅠbrief : 촬영한 이미지 저장하기
+    // @brief : 촬영한 이미지 저장하기
     public void galleryAddPic(){
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(current_photo_path);
@@ -409,89 +460,45 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         Toast.makeText(getContext(),"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
     }
 
-    // @deprecated JSONTask 삭제 예정
-    public class JSONTask extends AsyncTask<String, String, String> {
 
-        @Override
-        protected String doInBackground(String... urls) {
-            try {
-                //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("user_id", "1");
-                jsonObject.accumulate("folder_id", "1");
-                jsonObject.accumulate("item_image", "none");
-                jsonObject.accumulate("item_name", "TERRY SHORTS (3COLORS)");
-                jsonObject.accumulate("item_price", "89,000");
-                jsonObject.accumulate("item_url", "https://store.musinsa.com/app/goods/1916401");
-                jsonObject.accumulate("item_memo", "youngjin");
-
-                HttpURLConnection con = null;
-                BufferedReader reader = null;
-
-                try{
-                    //URL url = new URL("http://13.125.227.20:3000/new_item/add");
-                    URL url = new URL(urls[0]);
-                    //연결
-                    con = (HttpURLConnection) url.openConnection();
-
-                    con.setRequestMethod("POST");//POST방식으로 보냄
-                    con.setRequestProperty("Cache-Control", "no-cache");//캐시 설정
-                    con.setRequestProperty("Content-Type", "application/json");//application JSON 형식으로 전송
-                    con.setRequestProperty("Accept", "text/html");//서버에 response 데이터를 html로 받음
-                    con.setDoOutput(true);//Outstream으로 post 데이터를 넘겨주겠다는 의미
-                    con.setDoInput(true);//Inputstream으로 서버로부터 응답을 받겠다는 의미
-                    con.connect();
-                    //서버로 보내기위해 스트림 만듦
-                    OutputStream outStream = con.getOutputStream();
-                    //버퍼를 생성하고 넣음
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
-                    writer.write(jsonObject.toString());
-                    writer.flush();
-                    writer.close();//버퍼 받아줌
-
-                    //서버로 부터 데이터 받음
-                    InputStream stream = con.getInputStream();
-
-                    reader = new BufferedReader(new InputStreamReader(stream));
-
-                    StringBuffer buffer = new StringBuffer();
-
-                    String line = "";
-                    while((line = reader.readLine()) != null){
-                        buffer.append(line);
-                    }
-
-                    return buffer.toString(); // 서버로 부터 받은 값을 반환
-
-                } catch (MalformedURLException e){
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if(con != null){
-                        con.disconnect();
-                    }
-                    try {
-                        if(reader != null){
-                            reader.close();//버퍼를 닫아줌
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
+    //@ TODO : 비트맵 이미지 크기 변환
+    /*
+    public Bitmap getResizedBitmap(Bitmap image, int newHeight, int newWidth) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        if (Build.VERSION.SDK_INT <= 19) {
+            //matrix.postRotate(90);
         }
-
-        //서버로 부터 받은 값을 출력
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            Log.i("NewItemFragment.java", result);
-            //view.setText(result)
-        }
+        Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
     }
+
+    private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(
+                NewItemFragment.this.getContext().getContentResolver().openInputStream(selectedImage), null, o);
+
+        final int REQUIRED_SIZE = 100;
+
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
+                break;
+            }
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(
+                NewItemFragment.this.getContext().getContentResolver().openInputStream(selectedImage), null, o2);
+    }*/
 }
