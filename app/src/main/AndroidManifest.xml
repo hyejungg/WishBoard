@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- @brief : 인터넷 접속 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- @brief : 저장소 접근 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!--카메라 권한-->
+    <uses-feature android:name="android.hardware.camera" android:required="true"/> <!--카메라 기능 사용-->
 
     <application
         android:name=".sign.KakaoApplication"
@@ -61,5 +63,15 @@
             </intent-filter>
         </activity>
 
+    <!-- @brief: 이미지의 캐시가 저장될 수 있는 경로를 지정 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.hyeeyoung.wishboard"
+            android:exported="false"
+            android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/filepaths" />
+    </provider>
     </application>
 </manifest>
