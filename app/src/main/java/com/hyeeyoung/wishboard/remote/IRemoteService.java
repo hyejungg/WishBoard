@@ -1,5 +1,6 @@
 package com.hyeeyoung.wishboard.remote;
 
+import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.model.WishItem;
 
 import okhttp3.ResponseBody;
@@ -27,8 +28,14 @@ public interface IRemoteService {
     @brief : POST 방식, BASE_URL/item 호출
      */
 
-    @POST("/item/new")
+    @POST("/item/")
     Call<ResponseBody> insertItemInfo(@Body WishItem wish_item);
+
+    // @brief : 회원 정보 관련 요청
+    @POST("/user/signup")
+    Call<ResponseBody> signUpUser(@Body UserItem user_item);
+    @POST("/user/signin")
+    Call<ResponseBody> signInUser(@Body UserItem user_item);
 
     /*
     @brief @GET( EndPoint-자원위치(URI) )  ET 방식, BASE_URL/home/{user_id} 호출
