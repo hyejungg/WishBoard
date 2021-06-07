@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
@@ -17,6 +18,9 @@ import android.widget.Toast;
 
 import com.hyeeyoung.wishboard.adapter.SpinnerAdapter;
 import com.hyeeyoung.wishboard.R;
+import com.hyeeyoung.wishboard.model.WishItem;
+import com.hyeeyoung.wishboard.remote.IRemoteService;
+import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Connection;
@@ -33,6 +37,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LinkSharingActivity extends AppCompatActivity {
 
     // @param : 알림 날짜 넘버피커 변수
@@ -44,14 +53,15 @@ public class LinkSharingActivity extends AppCompatActivity {
     ArrayList<String> noti_types_array;
     Spinner noti_type_spinner;
     SpinnerAdapter spinner_adapter;
-    TextView item_name, item_price;
+
+    // @param : 아이템정보가 디스플레이될 뷰를 가리키는 변수
+    TextView item_name;
+    EditText item_price;
+    EditText item_memo;
     ImageView item_image;
-
-    // @param : 가져온 데이터를 화면에 보여주기 위해 변수 선언
-    TextView won;
-
-    // @param : 가져온 데이터 보관
-    String site_url = "";
+    WishItem wish_item;
+    //TextView won;
+    String site_url = ""; // @param : 가져온 데이터 보관
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +94,6 @@ public class LinkSharingActivity extends AppCompatActivity {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             // @breif : 전송데이터 타입이 텍스트인 경우
             if ("text/plain".equals(type)) {
-//                handleSendText(intent);
                 site_url = intent.getStringExtra(Intent.EXTRA_TEXT); // @params : site url은 String에 보관. DB 저장용
                 Log.i("LinkTest", "handleSendText: " + site_url);
                 new JsoupAsyncTask(site_url).execute();
@@ -108,7 +117,10 @@ public class LinkSharingActivity extends AppCompatActivity {
         item_name = findViewById(R.id.item_name);
         item_image = findViewById(R.id.item_image);
         item_price = findViewById(R.id.item_price);
-        won = findViewById(R.id.won);
+        item_memo = findViewById(R.id.item_memo);
+        //won = findViewById(R.id.won);
+
+        wish_item = new WishItem();
     }
 
     // @FIXME : 알림 날짜 초기화 함수로 실행 시 앱 중단
@@ -171,14 +183,74 @@ public class LinkSharingActivity extends AppCompatActivity {
         return dates.toArray(new String[dates.size() - 1]);
     }
 
-//    // @param : 전송 중인 단일 텍스트 처리
-//    void handleSendText(Intent intent) {
-//
-//    }
+    private WishItem getWishItem() {
+        wish_item.user_id = "1"; // @todo : 회원정보와 연동 필요
+        wish_item.folder_id = "1";
+
+        String get_item_price = item_price.getText().toString();
+        String get_item_memo = item_memo.getText().toString();
+
+        /**
+         * @brief : 아이템 정보에 대한 null값 예외처리
+         * @TODO : 아이템 이미지, 상품명에 대한 예외처리도 추가
+         */
+
+        // @brief : 가격데이터 예외처리
+        if(get_item_price == null){ // @ brief : 공유페이지에서 가져온 가격데이터 또는 사용자의 입력 값이 없는 경우 null로 초기화
+            wish_item.setItem_price(null);
+        } else{ // @ brief : 사용자의 입력 값이 있는 경우
+            wish_item.setItem_price(get_item_price); // @ brief : 입력값으로 초기화
+        }
+
+        // @brief : 메모데이터 예외처리
+        if(get_item_memo == null){ // @ brief : 사용자가 메모를 입력하지 않은 경우
+            wish_item.setItem_memo(null);
+        } else{ // @ brief : 사용자가 메모를 입력한 경우
+            wish_item.setItem_memo(get_item_memo);
+        }
+
+        return wish_item;
+    }
+
+    /**
+     * @brief : 사용자가 입력한 정보를 저장한다.
+     */
+    private void save() {
+        wish_item = getWishItem(); // @brief : 생성된 아이템 객체 가져오기
+
+        IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
+        Call<ResponseBody> call = remote_service.insertItemInfo(wish_item);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // @brief : 정상적으로 통신 성공한 경우
+                    String seq = null;
+                    try {
+                        seq = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("아이템 간편 등록", seq);
+
+                } else {
+                    // @brief : 통신에 실패한 경우
+                    Log.e("아이템 간편 등록", "Retrofit 통신 실패");
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e("아이템 간편 등록", "서버 연결 실패");
+            }
+        });
+    }
+
 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add: // @brief : "위시리스트에 추가하기" 버튼
+                save(); // @brief : DB에 아이템 정보 저장
                 Toast.makeText(this, "위시리스트에 추가되었습니다", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
@@ -188,12 +260,11 @@ public class LinkSharingActivity extends AppCompatActivity {
         }
     }
 
+    // @brief : 오픈그래프 메타태그 파싱을 통해 아이템 정보 가져오기
     @SuppressLint("StaticFieldLeak")
     public class JsoupAsyncTask extends AsyncTask {
-
         String this_url;
-        // @brief : 타이틀 메타태그 내 content 속성값을 상품명으로 사용
-        String get_title, get_image, get_price;
+        String get_title, get_image, get_price; // @brief : 메타태그 내에서 가져올 content 속성값
 
         JsoupAsyncTask(String get_url) {
             // @brief : 인텐트로 받아온 url
@@ -204,6 +275,7 @@ public class LinkSharingActivity extends AppCompatActivity {
         protected Object doInBackground(Object[] objects) {
             try {
                 Connection con = Jsoup.connect(this_url);
+                wish_item.item_url = this_url;
                 Document doc = con.get();
 
                 // @brief : HTML의 head부분에 있는 오픈그래프 메타태그 가져오기
@@ -261,11 +333,17 @@ public class LinkSharingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) { // @brief : doInBackground 작업 후 작업
             super.onPostExecute(o);
+
+            // @brief : 텍스트 뷰에 가져온 아이템 정보로 디스플레이
             item_name.setText(get_title);
             item_price.setText(get_price);
-            // @brief : 피카소로 사진 로딩 속도 개선
-            try {
-                Picasso.get().load(get_image).into(item_image);
+
+            // @brief : 아이템 객체의 상품명 초기화
+            wish_item.setItem_name(get_title);
+
+            try { // @brief : 피카소로 이미지 로딩 속도 개선
+                Picasso.get().load(get_image).into(item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
+                wish_item.setItem_image(get_image); // @brief : 아이템 객체의 이미지 초기화
             } catch (IllegalArgumentException i) {
                 Log.d("checkings", "사진이 없음");
             }
