@@ -3,14 +3,12 @@ package com.hyeeyoung.wishboard;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
-import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.sign.SigninActivity;
 
 import java.util.ArrayList;
@@ -125,7 +122,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     // @deprecated
     private void addItem(int icon, String mainText, String subText) {
         WishItem item = new WishItem();
-        item.setItem_image(icon);
+        //item.setItem_img(icon);
         item.setItem_name(mainText);
         item.setItem_price(subText);
         wish_list.add(item);

@@ -56,7 +56,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, final int position) {
         WishItem item = wishList.get(position);
         // viewholder.item_image.setImageDrawable(item.getItem_image()); @ deprecated : 안드로이드 기본 아이콘 대신 실제 상품 이미지로 테스트 할 경우 주석 제거 후 사용
-        viewholder.item_image.setImageResource(item.getItem_image());
+        //viewholder.item_image.setImageResource(item.getItem_image());
         viewholder.item_name.setText(item.getItem_name());
         viewholder.item_price.setText(item.getItem_price());
         viewholder.cart.setImageResource(R.drawable.cart_black);
