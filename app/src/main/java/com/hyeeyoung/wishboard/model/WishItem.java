@@ -24,24 +24,24 @@ public class WishItem {
         this.item_memo = item_memo;
     }
 
-    /* @deprecated : Drawable 타입의 이미지로 테스트할 경우 주석 제거 후 사용
-    public WishItem(Drawable item_image, String item_name, String item_price) {
+//    @deprecated : Drawable 타입의 이미지로 테스트할 경우 주석 제거 후 사용
+//    public WishItem(Drawable item_image, String item_name, String item_price) {
+//        this.item_image = item_image;
+//        this.item_name = item_name;
+//        this.item_price = item_price;
+//    }
+
+    public void setItem_image(String item_image) {
         this.item_image = item_image;
-        this.item_name = item_name;
-        this.item_price = item_price;
     }
 
-    public Drawable getItem_image() {
+    public String getItem_image() {
         return item_image;
     }
-
-    public void setItem_image(Drawable item_image) {
-        this.item_image = item_image;
-    }*/
-
-    public int getItem_img() {
-        return item_img;
-    }
+//
+//    public int getItem_img() {
+//        return item_img;
+//    }
 
     public String getItem_name() {
         return item_name;

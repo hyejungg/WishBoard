@@ -1,19 +1,31 @@
 package com.hyeeyoung.wishboard.add;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+
 import com.hyeeyoung.wishboard.R;
+import com.hyeeyoung.wishboard.config.WindowPermission;
 import com.hyeeyoung.wishboard.folder.FolderListActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
@@ -40,6 +52,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link NewItemFragment#newInstance} factory method to
@@ -88,18 +102,26 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
 
     private View view;
     // @param : 클릭 이벤트에서의 클릭 대상 View
-    private ConstraintLayout item_image;
+    private ConstraintLayout item_image_layout;
     private LinearLayout btn_folder, btn_noti;
     private ImageButton save;
+    private ImageView item_image;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
     private String time_stamp;
     WishItem wish_item; //@brief : 서버연동 시 사용, 추가
+
+    // @ brief : 카메라, 갤러리 접근
+    private Uri img_uri, photo_uri, album_uri;
+    private String current_photo_path;
+    private static final int FROM_CAMERA = 0;
+    private static final int FROM_ALBUM = 1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_new_item, container, false);
-        item_image = (ConstraintLayout) view.findViewById(R.id.item_image_layout);
+        item_image_layout = (ConstraintLayout) view.findViewById(R.id.item_image_layout);
         btn_folder = (LinearLayout) view.findViewById(R.id.btn_folder);
         btn_noti = (LinearLayout) view.findViewById(R.id.btn_noti);
         save = (ImageButton) view.findViewById(R.id.save);
@@ -108,11 +130,20 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         item_price = (EditText) view.findViewById(R.id.item_price);
         item_url = (EditText) view.findViewById(R.id.item_url);
         item_memo = (EditText) view.findViewById(R.id.item_url);
-
-        item_image.setOnClickListener(this);
+        item_image = (ImageView) view.findViewById(R.id.item_image);
+        item_image_layout.setOnClickListener(this);
         btn_folder.setOnClickListener(this);
         btn_noti.setOnClickListener(this);
         save.setOnClickListener(this);
+
+        //TedPermission 라이브러리 -> 카메라 권한 획득
+        // @ brief : 권한 확인 및 획득
+        new WindowPermission(getContext()).setPermission(
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.ACCESS_FINE_LOCATION
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                Manifest.permission.SYSTEM_ALERT_WINDOW
+        );
 
         //wish_item = getWishItem(); //@brief : 서버연동 시 사용, 추가
         return view;
@@ -213,6 +244,9 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                  * @brief "sdcard/Download/sample.jpg" : 업로드 테스트를 위한 임시 파일 경로 지정, 에뮬레이터로 이미지 파일 드래그(파일 복사) 후 테스트 가능
                  */
                 aws_s3.uploadFile(new File("sdcard/Download/sample.jpg"), time_stamp);
+
+                // 여기서 부터 테스트 코드
+                makeDialog();
             break;
 
             case R.id.btn_folder :
@@ -228,6 +262,151 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                 //new JSONTask().execute("http://13.125.227.20:3000/new_item/add");// @brief : AsyncTask 시작
                 break;
         }
+    }
+    // @see : http://dailyddubby.blogspot.com/2018/04/107-tedpermission.html
+    // @brief : 앨범 선택 클릭
+    public void selectAlbum(){
+        //앨범 열기
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setType("image/*");
+        startActivityForResult(intent, FROM_ALBUM);
+    }
+
+    //사진 찍기 클릭
+    public void takePhoto(){
+        // 촬영 후 이미지 가져옴
+        String state = Environment.getExternalStorageState();
+        if(Environment.MEDIA_MOUNTED.equals(state)){
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if(intent.resolveActivity(getContext().getPackageManager())!=null){
+                File photo_file = null;
+                try{
+                    photo_file = createImageFile();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+
+                if(photo_file!=null){
+                    Uri providerURI = FileProvider.getUriForFile(getContext(), getContext().getPackageName(), photo_file);
+                    img_uri = providerURI;
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, providerURI);
+                    startActivityForResult(intent, FROM_CAMERA);
+                }
+            }
+        }else{
+            Log.v("알림", "저장공간에 접근 불가능");
+            return;
+        }
+    }
+
+    // @brief : 이미지뷰 클릭 시 dialog 생성
+    private void makeDialog(){
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(getContext()); // @ see : R.style.MyAlertDialogStyle 스타일 커스텀 가능
+        alt_bld.setTitle("사진 업로드").setIcon(R.drawable.cart).setCancelable(
+                false).setPositiveButton("사진촬영",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.v("알림", "다이얼로그 > 사진촬영 선택");
+                        // 사진 촬영 클릭
+                        takePhoto();
+                    }
+
+                }).setNeutralButton("앨범선택",
+
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int id) {
+                        Log.v("알림", "다이얼로그 > 앨범선택 선택");
+                        //앨범에서 선택
+                        selectAlbum();
+                    }
+
+                }).setNegativeButton("취소   ",
+
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.v("알림", "다이얼로그 > 취소 선택");
+                        // 취소 클릭. dialog 닫기.
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alt_bld.create();
+        alert.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != RESULT_OK){
+            return;
+        }
+
+        switch (requestCode){
+            case FROM_ALBUM : {
+                //앨범에서 가져오기
+                if(data.getData()!=null){
+                    try{
+                        File albumFile = null;
+                        albumFile = createImageFile();
+                        photo_uri = data.getData();
+                        album_uri = Uri.fromFile(albumFile);
+                        galleryAddPic();
+
+                        //이미지뷰에 이미지 셋팅
+                        item_image.setImageURI(photo_uri);
+                        //cropImage();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.v("알림","앨범에서 가져오기 에러");
+                    }
+                }
+                break;
+            }
+
+            case FROM_CAMERA : {
+                //촬영
+                try{
+                    Log.v("알림", "FROM_CAMERA 처리");
+                    galleryAddPic();
+                    //이미지뷰에 이미지셋팅
+                    item_image.setImageURI(img_uri);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+    }
+
+    // brief : 카메라로 촬영한 이미지 생성하기
+
+    public File createImageFile() throws IOException{
+        String imgFileName = System.currentTimeMillis() + ".jpg";
+        File imageFile= null;
+        File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ireh");
+
+        if(!storageDir.exists()){
+            Log.v("알림","storageDir 존재 x " + storageDir.toString());
+            storageDir.mkdirs();
+        }
+
+        Log.v("알림","storageDir 존재함 " + storageDir.toString());
+        imageFile = new File(storageDir,imgFileName);
+        current_photo_path = imageFile.getAbsolutePath();
+
+        return imageFile;
+
+    }
+
+    // @ㅠbrief : 촬영한 이미지 저장하기
+    public void galleryAddPic(){
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(current_photo_path);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        getContext().sendBroadcast(mediaScanIntent);
+        Toast.makeText(getContext(),"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
     }
 
     // @deprecated JSONTask 삭제 예정
