@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 // @brief '/' : 함수가 적용되는 경로(라우트)
-router.get('/new', (req, res) => res.send('item!'));
+//router.get('/new', (req, res) => res.send('item!'));
 
 // food/info
 router.post('/new', function(req, res, next) {
@@ -15,36 +15,29 @@ router.post('/new', function(req, res, next) {
 //	return console.log("400 : 정보가 없습니다.")
         return res.status(400).send("정보가 없습니다");
     }
-
+//    var item_id = req.body.item_id;
     var user_id = Number(req.body.user_id);
     var folder_id = Number(req.body.folder_id);
     var item_image = req.body.item_image;
     var item_name = req.body.item_name;
-    var item_price = Number(req.body.item_price);
+    var item_price = req.body.item_price;
     var item_url = req.body.item_url;
     var item_memo = req.body.item_memo;
 
-    var sql_insert = 
-    "insert into items (user_id, folder_id, item_image, item_name, item_price, item_url, item_memo)"
-    + " values(?,?,?,?,?,?,?);";
+    var sql_insert =  "INSERT INTO items (user_id, folder_id, item_image, item_name, item_price, item_url, item_memo) VALUES(?,?,?,?,?,?,?)";
 
-    var params = [
-        user_id,
-         folder_id,
-         item_image,
-         item_name,
-         item_price,
-         item_url,
-         item_memo
-     ];
+    var params = [user_id, folder_id, item_image, item_name, item_price, item_url, item_memo];
 
-    console.log("sql_insert : "+ sql_insert);
+    console.log("sql_insert : " + sql_insert);
 
     db.get().query(sql_insert, params, function(err, result){
-        if(err){
+        if(err) {
             console.log(err);
-        }
-        response.status(200).send(''+result.insertId); // @brief insertId : INSERT 문이 실행됐을 때, 삽입된 데이터의 id를 얻음, 폴더 ID 받아올 때 참고하기
+        } else {
+          res.status(200).send(''+result.insertId); // @brief insertId : INSERT 문이 실행됐을 때, 삽입된 데이터의 id를 얻음, 폴더 ID 받아올 때 참고하기
+         // db.releaseConn();
+	}
+          db.releaseConn();
     });
 });
 

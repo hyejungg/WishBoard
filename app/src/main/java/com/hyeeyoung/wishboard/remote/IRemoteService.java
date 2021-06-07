@@ -28,7 +28,8 @@ public interface IRemoteService {
     @brief : POST 방식, BASE_URL/item 호출
      */
 
-    @POST("/item/")
+    // @brief : 아이템 정보 저장 요청
+    @POST("/item/new")
     Call<ResponseBody> insertItemInfo(@Body WishItem wish_item);
 
     // @brief : 회원 정보 관련 요청
