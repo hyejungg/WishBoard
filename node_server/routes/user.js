@@ -66,7 +66,8 @@ router.post("/signin", function (req, res) {
             success: true,
             message: "wish board 앱 로그인 성공 ",
             user_id: result[0].user_id,
-          });
+            email : result[0].email,
+	  });
         // @brief : 토큰 생성
       }
       db.releaseConn(); // @brief : connection pool 반환
