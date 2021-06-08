@@ -19,6 +19,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.hyeeyoung.wishboard.MainActivity;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.UserItem;
@@ -27,7 +29,6 @@ import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.kakao.sdk.auth.LoginClient;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
-import com.kakao.sdk.user.model.User;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
@@ -61,10 +62,6 @@ public class SigninActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         init();
-
-        // @TODO : goMainActivity() 수정 필요
-        //goMainActivity(user != null);
-
     }
 
     @Override
@@ -74,13 +71,13 @@ public class SigninActivity extends AppCompatActivity {
          * @see : onStart()될 때마다 updateKakaoLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
          *        자동으로 로그인 정보를 가져옴
          * */
-//        updateKakaoLogin();
+        updateKakaoLogin();
         /**
          * @see : onStart()될 때마다 updateGoogleLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
          *        자동으로 로그인 정보를 가져옴
          * */
-        mAuth = FirebaseAuth.getInstance();
-//        updateGoogleLogin();
+        updateGoogleLogin();
+        updateWishLogin();
     }
 
     public void onClick(View view) {
@@ -89,10 +86,8 @@ public class SigninActivity extends AppCompatActivity {
                 email = edit_email.getText().toString();
                 pw = edit_pw.getText().toString();
 
-                // @TODO: 해야 할 일
-                //  @brief : 서버와 연결하여 로그인 처리
+                //  @brief : wish board 앱 로그인 진행
                 signInWish(email, pw);
-
                 break;
             case R.id.kakao:
                 //  @brief : 카카오 로그인 진행
@@ -104,7 +99,7 @@ public class SigninActivity extends AppCompatActivity {
                 signInGoogle();
                 break;
             case R.id.btn_email_signup:
-                // @brief : 회원가입 처리
+                // @brief : wish board 앱 회원가입 처리
                 intent = new Intent(this, SignupActivity.class);
                 startActivity(intent);
                 break;
@@ -143,16 +138,23 @@ public class SigninActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     // @brief : 정상적으로 통신 성공한 경우
                     String seq = null;
+                    int lenght = 0;
                     try{
+//                        seq = new Gson().toJson(response.body());
                         seq = response.body().string();
                     }catch(Exception e){
                         e.printStackTrace();
                     }
-                    Log.i("Wish 로그인", "성공");
+                    Log.i("Wish 로그인", "성공" + "\n" + seq);
+                    Log.i("Wish 로그인", String.valueOf(seq.length()));
+//                    Log.i("Wish 로그인", seq[0]);
                     goMainActivity(true);
                 }else{
                     // @brief : 통신에 실패한 경우
                     Log.e("Wish 로그인", "오류");
+                    Toast.makeText(SigninActivity.this, "다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                    edit_email.setText("");
+                    edit_pw.setText("");
                 }
             }
 
@@ -163,6 +165,10 @@ public class SigninActivity extends AppCompatActivity {
                 t.fillInStackTrace();
             }
         });
+    }
+
+    private void updateWishLogin(){
+        // @TODO : 이미 로그인 한 기록이 있다면 자동 로그인 처리 구현 필요
     }
 
     /****************************************
@@ -309,8 +315,8 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     // @brief : 로그아웃
-    private void singOutGoogle() {
-        mAuth.getInstance().signOut();
-    }
+//    private void singOutGoogle() {
+//        mAuth.getInstance().signOut();
+//    }
 
 }
