@@ -39,10 +39,18 @@ public interface IRemoteService {
     Call<ResponseBody> signInUser(@Body UserItem user_item);
 
     /*
-    @brief @GET( EndPoint-자원위치(URI) )  ET 방식, BASE_URL/home/{user_id} 호출
-    Data Type의 JSON을 통신을 통해 받음
-    @Path("user_id") String id : id 로 들어간 String 값을 {user_id}에 넘김
-    @return WishItem 객체를 JSON 형태로 반환
+    @brief :
+        @GET( EndPoint-자원위치(URI) )  ET 방식, BASE_URL/home/{user_id} 호출
+        Data Type의 JSON을 통신을 통해 받음
+        @Path("user_id") String id : id 로 들어간 String 값을 {user_id}에 넘김
+        @return WishItem 객체를 JSON 형태로 반환
+        ------------
+        @Path - 동적으로 경로를 사용하기 위한 어노테이션
+        @Query, @QueryMap - @GET 에서 사용하며 조건 파라미터를 설정
+        @Field, @FieldMap - @POST 에서 사용하며 조건 파라미터를 설정
+        @Body - 객체를 이용하여 조건 파라미터를 설정
+
+        @Header - 해더 설정
      */
 
     @GET("/home/{user_id}")
