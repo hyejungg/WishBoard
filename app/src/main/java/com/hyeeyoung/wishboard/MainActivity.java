@@ -1,6 +1,8 @@
 package com.hyeeyoung.wishboard;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -12,8 +14,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hyeeyoung.wishboard.folder.FolderFragment;
 import com.hyeeyoung.wishboard.add.NewItemFragment;
 import com.hyeeyoung.wishboard.noti.NotiFragment;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
 public class MainActivity extends AppCompatActivity {
+//    private static final String USER_ID = "USER_ID";
+    private String user_id;
+
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fragManager;
     private FragmentTransaction fragTransaction;
@@ -28,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(SaveSharedPreferences.getUserId(this).length() != 0)
+            user_id = SaveSharedPreferences.getUserId(this);
 
         newItemFragment = new NewItemFragment();
         folderFragment = new FolderFragment();

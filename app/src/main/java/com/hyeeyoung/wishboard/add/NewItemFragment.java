@@ -1,16 +1,10 @@
 package com.hyeeyoung.wishboard.add;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -28,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.common.Feature;
 import com.hyeeyoung.wishboard.R;
 
 import com.hyeeyoung.wishboard.config.WindowPermission;
@@ -39,6 +34,8 @@ import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.AwsS3Service;
 import java.io.File;
 
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
+
 import java.io.IOException;
 
 import java.text.SimpleDateFormat;
@@ -48,6 +45,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.HEAD;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -115,7 +114,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
 
-
+    private String user_id = "";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -144,6 +143,9 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
 //                Manifest.permission.SYSTEM_ALERT_WINDOW
         );
 
+        if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0)
+            user_id = SaveSharedPreferences.getUserId(this.getActivity());
+
         return view;
     }
 
@@ -154,7 +156,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
     private WishItem getWishItem() {
         WishItem wish_item = new WishItem();
 
-        wish_item.user_id = "1"; // @TODO : 회원정보와 연동필요
+        wish_item.user_id = user_id; // @TODO : SharedPreferences값 이용하여 수정
         wish_item.folder_id = "1";
         wish_item.item_image = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/20210519_095452";  // @TODO : S3 연동 필요
 
