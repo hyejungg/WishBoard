@@ -3,6 +3,7 @@ package com.hyeeyoung.wishboard;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.hyeeyoung.wishboard.sign.SigninActivity;
 
 import java.util.ArrayList;
@@ -75,11 +77,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Intent intent;
     private ImageButton cart, more;
     private Button[] buttons;
+
+    private String user_id = "";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         init();
+
+        if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0)
+            user_id = SaveSharedPreferences.getUserId(this.getActivity());
+        // @deprecated : test용
+        Log.i("Wish/HomeFragment", "user_id = " + user_id);
 
         return view;
     }
@@ -122,10 +132,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     // @deprecated
     private void addItem(int icon, String mainText, String subText) {
         WishItem item = new WishItem();
-        //item.setItem_img(icon);
+//        item.setItem_image(icon);
         item.setItem_name(mainText);
         item.setItem_price(subText);
         wish_list.add(item);
+    }
+
+    private void getItem(String image, String mainText, String subText){
+
     }
 
     /*
@@ -146,7 +160,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 v.getContext().startActivity(intent);
                 break;
 
-            // @deprecated
+                // @deprecated
                 // @see : 우선 로그인 확인을 위해 임의의 버튼을 login 화면으로 연결되도록 설정
             case R.id.more:
                 intent = new Intent(v.getContext(), SigninActivity.class);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.hyeeyoung.wishboard.sign.SigninActivity;
 
 public class IntroActivity extends AppCompatActivity {
@@ -16,14 +17,14 @@ public class IntroActivity extends AppCompatActivity {
         public void run() { // @param : 자동로그인
 
             Intent intent;
-            /*
+
             // @brief : 저장된 사용자 정보가 없다면 로그인 화면으로 이동
-            if(SaveSharedPreferences.getUserEmail(IntroActivity.this).length() == 0 || SaveSharedPreferences.getUserPw(IntroActivity.this).length() == 0) {
+            if(SaveSharedPreferences.getUserEmail(IntroActivity.this).length() == 0 || SaveSharedPreferences.getUserId(IntroActivity.this).length() == 0) {
                 intent = new Intent(IntroActivity.this, SigninActivity.class);
             } else { //저장된 사용자 정보가 있다면 메인 화면으로 이동
                 intent = new Intent(IntroActivity.this, MainActivity.class);
             }
-            */
+
             intent = new Intent(IntroActivity.this, MainActivity.class); // @deprecated : 추후 로그인 완벽 구현 시 삭제 예정
             startActivity(intent);
             finish(); // @brief : Activity 화면 제거
