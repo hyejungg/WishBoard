@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -25,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.common.Feature;
 import com.hyeeyoung.wishboard.R;
 
+import com.hyeeyoung.wishboard.RealPathUtil;
 import com.hyeeyoung.wishboard.config.WindowPermission;
 import com.hyeeyoung.wishboard.folder.FolderListActivity;
 
@@ -36,6 +39,7 @@ import java.io.File;
 
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.text.SimpleDateFormat;
@@ -115,6 +119,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
     private static final int FROM_ALBUM = 1;
 
     private String user_id = "";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -137,10 +142,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         //TedPermission 라이브러리 -> 카메라 권한 획득
         // @ brief : 권한 확인 및 획득
         new WindowPermission(getContext()).setPermission(
-                Manifest.permission.READ_CONTACTS,
-                Manifest.permission.ACCESS_FINE_LOCATION
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                Manifest.permission.SYSTEM_ALERT_WINDOW
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA
         );
 
         if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0)
@@ -156,18 +158,16 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
     private WishItem getWishItem() {
         WishItem wish_item = new WishItem();
 
-        wish_item.user_id = user_id; // @TODO : SharedPreferences값 이용하여 수정
-        wish_item.folder_id = "1";
-        wish_item.item_image = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/20210519_095452";  // @TODO : S3 연동 필요
+        wish_item.user_id = user_id;
+        wish_item.folder_id = "1"; // @TODO : 폴더 DB연동 후 변경하기
 
         // @brief : 사용자가 입력한 아이템데이터 가져오기
         wish_item.item_name = item_name.getText().toString();
         String get_item_price = item_price.getText().toString();
         String get_item_url = item_url.getText().toString().replace(" ", ""); //@ @brief : 링크로 이동 시 공백에 의한 예외를 방지하기위해 공백 처리
         String get_item_memo = item_memo.getText().toString();
-
-        // @brief : 추후 사용예정
-        // wish_item.item_image = image_path;
+        wish_item.item_image = image_path;
+        Log.i(TAG, "getWishItem: "+ wish_item.item_image);
 
         /**
          * @brief : 아이템 가격, url, 메모에 대한 null값 예외처리
@@ -213,7 +213,6 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
      */
     private void save() {
         wish_item = getWishItem();
-        //wish_item = new WishItem("1","1", "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/20210519_095452",  "TSHIRT - BIG APPLE - IVORY", "39900", "https://www.29cm.co.kr/product/1040132", "none");
 
         // @brief : 아이템 이름을 입력하지 않은 경우
         if (isNoName(wish_item)) {
@@ -296,7 +295,11 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         startActivityForResult(intent, FROM_ALBUM);
     }
 
-    // @brief : 사진 찍기 클릭
+    /**
+     * @TODO 사진촬영 클릭시 앱 중단되는 문제 발생, 해결 예정
+     * @brief : 사진 찍기 클릭
+     */
+
     public void takePhoto(){
         // @brief : 촬영 후 이미지 가져옴
         String state = Environment.getExternalStorageState();
@@ -375,40 +378,44 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                         photo_uri = data.getData();
                         album_uri = Uri.fromFile(albumFile);
                         //galleryAddPic();
-//
-//                        if (Build.VERSION.SDK_INT < 11) {
-//                            image_path = RealPathUtil.getRealPathFromURI_BelowAPI11(NewItemFragment.this.getContext(), photo_uri);
-//                            Log.d(TAG, Build.VERSION.SDK_INT + "");
-//                        } else if (Build.VERSION.SDK_INT < 19) {
-//                            Log.d(TAG, Build.VERSION.SDK_INT + "");
-//                            image_path = RealPathUtil.getRealPathFromURI_API11to18(NewItemFragment.this.getContext(), photo_uri);
-//                        } else {
-//                            Log.d(TAG, Build.VERSION.SDK_INT + "");
-//                            image_path = RealPathUtil.getRealPathFromURI_API19(NewItemFragment.this.getContext(), photo_uri);
-//                        }
-//                        Log.d(TAG, image_path);
-///**
-// * @param upload File : 이미지 파일 업로드
-// * @brief "sdcard/Download/sample.jpg" : 업로드 테스트를 위한 임시 파일 경로 지정, 에뮬레이터로 이미지 파일 드래그(파일 복사) 후 테스트 가능
-// */
-//
-//                        time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()); // @param time_stamp : 파일명 중복 방지를 위해 파일명으로 타임스탬프를 지정
-//                        aws_s3 = new AwsS3Service(getActivity().getApplicationContext()); // @param aws_s3 : @ s3 객체 생성
-//                        Bitmap bm;
-//                        try {
-//                            bm = getResizedBitmap(decodeUri(photo_uri), getResources().getDimensionPixelSize(R.dimen.idcard_pic_height), getResources().getDimensionPixelSize(R.dimen.idcard_pic_width));
-//                            item_image.setImageBitmap(bm);
-//                            file = new File(image_path);
-//                            aws_s3.uploadFile(new File(file.getName()), time_stamp);
-//                            break;
-//
-//                        } catch (FileNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
+
+                        if (Build.VERSION.SDK_INT < 11) {
+                            image_path = RealPathUtil.getRealPathFromURI_BelowAPI11(NewItemFragment.this.getContext(), photo_uri);
+                            Log.d(TAG, Build.VERSION.SDK_INT + "");
+                        } else if (Build.VERSION.SDK_INT < 19) {
+                            Log.d(TAG, Build.VERSION.SDK_INT + "");
+                            image_path = RealPathUtil.getRealPathFromURI_API11to18(NewItemFragment.this.getContext(), photo_uri);
+                        } else {
+                            Log.d(TAG, Build.VERSION.SDK_INT + "");
+                            image_path = RealPathUtil.getRealPathFromURI_API19(NewItemFragment.this.getContext(), photo_uri);
+                        }
+                        Log.d(TAG, image_path+ "hello");
+                        image_path = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishvoard"+image_path;
+
+                        /**
+                         * @param upload File : 이미지 파일 업로드
+                         * @brief "sdcard/Download/sample.jpg" : 업로드 테스트를 위한 임시 파일 경로 지정, 에뮬레이터로 이미지 파일 드래그(파일 복사) 후 테스트 가능
+                         */
+                        time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()); // @param time_stamp : 파일명 중복 방지를 위해 파일명으로 타임스탬프를 지정
+                        aws_s3 = new AwsS3Service(getActivity().getApplicationContext()); // @param aws_s3 : @ s3 객체 생성
+
+                        try {
+                            file = new File(image_path);
+                            /**
+                             * @brief : S3에 이미지 파일 업로드
+                             * @param file.getName() : 이미지 파일 경로
+                             * @param time_stamp : 이미지파일명 중복 방지를 위한 현재 시간 값을 추가해서 파일명 지정
+                             */
+                            aws_s3.uploadFile(new File(file.getName()), time_stamp);
+
+                            break;
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         // @brief : 이미지뷰에 이미지 디스플레이
                         item_image.setImageURI(photo_uri);
-                        //cropImage();
                     }catch (Exception e){
                         e.printStackTrace();
                         Log.v("알림","앨범에서 가져오기 에러");
@@ -422,7 +429,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                 try{
                     Log.v("알림", "FROM_CAMERA 처리");
                     galleryAddPic();
-                    //이미지뷰에 이미지셋팅
+                    // @brief : 이미지뷰에 이미지셋팅
                     item_image.setImageURI(img_uri);
 
                 }catch (Exception e){
@@ -461,46 +468,4 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         getContext().sendBroadcast(mediaScanIntent);
         Toast.makeText(getContext(),"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
     }
-
-
-    //@ TODO : 비트맵 이미지 크기 변환
-    /*
-    public Bitmap getResizedBitmap(Bitmap image, int newHeight, int newWidth) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth, scaleHeight);
-        if (Build.VERSION.SDK_INT <= 19) {
-            //matrix.postRotate(90);
-        }
-        Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0, width, height, matrix, false);
-        return resizedBitmap;
-    }
-
-    private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(
-                NewItemFragment.this.getContext().getContentResolver().openInputStream(selectedImage), null, o);
-
-        final int REQUIRED_SIZE = 100;
-
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true) {
-            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
-                break;
-            }
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
-        }
-
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        return BitmapFactory.decodeStream(
-                NewItemFragment.this.getContext().getContentResolver().openInputStream(selectedImage), null, o2);
-    }*/
 }
