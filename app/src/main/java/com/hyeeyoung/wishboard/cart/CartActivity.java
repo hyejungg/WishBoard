@@ -5,13 +5,16 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.CartAdapter;
 import com.hyeeyoung.wishboard.model.CartItem;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
 import java.util.ArrayList;
 
@@ -22,6 +25,8 @@ public class CartActivity extends AppCompatActivity {
     private ArrayList<CartItem> cartList;
     private LinearLayoutManager linearLayoutManager;
     private ImageButton cart;
+
+    private String user_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,9 @@ public class CartActivity extends AppCompatActivity {
 //                overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
 //            }
 //        });
+
+        if(SaveSharedPreferences.getUserId(this).length() != 0)
+            user_id = SaveSharedPreferences.getUserId(this);
     }
 
     private void init() {

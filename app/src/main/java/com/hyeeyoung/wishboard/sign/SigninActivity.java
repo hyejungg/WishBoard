@@ -24,14 +24,13 @@ import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.kakao.sdk.auth.LoginClient;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
-import com.kakao.sdk.user.model.User;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +44,9 @@ public class SigninActivity extends AppCompatActivity {
     private String token;
     private UserItem user_item = new UserItem();
 
+    // @params : 서버와 연결 후 response로 받는 정보를 담는 변수
+    private UserItem res_user_item = new UserItem();
+
     private EditText edit_email;
     private EditText edit_pw;
 
@@ -54,33 +56,22 @@ public class SigninActivity extends AppCompatActivity {
     private int RC_SIGN_IN = 1001; // @ brief : 성공코드 ...임의로 설정함
     private FirebaseUser user;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
         init();
-
-        // @TODO : goMainActivity() 수정 필요
-        //goMainActivity(user != null);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        /**
-         * @see : onStart()될 때마다 updateKakaoLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
-         *        자동으로 로그인 정보를 가져옴
-         * */
-//        updateKakaoLogin();
-        /**
-         * @see : onStart()될 때마다 updateGoogleLogin()을 해두어서 해당 기기에서 로그인한 기록이 있는 경우,
-         *        자동으로 로그인 정보를 가져옴
-         * */
-        mAuth = FirebaseAuth.getInstance();
-//        updateGoogleLogin();
+        // @TODO : 위치 상 intro로 옮겨야 할 것 같은데 추후 결정 ......
+        // @see : onStart()될 때마다 해당 기기에서 kakao 로그인한 기록이 있는 경우, 자동으로 로그인 정보를 가져옴
+        updateKakaoLogin();
+        // @see : onStart()될 때마다 해당 기기에서 google 로그인한 기록이 있는 경우, 자동으로 로그인 정보를 가져옴
+        updateGoogleLogin();
     }
 
     public void onClick(View view) {
@@ -88,11 +79,8 @@ public class SigninActivity extends AppCompatActivity {
             case R.id.btn_signin:
                 email = edit_email.getText().toString();
                 pw = edit_pw.getText().toString();
-
-                // @TODO: 해야 할 일
-                //  @brief : 서버와 연결하여 로그인 처리
+                //  @brief : wish board 앱 로그인 진행
                 signInWish(email, pw);
-
                 break;
             case R.id.kakao:
                 //  @brief : 카카오 로그인 진행
@@ -104,7 +92,7 @@ public class SigninActivity extends AppCompatActivity {
                 signInGoogle();
                 break;
             case R.id.btn_email_signup:
-                // @brief : 회원가입 처리
+                // @brief : wish board 앱 회원가입 처리
                 intent = new Intent(this, SignupActivity.class);
                 startActivity(intent);
                 break;
@@ -122,6 +110,9 @@ public class SigninActivity extends AppCompatActivity {
     private void goMainActivity(boolean isLogin) {
         // @brief : 로그인 성공 시 MainActivity로 이동
         if(isLogin){
+            SaveSharedPreferences.setUserEmail(this, res_user_item.email);
+            SaveSharedPreferences.setUserId(this, res_user_item.user_id);
+
             Intent goMain = new Intent(this, MainActivity.class);
             Toast.makeText(this, "로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
             startActivity(goMain);
@@ -136,35 +127,39 @@ public class SigninActivity extends AppCompatActivity {
         user_item.setPassword(pw);
 
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
-        Call<ResponseBody> call = remote_service.signInUser(user_item);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<UserItem> call = remote_service.signInUser(user_item);
+        call.enqueue(new Callback<UserItem>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<UserItem> call, Response<UserItem> response) {
                 if(response.isSuccessful()){
                     // @brief : 정상적으로 통신 성공한 경우
-                    String seq = null;
                     try{
-                        seq = response.body().string();
+                        res_user_item = response.body();
+                        // @brief : 로그인 이후 필요한 User_id
+                        res_user_item.user_id = res_user_item.getUser_id();
+                        res_user_item.email = res_user_item.getEmail();
                     }catch(Exception e){
                         e.printStackTrace();
                     }
-                    Log.i("Wish 로그인", "성공");
+                    Log.i("Wish 로그인", "성공" + "\n" + res_user_item.user_id + " / " + res_user_item.email);
                     goMainActivity(true);
                 }else{
                     // @brief : 통신에 실패한 경우
                     Log.e("Wish 로그인", "오류");
+                    Toast.makeText(SigninActivity.this, "다시 입력하세요.", Toast.LENGTH_SHORT).show();
+                    edit_email.setText("");
+                    edit_pw.setText("");
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<UserItem> call, Throwable t) {
                 // @brief : 통신 실패 시 callback
                 Log.e("Wish 로그인", "서버 연결 실패");
                 t.fillInStackTrace();
             }
         });
     }
-
     /****************************************
      * @params : kakao 로그인 관련 함수
      **/
@@ -201,8 +196,8 @@ public class SigninActivity extends AppCompatActivity {
 
                 // @brief : 로그인한 유저의 email주소와 token 값 가져오기. pw는 제공 X
                 email = user.getKakaoAccount().getEmail();
-                token = String.valueOf(user.getId());
-                pw = null;
+//                token = String.valueOf(user.getId());
+//                pw = null;
 
                 // @brief : 로그인 성공했으므로 메인엑티비티로 이동
                 goMainActivity(user != null);
@@ -309,8 +304,8 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     // @brief : 로그아웃
-    private void singOutGoogle() {
-        mAuth.getInstance().signOut();
-    }
+//    private void singOutGoogle() {
+//        mAuth.getInstance().signOut();
+//    }
 
 }
