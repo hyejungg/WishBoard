@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard;
+package com.hyeeyoung.wishboard.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
