@@ -30,7 +30,7 @@ public class WindowPermission {
             @Override
             public void onPermissionGranted() {
                 // @brief : 권한 부여
-                Toast.makeText(mContext, "권한 부여", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "권한 부여", Toast.LENGTH_SHORT).show();
             }
 
             @Override
