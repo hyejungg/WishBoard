@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 // @brief '/' : 함수가 적용되는 경로(라우트)
 //router.get('/new', (req, res) => res.send('item!'));
 
-// food/info
+// /item/new
 router.post('/new', function(req, res, next) {
     if(!req.body.item_image){
 //	return console.log("400 : 정보가 없습니다.")
@@ -41,8 +41,47 @@ router.post('/new', function(req, res, next) {
     });
 });
 
-module.exports = router;
-/* @brief : pool 사용하i기
-const getConnection = require('../db_connection');
-*/
+//item/home/:user_id
+router.get('/home/:user_id', function(req, res, next) {
+    // @brief : express 모듈을 사용하면 /:를 통해서 클라이언트에서 주소를 통해 요청한 값을 params로 가져올 수 있다
+    var user_id = req.params.user_id;
+    console.log("user_id : " + user_id);
 
+    // @brief : 요청한 사용자 아이디로 서버에서 해당 사용자의 item을 select한다.
+    var sql = "SELECT user_id, folder_id, item_image, item_name, item_price, item_url, item_memo FROM items WHERE user_id = ? ORDER BY item_id DESC"; //@TODO : user_id 지우기
+    console.log("sql : " + sql);
+
+    db.get().query(sql, [user_id], function (err, rows) {
+          if (err) {
+               console.log(err);
+               res.sendStatus(400);
+             } else {
+               if (rows.length === 0) { //@brief : 가져온 아이템 정보가 없다면 에러를 띄운다.
+                 console.log("Failed to select item data.");
+                 res.status(500).json({
+                   success: false,
+                   message: "wish boarad 서버 에러",
+                 });
+               } else {
+                 console.log("rows : " + JSON.stringify(rows));
+		 res.status(200).json(rows);
+		 //res.send(rows);
+                 //console.log("Successfully selected item data.");
+                 //res.status(200).json({
+                 //  success: true,
+                 //  message: "아이템 데이터베이스 접근 성공",
+                 //});
+               }
+             }
+//         if (err){
+//            res.sendStatus(400);
+//         } else{
+//            console.log("rows : " + JSON.stringify(rows));
+//            res.status(200).json(rows);
+//         }
+         db.releaseConn(); //@brief : err가 떠도 conn은 반드시 release() 해주어야한다.
+    });
+});
+
+
+module.exports = router;
