@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard;
+package com.hyeeyoung.wishboard.home;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -15,13 +15,20 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
+import com.hyeeyoung.wishboard.remote.IRemoteService;
+import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.hyeeyoung.wishboard.sign.SigninActivity;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +36,6 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    private Drawable img; // @ deprecated
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -69,6 +75,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     private View view;
     RecyclerView recycler_view;
     ItemAdapter adapter;
@@ -77,30 +84,72 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Intent intent;
     private ImageButton cart, more;
     private Button[] buttons;
-
-    private String user_id = "";
+    private String user_id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
-        init();
 
-        if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0)
+        if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0){
             user_id = SaveSharedPreferences.getUserId(this.getActivity());
-        // @deprecated : test용
-        Log.i("Wish/HomeFragment", "user_id = " + user_id);
-
+            Log.i("Wish/HomeFragment", "user_id = " + user_id); // @deprecated : test용
+            selectItemInfo(user_id);
+        }
+       //init(); // @deprecated : 처음 인트로에서 메인으로 이동할 때 아이템이 보이지 않는 문제로 init() 위치 옮김
         return view;
     }
 
+    /**
+     * @brief : 서버에서 아이템 정보를 조회한다.
+     * @param user_id 사용자 아이디
+     */
+    private void selectItemInfo(String user_id) {
+        IRemoteService remoteService = ServiceGenerator.createService(IRemoteService.class);
+        Call<ArrayList<WishItem>> call = remoteService.selectItemInfo(user_id);
+        call.enqueue(new Callback<ArrayList<WishItem>>() {
+            @Override
+            public void onResponse(Call<ArrayList<WishItem>> call, Response<ArrayList<WishItem>> response) {
+                wish_list = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨.
+
+                // @brief : 가져온 아이템이 없는 경우
+                if (wish_list == null) {
+                    wish_list = new ArrayList<>(); // @brief : 아이탬 배열 초기화
+                }
+
+                // @brief : 서버연결 성공한 경우
+                if(response.isSuccessful()){
+                    if (wish_list.size() > 0) { // @brief : 가져온 아이템이 하나 이상인 경우
+                        Log.i("아이템 가져오기", "Retrofit 통신 성공");
+                        Log.i("가져온 아이템 살펴보기", wish_list+""); // @deprecated : 테스트용
+                    }
+                } else { // @brief : 통신에 실패한 경우
+                    Log.e("아이템 가져오기", "Retrofit 통신 실패");
+                }
+                init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<WishItem>> call, Throwable t) {
+                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e("아이템 가져오기", "서버 연결 실패");
+                init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+            }
+        });
+    }
+
+    /**
+     * @brief : 뷰 초기화
+     */
     private void init() {
+        // @brief : 각 위시 아이템 뷰를 초기화
         recycler_view = view.findViewById(R.id.recyclerview_wish_list);
-        wish_list = new ArrayList<>();
         adapter = new ItemAdapter(wish_list);
         recycler_view.setAdapter(adapter);
         grid_layout_manager = new GridLayoutManager(this.getActivity(), 2);
         recycler_view.setLayoutManager(grid_layout_manager);
+
+        // @brief : 우측 상단의 장바구니와 더보기 버튼
         cart = view.findViewById(R.id.cart);
         more = view.findViewById(R.id.more);
 
@@ -115,36 +164,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         for(int i = 0; i < buttons.length; i++){
             buttons[i].setOnClickListener(this);
         }
-
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        addItem(R.drawable.sample, "PRETZEL PUFF KNIT", "129,000");
-        adapter.notifyDataSetChanged();
     }
 
-    // @deprecated
-    private void addItem(int icon, String mainText, String subText) {
-        WishItem item = new WishItem();
-//        item.setItem_image(icon);
-        item.setItem_name(mainText);
-        item.setItem_price(subText);
-        wish_list.add(item);
-    }
-
-    private void getItem(String image, String mainText, String subText){
-
-    }
-
-    /*
-    * @brief : 우측상단 장바구니버튼과 더보기 버튼을 클릭했을 때, 특정 폴더를 클릭할 때의 동작을 지정
-    **/
+    /**
+     * @brief : 우측상단 장바구니버튼과 더보기 버튼을 클릭했을 때, 특정 폴더를 클릭할 때의 동작을 지정
+     */
     @Override
     public void onClick(View v) {
 
@@ -160,7 +184,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 v.getContext().startActivity(intent);
                 break;
 
-                // @deprecated
+                // @TODO : 아이템 수정, 삭제 구현하기
                 // @see : 우선 로그인 확인을 위해 임의의 버튼을 login 화면으로 연결되도록 설정
             case R.id.more:
                 intent = new Intent(v.getContext(), SigninActivity.class);

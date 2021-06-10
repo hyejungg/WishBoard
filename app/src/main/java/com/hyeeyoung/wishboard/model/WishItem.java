@@ -7,7 +7,7 @@ package com.hyeeyoung.wishboard.model;
 public class WishItem {
     public String user_id;
     public String folder_id;
-    public String item_image; //@param : 추후 DB에서 이미지링크 가져올 경우 사용할 변수
+    public String item_image;
     public String item_name;
     public String item_price;
     public String item_url;
@@ -62,7 +62,6 @@ public class WishItem {
     public void setItem_memo(String item_memo) {
         this.item_memo = item_memo;
     }
-
 
     @Override
     public String toString() {

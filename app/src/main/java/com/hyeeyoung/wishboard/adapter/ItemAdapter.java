@@ -2,6 +2,7 @@ package com.hyeeyoung.wishboard.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.detail.ItemDetailActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
+import com.hyeeyoung.wishboard.remote.IRemoteService;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHolder> {
-    private ArrayList<WishItem> wishList;
+    private ArrayList<WishItem> wish_list;
     private Intent intent;
     protected Context context;
     protected boolean isClicked = true;
+
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView item_image;
         protected TextView item_name;
@@ -38,7 +43,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
         }
     }
     public ItemAdapter(ArrayList<WishItem> data) {
-        this.wishList = data;
+        this.wish_list = data;
+        notifyDataSetChanged(); // @brief : 데이터 변경사항 반영
     }
 
     @Override
@@ -54,9 +60,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, final int position) {
-        WishItem item = wishList.get(position);
-        // viewholder.item_image.setImageDrawable(item.getItem_image()); @ deprecated : 안드로이드 기본 아이콘 대신 실제 상품 이미지로 테스트 할 경우 주석 제거 후 사용
-        //viewholder.item_image.setImageResource(item.getItem_image());
+        WishItem item = wish_list.get(position);
+
+        try { // @brief : 아이템 이미지를 화면에 보여준다.
+            Picasso.get().load(IRemoteService.IMAGE_URL +item.getItem_image()).into(viewholder.item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
+        } catch (IllegalArgumentException i) {
+            Log.d("checkings", "아이템 사진 없음");
+        }
+
         viewholder.item_name.setText(item.getItem_name());
         viewholder.item_price.setText(item.getItem_price());
         viewholder.cart.setImageResource(R.drawable.cart_black);
@@ -85,6 +96,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     }
     @Override
     public int getItemCount() {
-        return (null != wishList ? wishList.size() : 0);
+        return (null != wish_list ? wish_list.size() : 0);
     }
 }

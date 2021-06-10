@@ -3,18 +3,22 @@ package com.hyeeyoung.wishboard.remote;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.model.WishItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface IRemoteService {
 
     //@brief : 네트워크 설정
     String BASE_URL = "http://13.125.227.20/"; // @brief : IP 주소 적기
-
+    String IMAGE_URL = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/";
     /*@brief : 각 요청 URL
     String NEW_ITEM_URL = BASE_URL+"/item/";
     String HOME_URL = BASE_URL+"/home/";
@@ -47,6 +51,8 @@ public interface IRemoteService {
         @return WishItem 객체를 JSON 형태로 반환
      */
 
+    // @brief : 홈화면에서 로그인한 사용자의 아이템 정보를 요청
     @GET("/item/home/{user_id}")
-    Call<WishItem> getData(@Path("user_id") String user_id);
+    Call<ArrayList<WishItem>> selectItemInfo(@Path("user_id") String user_id); // @brief : <>안의 자료형은 JSON 데이터를 <>안의 자료형으로 받겠다는 의미.
+
 }
