@@ -139,8 +139,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         btn_noti.setOnClickListener(this);
         save.setOnClickListener(this);
 
-        //TedPermission 라이브러리 -> 카메라 권한 획득
-        // @ brief : 권한 확인 및 획득
+        // @brief : TedPermission 라이브러리 -> 카메라 권한 획득
         new WindowPermission(getContext()).setPermission(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA
         );
@@ -166,8 +165,10 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
         String get_item_price = item_price.getText().toString();
         String get_item_url = item_url.getText().toString().replace(" ", ""); //@ @brief : 링크로 이동 시 공백에 의한 예외를 방지하기위해 공백 처리
         String get_item_memo = item_memo.getText().toString();
-        wish_item.item_image = image_path;
-        Log.i(TAG, "getWishItem: "+ wish_item.item_image);
+
+        // @brief : 아이템 등록 시 파일명 중복 방지를 위해 파일명으로 등록 시간으로 지정, 추후 파일명도 추가할 예정
+        time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        wish_item.item_image = time_stamp;
 
         /**
          * @brief : 아이템 가격, url, 메모에 대한 null값 예외처리
@@ -208,6 +209,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
             return false;
         }
     }
+
     /**
      * @brief : 사용자가 입력한 정보를 저장
      */
@@ -220,13 +222,22 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
             return;
         }
 
+        // @param aws_s3 : @ s3에 이미지 업로드를 위한 s3 객체 생성
+        aws_s3 = new AwsS3Service(getActivity().getApplicationContext());
+        /**
+         * @brief : S3에 이미지 파일 업로드
+         * @param image_path : 이미지 파일 경로
+         * @param wish_item.getItem_image() : 이미지파일명 중복 방지를 위한 현재 시간 값을 추가해서 파일명 지정함
+         */
+        aws_s3.uploadFile(new File(image_path), wish_item.getItem_image());
+
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
         Call<ResponseBody> call = remote_service.insertItemInfo(wish_item);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                // @brief : 서버연결 성공한 경우
                 if (response.isSuccessful()) {
-                    // @brief : 정상적으로 통신 성공한 경우
                     String seq = null;
                     try {
                         seq = response.body().string();
@@ -242,8 +253,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                     item_url.setText("");
                     item_memo.setText("");
 
-                } else {
-                    // @brief : 통신에 실패한 경우
+                } else { // @brief : 통신에 실패한 경우
                     Log.e("아이템 등록", "Retrofit 통신 실패");
                 }
             }
@@ -259,17 +269,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.item_image_layout :
-                time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()); // @param time_stamp : 파일명 중복 방지를 위해 파일명으로 타임스탬프를 지정
-                aws_s3 = new AwsS3Service(getActivity().getApplicationContext()); // @param aws_s3 : @ s3 객체 생성
-
-                /**
-                 * @param uploadFile : 이미지 파일 업로드
-                 * @brief "sdcard/Download/sample.jpg" : 업로드 테스트를 위한 임시 파일 경로 지정, 에뮬레이터로 이미지 파일 드래그(파일 복사) 후 테스트 가능
-                 */
-                aws_s3.uploadFile(new File("sdcard/Download/sample.jpg"), time_stamp);
-
-                // @brief : 다이얼로그 디스플레이
-                makeDialog();
+                makeDialog(); // @brief : 다이얼로그 디스플레이
             break;
 
             case R.id.btn_folder :
@@ -334,7 +334,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.v("알림", "다이얼로그 > 사진촬영 선택");
-                        // 사진 촬영 클릭
+                        // @brief : 사진 촬영 클릭
                         takePhoto();
                     }
 
@@ -343,7 +343,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int id) {
                         Log.v("알림", "다이얼로그 > 앨범선택 선택");
-                        //앨범에서 선택
+                        // @brief : 앨범에서 선택
                         selectAlbum();
                     }
 
@@ -352,7 +352,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.v("알림", "다이얼로그 > 취소 선택");
-                        // 취소 클릭. dialog 닫기.
+                        // @brief : 취소 클릭. dialog 닫기.
                         dialog.cancel();
                     }
                 });
@@ -377,8 +377,8 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                         albumFile = createImageFile();
                         photo_uri = data.getData();
                         album_uri = Uri.fromFile(albumFile);
-                        //galleryAddPic();
 
+                        // @brief : sdk 버전에 맞게 이미지 파일 객체 생성을 위한 이미지 경로 설정
                         if (Build.VERSION.SDK_INT < 11) {
                             image_path = RealPathUtil.getRealPathFromURI_BelowAPI11(NewItemFragment.this.getContext(), photo_uri);
                             Log.d(TAG, Build.VERSION.SDK_INT + "");
@@ -389,29 +389,14 @@ public class NewItemFragment extends Fragment implements View.OnClickListener{
                             Log.d(TAG, Build.VERSION.SDK_INT + "");
                             image_path = RealPathUtil.getRealPathFromURI_API19(NewItemFragment.this.getContext(), photo_uri);
                         }
-                        Log.d(TAG, image_path+ "hello");
-                        image_path = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishvoard"+image_path;
-
-                        /**
-                         * @param upload File : 이미지 파일 업로드
-                         * @brief "sdcard/Download/sample.jpg" : 업로드 테스트를 위한 임시 파일 경로 지정, 에뮬레이터로 이미지 파일 드래그(파일 복사) 후 테스트 가능
-                         */
-                        time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()); // @param time_stamp : 파일명 중복 방지를 위해 파일명으로 타임스탬프를 지정
-                        aws_s3 = new AwsS3Service(getActivity().getApplicationContext()); // @param aws_s3 : @ s3 객체 생성
+                        Log.d(TAG, image_path+ "--hello");
 
                         try {
-                            file = new File(image_path);
-                            /**
-                             * @brief : S3에 이미지 파일 업로드
-                             * @param file.getName() : 이미지 파일 경로
-                             * @param time_stamp : 이미지파일명 중복 방지를 위한 현재 시간 값을 추가해서 파일명 지정
-                             */
-                            aws_s3.uploadFile(new File(file.getName()), time_stamp);
-
-                            break;
+                            file = new File(image_path); // @brief : 해당경로의 이미지 파일을 S3에 업로드
 
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Log.i(TAG, "onActivityResult: " + "갤러리 이미지 적용 에러");
                         }
 
                         // @brief : 이미지뷰에 이미지 디스플레이
