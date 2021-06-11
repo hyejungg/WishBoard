@@ -27,10 +27,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.common.Feature;
-import com.google.android.material.snackbar.Snackbar;
-import com.hyeeyoung.wishboard.CustumSnackbar;
-import com.hyeeyoung.wishboard.MainActivity;
 import com.hyeeyoung.wishboard.R;
 
 import com.hyeeyoung.wishboard.RealPathUtil;
@@ -46,12 +42,8 @@ import java.io.File;
 
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -59,7 +51,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.HEAD;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -514,6 +505,6 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         getContext().sendBroadcast(mediaScanIntent);
-        new CustumSnackbar(getView(), "사진이 저장되었습니다", Snackbar.LENGTH_SHORT).show();
+//        new CustumSnackbar(getView(), "사진이 저장되었습니다", Snackbar.LENGTH_SHORT).show();
     }
 }

@@ -3,16 +3,11 @@ package com.hyeeyoung.wishboard.config;
 import android.Manifest;
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.hyeeyoung.wishboard.CustumSnackbar;
-import com.hyeeyoung.wishboard.R;
 
 import java.util.List;
 
