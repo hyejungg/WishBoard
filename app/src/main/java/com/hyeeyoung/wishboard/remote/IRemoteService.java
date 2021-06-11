@@ -22,10 +22,6 @@ public interface IRemoteService {
     //@brief : 네트워크 설정
     String BASE_URL = "http://ec2-13-125-227-20.ap-northeast-2.compute.amazonaws.com/"; // @brief : IP 주소 적기 13.125.227.20
     String IMAGE_URL = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/";
-    /*@brief : 각 요청 URL
-    String NEW_ITEM_URL = BASE_URL+"/item/";
-    String HOME_URL = BASE_URL+"/home/";
-    */
 
     /**
      * @brief NewItemFragment : 서버에 아이템 등록
@@ -34,7 +30,6 @@ public interface IRemoteService {
     /*
     @brief : POST 방식, BASE_URL/item 호출
      */
-
 
     // @brief : 아이템 정보 저장 요청
     @POST("/item/new")
@@ -66,4 +61,7 @@ public interface IRemoteService {
     @GET("/item/home/{user_id}")
     Call<ArrayList<WishItem>> selectItemInfo(@Path("user_id") String user_id); // @brief : <>안의 자료형은 JSON 데이터를 <>안의 자료형으로 받겠다는 의미.
 
+    // @brief : 홈화면에서 로그인한 사용자의 아이템 정보를 요청
+    @GET("/item/detail/{item_id}")
+    Call<WishItem> selectItemDetails(@Path("item_id") String item_id);
 }

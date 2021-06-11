@@ -19,18 +19,18 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"/>
 
-    <ImageView
-        android:id="@+id/cart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/item_image"
-        app:layout_constraintRight_toRightOf="@id/item_image"
-        android:layout_margin="10dp"
-        android:src="@drawable/cart_black" />
+<!--    <ImageView-->
+<!--        android:id="@+id/cart"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/item_image"-->
+<!--        app:layout_constraintRight_toRightOf="@id/item_image"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:src="@drawable/cart_black" />-->
 
     <TextView
         android:id="@+id/item_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/item_image"
         app:layout_constraintTop_toBottomOf="@id/item_image"
@@ -63,5 +63,20 @@
         android:textColor="@color/black"
         android:fontFamily="@font/nanum_square_b"
         android:text="원" />
+    
+    <Button
+        android:id="@+id/cart"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintBottom_toBottomOf="@id/item_image"
+        app:layout_constraintRight_toRightOf="@id/item_image"
+        android:layout_margin="10dp"
+        android:outlineProvider="none"
+        android:textAllCaps="false"
+        android:textSize="10dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/nanum_square_b"
+        android:text="Cart"
+        android:background="@drawable/round_sticker_white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,19 +5,14 @@ package com.hyeeyoung.wishboard.model;
  */
 
 public class WishItem {
-    public String user_id;
-    public String folder_id;
-    public String item_image;
-    public String item_name;
-    public String item_price;
-    public String item_url;
-    public String item_memo;
+    public String item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo;
 
     public WishItem() {
     }
 
     //@brief : 추후 folder_id 서버에서 결과 값 받아서 사용, 타입은 서버에서 형변환 예정
-    public WishItem(String user_id, String folder_id, String item_image, String item_name, String item_price, String item_url, String item_memo) {
+    public WishItem(String item_id, String user_id, String folder_id, String item_image, String item_name, String item_price, String item_url, String item_memo) {
+        this.item_id = item_id;
         this.user_id = user_id;
         this.folder_id = folder_id;
         this.item_image = item_image;
@@ -27,6 +22,13 @@ public class WishItem {
         this.item_memo = item_memo;
     }
 
+    public String getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(String item_id) {
+        this.item_id = item_id;
+    }
 
     public String getItem_image() {
         return item_image;
@@ -66,6 +68,7 @@ public class WishItem {
     @Override
     public String toString() {
         return "WishItem{" +
+                "item_id='" + item_id + '\'' +
                 "user_id='" + user_id + '\'' +
                 ", folder_id='" + folder_id + '\'' +
                 ", item_image='" + item_image + '\'' +
