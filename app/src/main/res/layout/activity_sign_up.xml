@@ -62,7 +62,8 @@
                 android:background="@android:color/transparent"
                 android:textSize="15dp"
                 android:layout_marginLeft="10dp"
-                android:hint="이메일을 입력해주세요." />
+                android:hint="이메일을 입력해주세요."
+                android:inputType="textEmailAddress"/>
 
         </LinearLayout>
 
