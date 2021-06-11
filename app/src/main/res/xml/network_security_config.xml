@@ -1,0 +1,7 @@
+<!-- http 프로토콜 접속 시 예외발생 조치를 위해 서버 도매인에 한해 http 주소를 허용(평문 접근 허용)-->
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">ec2-13-125-227-20.ap-northeast-2.compute.amazonaws.com</domain>
+    </domain-config>
+</network-security-config>
