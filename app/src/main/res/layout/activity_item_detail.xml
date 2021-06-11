@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,13 +28,14 @@
         android:paddingBottom="10dp">
 
         <TextView
+            android:id="@+id/folder_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="15dp"
             android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_eb"
-            android:text="니트 / 가디건" />
+            android:text="의류" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -166,6 +169,7 @@
                     android:layout_marginTop="15dp"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="5dp"
+                    android:visibility="invisible"
                     android:background="@drawable/background_tag"
                     android:textSize="15dp"
                     android:textColor="@color/black"
@@ -202,7 +206,7 @@
         </LinearLayout>
 <!--        @brief : outlineProvider="none" 버튼 음영 없애기 위함-->
         <Button
-            android:id="@+id/shopping"
+            android:id="@+id/go_to_shop"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
