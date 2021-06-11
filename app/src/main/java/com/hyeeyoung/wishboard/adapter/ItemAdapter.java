@@ -137,7 +137,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     private void addCart(String user_id, String item_id){
         // @brief : 서버에 들어갈 CartItem 초기화
         cart_item = new CartItem(user_id, item_id);
-        Log.i("CartItem add값 확인", user_id + " / " + item_id); //@brief : 기존에는 art_item.user_id, cart_item.item_id 였음
+        Log.i("CartItem add값 확인", user_id + " / " + item_id);
 
         // @params : 서버의 응답을 받는 CartItem
         res_cart_item = new CartItem();
@@ -172,13 +172,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     }
     /**
      * @brief : 장바구니에 아이템 정보를 삭제
+     * @param user_id 사용자 아이디
+     * @param item_id 아이템 아이디
      */
     private void deleteCart(String user_id, String item_id){
         Log.i("CartItem delete값 확인", user_id + " / " + item_id);
-        // @params : 서버의 응답을 받는 CartItem
-        res_cart_item = new CartItem();
+
+        CartItem delete_cart = new CartItem(user_id, item_id);
+
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
-        Call<CartItem> call = remote_service.deleteCartInfo(user_id, item_id); //@brief : 기존 인자는 art_item.user_id, cart_item.item_id 였음
+        Call<CartItem> call = remote_service.deleteCartInfo(delete_cart); //@brief : Body로 보내야해서 객체로 변경
         call.enqueue(new Callback<CartItem>() {
             @Override
             public void onResponse(Call<CartItem> call, Response<CartItem> response) {
