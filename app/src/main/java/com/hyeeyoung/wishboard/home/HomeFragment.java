@@ -85,6 +85,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ImageButton cart, more;
     private Button[] buttons;
     private String user_id;
+    private String item_id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,9 +147,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void init() {
         // @brief : 각 위시 아이템 뷰를 초기화
         recycler_view = view.findViewById(R.id.recyclerview_wish_list);
-        //wish_list = new ArrayList<>();
-        adapter = new ItemAdapter(wish_list);
-        //adapter = new ItemAdapter(wish_list, user_id, "137"); // @TODO : 추후 item_id로 변경해야 함
+        //adapter = new ItemAdapter(wish_list);
+        adapter = new ItemAdapter(wish_list, user_id);
+
         recycler_view.setAdapter(adapter);
         grid_layout_manager = new GridLayoutManager(this.getActivity(), 2);
         recycler_view.setLayoutManager(grid_layout_manager);

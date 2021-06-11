@@ -45,7 +45,7 @@ public interface IRemoteService {
     @POST("/basket/add")
     Call<CartItem> insertCartInfo(@Body CartItem cart_item);
     @GET("/basket/{user_id}")
-    Call<CartItem> selectCartInfo(@Path("user_id") String user_id);
+    Call<ArrayList<CartItem>> selectCartInfo(@Path("user_id") String user_id);
     @DELETE("/basket/delete/{user_id}/{item_id}")
     Call<CartItem> deleteCartInfo(@Path("user_id") String user_id, @Path("item_id") String item_id);
 
