@@ -54,8 +54,6 @@ public class SignupActivity extends AppCompatActivity {
 
         edit_email.setOnFocusChangeListener((view, b) -> {
             email = edit_email.getText().toString();
-            // @deprecated : test 용
-//            email = "hyee1@sungshin.ac.kr";
             isValidId();
         });
     }
@@ -80,9 +78,6 @@ public class SignupActivity extends AppCompatActivity {
                 // @brief : 비밀번호 유효성 검사
                 isValidPassWd();
 
-                // @TODO: 해야 할 일
-                // @breif : 서버 연결하여 DB에 저장
-                save(email, pw_re);
                 /**
                  * @see : 서버와 연결 성공하면 token 값을 생성, 이 값과 함께 db에 저장
                  *         이후 이 token 값은 로그인 화면에서 사용?
@@ -90,7 +85,9 @@ public class SignupActivity extends AppCompatActivity {
 
                 // @brief : 회원가입 성공하여 로그인 화면으로 이동
                 if(isCheckId && isCheckPw) {
-                    Toast.makeText(this, "회원가입에 성공하였습니다!", Toast.LENGTH_SHORT).show();
+                    // @breif : 서버 연결하여 DB에 저장
+                    save(email, pw_re);
+                    Toast.makeText(this, "회원가입에 성공했습니다!", Toast.LENGTH_SHORT).show();
                     // @see : 토스트 확인 후 로그인 화면으로 넘어갈 수 있도록 delay 발생시킴
                     Handler timer = new Handler();
                     timer.postDelayed(() -> {
@@ -120,9 +117,6 @@ public class SignupActivity extends AppCompatActivity {
     private void isValidPassWd(){
         pw = edit_pw.getText().toString();
         pw_re = edit_pw_re.getText().toString();
-        // @deprecated : test 용
-//        pw = "abcde2021!";
-//        pw_re = "abcde2021!";
 
         // @brief :
         Pattern PASSWORD_PATTENRN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&]).{8}.$");
@@ -158,7 +152,8 @@ public class SignupActivity extends AppCompatActivity {
      * @prams : Retrofit을 이용하여 서버에 데이터 값 저장하는 함수
      * */
     private void save(String email, String pw_re){
-        user_item = new UserItem(null, email, pw_re, true, ""); //option_noti는 초기값 true
+        user_item = new UserItem(null, email, pw_re, true, ""); // @brief : option_noti는 초기값 true
+        //Log.e("회원정보 등록", "정보" + email + ", "+ pw_re);
 
         // @brief : Retrofit
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
@@ -181,8 +176,9 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                // @brief : 통신 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
                 Log.e("회원정보 등록", "서버 연결 실패");
+                //Log.i("회원정보 등록", "onFailure: " + t.getMessage());
             }
         });
     }
