@@ -48,7 +48,7 @@ router.get('/home/:user_id', function(req, res, next) {
     console.log("user_id : " + user_id);
 
     // @brief : 요청한 사용자 아이디로 서버에서 해당 사용자의 item을 select한다.
-    var sql = "SELECT user_id, folder_id, item_image, item_name, item_price, item_url, item_memo FROM items WHERE user_id = ? ORDER BY item_id DESC"; //@TODO : user_id 지우기
+    var sql = "SELECT item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo FROM items WHERE user_id = ? ORDER BY item_id DESC"; //@TODO : user_id 지우기
     console.log("sql : " + sql);
 
     db.get().query(sql, [user_id], function (err, rows) {
@@ -65,23 +65,40 @@ router.get('/home/:user_id', function(req, res, next) {
                } else {
                  console.log("rows : " + JSON.stringify(rows));
 		 res.status(200).json(rows);
-		 //res.send(rows);
-                 //console.log("Successfully selected item data.");
-                 //res.status(200).json({
-                 //  success: true,
-                 //  message: "아이템 데이터베이스 접근 성공",
-                 //});
                }
              }
-//         if (err){
-//            res.sendStatus(400);
-//         } else{
-//            console.log("rows : " + JSON.stringify(rows));
-//            res.status(200).json(rows);
-//         }
          db.releaseConn(); //@brief : err가 떠도 conn은 반드시 release() 해주어야한다.
     });
 });
 
+//item/detail/:user_id
+router.get('/detail/:item_id', function(req, res, next) {
+    // @brief : express 모듈을 사용하면 /:를 통해서 클라이언트에서 주소를 통해 요청한 값을 params로 가져올 수 있다
+    var item_id = req.params.item_id;
+    console.log("item_id : " + item_id);
+
+    // @brief : 요청한 아이템 아이디로 서버에서 해당 item을 select한다.
+    var sql = "SELECT folder_id, item_image, item_name, item_price, item_url, item_memo FROM items WHERE item_id = ?";
+    console.log("sql : " + sql);
+
+    db.get().query(sql, [item_id], function (err, rows) {
+          if (err) {
+               console.log(err);
+               res.sendStatus(400);
+             } else {
+               if (rows.length > 0) { //@brief : 가져온 아이템 정보가 존재한다면
+                 console.log("rows : " + JSON.stringify(rows));
+                 res.status(200).json(rows[0]);
+               } else {
+                 console.log("Failed to select item data.");
+                 res.status(500).json({
+                    success: false,
+                    message: "wish boarad 서버 에러",
+                 });
+               }
+             }
+         db.releaseConn(); //@brief : err가 떠도 conn은 반드시 release() 해주어야한다.
+    });
+});
 
 module.exports = router;
