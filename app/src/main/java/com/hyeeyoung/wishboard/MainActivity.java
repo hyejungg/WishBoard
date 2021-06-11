@@ -1,8 +1,6 @@
 package com.hyeeyoung.wishboard;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -13,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hyeeyoung.wishboard.folder.FolderFragment;
 import com.hyeeyoung.wishboard.add.NewItemFragment;
+import com.hyeeyoung.wishboard.home.HomeFragment;
 import com.hyeeyoung.wishboard.noti.NotiFragment;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
