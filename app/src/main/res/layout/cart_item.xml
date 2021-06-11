@@ -51,7 +51,7 @@
             android:src="@drawable/minus"
             android:background="@android:color/transparent" />
         <TextView
-            android:id="@+id/quantity"
+            android:id="@+id/item_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -73,15 +73,17 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/item_image"
         android:layout_alignParentEnd="true">
+
         <TextView
-            android:id="@+id/total"
+            android:id="@+id/item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/won"
-            android:textSize="17dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_eb"
-            android:text="238,000" />
+            android:text="238,000"
+            android:textColor="@color/black"
+            android:textSize="17dp" />
+
         <TextView
             android:id="@+id/won"
             android:layout_width="wrap_content"

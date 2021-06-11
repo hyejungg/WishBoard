@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.FolderListItem;
 import java.util.ArrayList;
+
 public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.CustomViewHolder> {
     private int lastCheckedPosition = -1;
     private ArrayList<FolderListItem> folderList;

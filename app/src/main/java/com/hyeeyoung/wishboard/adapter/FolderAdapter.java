@@ -1,6 +1,5 @@
 package com.hyeeyoung.wishboard.adapter;
 
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

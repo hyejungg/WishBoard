@@ -17,9 +17,9 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import java.io.File;
 
 public class AwsS3Service {
-    private static String BUCKET_NAME = "BUCKET_NAME"; // @param : 생성한 버킷명
-    private static String ACCESS_KEY = "ACCESS_KEY"; // @param : IAM에서 생성한 액세스 키
-    private static String SECRET_KEY = "SECRET_KEY"; // @param : IAM에서 생성한 시크릿 키
+    private static String BUCKET_NAME = ""; // @param : 생성한 버킷명
+    private static String ACCESS_KEY = ""; // @param : IAM에서 생성한 액세스 키
+    private static String SECRET_KEY = "";
 
     private AmazonS3 s3_client;
     private AWSCredentials aws_credentials;
@@ -36,13 +36,13 @@ public class AwsS3Service {
 
     /**
      * @param file : 업로드 할 이미지 파일
-     * @param time_key : 저장될 이미지 파일명(식별자), 타임스탬프로 파일명 지정
+     * @param time_key : 저장될 이미지 파일명(식별자), 타임스탬프를 추가해서 파일명 지정
      */
     public void uploadFile(File file, String time_key) {
         if (s3_client != null) {
-            long time_stamp = System.currentTimeMillis();
-
+            Log.i(TAG, "uploadFile: " + file.getName());
             TransferObserver uploadObserver = transferUtility.upload(BUCKET_NAME, "wishboard/"+ time_key, file); // @param "wishboard/" : 버킷 내 폴더명
+            Log.i("타임키 테스트", "uploadFile: " + time_key);
             uploadObserver.setTransferListener(new TransferListener() {
                 @Override
                 public void onStateChanged(int id, TransferState state) {

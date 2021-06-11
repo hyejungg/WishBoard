@@ -11,12 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.adapter.NotiAdapter;
 import com.hyeeyoung.wishboard.model.NotiItem;
 
-import com.hyeeyoung.wishboard.model.NotiItem;
-import com.hyeeyoung.wishboard.model.WishItem;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
 import java.util.ArrayList;
 
@@ -70,11 +68,17 @@ public class NotiFragment extends Fragment {
     NotiAdapter adapter;
     private ArrayList<NotiItem> notiList;
     private LinearLayoutManager linearLayoutManager;
+
+    private String user_id = "";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_noti, container, false);
         init();
+
+        if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0)
+            user_id = SaveSharedPreferences.getUserId(this.getActivity());
+
         return view;
     }
 

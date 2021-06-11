@@ -2,22 +2,15 @@ package com.hyeeyoung.wishboard.folder;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.adapter.CartAdapter;
-import com.hyeeyoung.wishboard.adapter.FolderAdapter;
 import com.hyeeyoung.wishboard.adapter.FolderListAdapter;
 import com.hyeeyoung.wishboard.model.FolderListItem;
-import com.hyeeyoung.wishboard.model.FolderItem;
 
 import java.util.ArrayList;
 

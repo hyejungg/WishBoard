@@ -21,6 +21,7 @@ import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Connection;
@@ -63,6 +64,8 @@ public class LinkSharingActivity extends AppCompatActivity {
     //TextView won;
     String site_url = ""; // @param : 가져온 데이터 보관
 
+    String user_id = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +79,9 @@ public class LinkSharingActivity extends AppCompatActivity {
         // @param : 변수 초기화
         init();
         initNumperPicker();
+
+        if(SaveSharedPreferences.getUserId(this).length() != 0)
+            user_id = SaveSharedPreferences.getUserId(this);
 
         // @param : 알림 유형 스피너에서 선택된 아이템 처리 이벤트
         noti_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -184,7 +190,7 @@ public class LinkSharingActivity extends AppCompatActivity {
     }
 
     private WishItem getWishItem() {
-        wish_item.user_id = "1"; // @todo : 회원정보와 연동 필요
+        wish_item.user_id = user_id; // @todo : 회원정보와 연동
         wish_item.folder_id = "1";
 
         String get_item_price = item_price.getText().toString();
@@ -245,7 +251,6 @@ public class LinkSharingActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public void onClick(View v) {
         switch (v.getId()) {
