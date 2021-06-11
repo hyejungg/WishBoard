@@ -73,9 +73,12 @@ router.post("/", function (req, res) {
 });
 
 // @brief : 장바구니 삭제
-router.delete("/:user_id/:item_id", function (req, res) {
+router.delete("/", function (req, res) {
   var user_id = Number(req.body.user_id);
   var item_id = Number(req.body.item_id);
+
+  console.log(user_id + " " + item_id);
+	
 
   var sql = "DELETE FROM basket WHERE user_id = ? AND item_id = ?";
   var params = [user_id, item_id];
