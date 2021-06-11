@@ -9,7 +9,6 @@ router.get("/", (req, res) => res.send("user!"));
 
 // @brief : wish board 앱 회원가입
 router.post("/signup", function (req, res) {
-  var user_id = req.body.user_id;
   var email = req.body.email;
   var before_pw = req.body.password;
   var option_notification = req.body.option_notification;
@@ -19,8 +18,8 @@ router.post("/signup", function (req, res) {
   const password = bcrypt.hashSync(before_pw, 10);
 
   var sql_insert =
-    "INSERT INTO users (user_id, email, password, option_notification, token) VALUES (?, ?, ?, ?, ?)";
-  var params = [user_id, email, password, option_notification, token];
+    "INSERT INTO users (email, password, option_notification, token) VALUES (?, ?, ?, ?)";
+  var params = [email, password, option_notification, token];
 
   console.log("sql_insert : " + sql_insert);
 
@@ -66,8 +65,8 @@ router.post("/signin", function (req, res) {
             success: true,
             message: "wish board 앱 로그인 성공 ",
             user_id: result[0].user_id,
-            email : result[0].email,
-	  });
+            email: result[0].email,
+          });
         // @brief : 토큰 생성
       }
       db.releaseConn(); // @brief : connection pool 반환
