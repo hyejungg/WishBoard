@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -59,22 +61,36 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/sample"/>
+                    android:background="@color/mediumGray"/>
+                <!--@todo : 추후 레이아웃 클릭이 아닌 플러스버튼 클릭으로 변경-->
+                <ImageView
+                    android:id="@+id/plus_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/plus_image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
             <!--    @see : java에서 linearlayout 클릭 시 (폴더 버튼)    -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp">
                 <LinearLayout
                     android:id="@+id/btn_folder"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp">
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingVertical="12dp"
                         android:drawableRight="@drawable/detail"
                         android:fontFamily="@font/nanum_square_eb"
                         android:text="Folder"
@@ -83,13 +99,12 @@
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginBottom="15dp">
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingVertical="12dp"
                         android:fontFamily="@font/nanum_square_eb"
                         android:text="Title"
                         android:textColor="@color/black"
@@ -99,21 +114,23 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
+                        android:paddingVertical="12dp"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/nanum_square_b"
                         android:gravity="right"
                         android:hint="상품명을 입력해주세요."
-                        android:textSize="13dp" />
+                        android:textColor="@color/mediumGray"
+                        android:textSize="13dp"
+                        android:inputType="text"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginBottom="15dp">
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingVertical="12dp"
                         android:fontFamily="@font/nanum_square_eb"
                         android:text="Price"
                         android:textColor="@color/black"
@@ -123,21 +140,23 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
+                        android:paddingVertical="12dp"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/nanum_square_b"
                         android:gravity="right"
                         android:hint="가격을 입력해주세요."
-                        android:textSize="13dp" />
+                        android:textColor="@color/mediumGray"
+                        android:textSize="13dp"
+                        android:inputType="number"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginBottom="15dp">
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingVertical="12dp"
                         android:fontFamily="@font/nanum_square_eb"
                         android:text="Url"
                         android:textColor="@color/black"
@@ -147,22 +166,24 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
+                        android:paddingVertical="12dp"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/nanum_square_b"
                         android:gravity="right"
                         android:hint="쇼핑몰 링크를 입력해주세요."
-                        android:textSize="13dp" />
+                        android:textColor="@color/mediumGray"
+                        android:textSize="13dp"
+                        android:inputType="textUri"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/btn_noti"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginBottom="15dp">
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingVertical="12dp"
                         android:drawableRight="@drawable/detail"
                         android:fontFamily="@font/nanum_square_eb"
                         android:text="Notification"
@@ -172,12 +193,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginBottom="15dp"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingVertical="12dp"
                         android:fontFamily="@font/nanum_square_eb"
                         android:text="Memo"
                         android:textColor="@color/black"
@@ -186,12 +206,14 @@
                         android:id="@+id/item_memo"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginTop="15dp"
                         android:layout_weight="1"
+                        android:layout_marginBottom="12dp"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/nanum_square_b"
                         android:hint="메모를 작성해주세요. (메모 내용으로도 검색할 수 있어요!)"
-                        android:textSize="13dp" />
+                        android:textColor="@color/mediumGray"
+                        android:textSize="13dp"
+                        android:inputType="text"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
