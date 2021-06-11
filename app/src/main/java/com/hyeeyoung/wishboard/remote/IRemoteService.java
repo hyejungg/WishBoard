@@ -1,12 +1,10 @@
 package com.hyeeyoung.wishboard.remote;
 
-import com.google.gson.JsonElement;
 import com.hyeeyoung.wishboard.model.CartItem;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.model.WishItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -15,7 +13,6 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface IRemoteService {
 
@@ -32,7 +29,7 @@ public interface IRemoteService {
      */
 
     // @brief : 아이템 정보 저장 요청
-    @POST("/item/new")
+    @POST("/item")
     Call<ResponseBody> insertItemInfo(@Body WishItem wish_item);
 
     // @brief : 회원 정보 관련 요청
@@ -42,11 +39,11 @@ public interface IRemoteService {
     Call<UserItem> signInUser(@Body UserItem user_item);
 
     // @brief : 장바구니 관련 요청
-    @POST("/basket/add")
+    @POST("/basket")
     Call<CartItem> insertCartInfo(@Body CartItem cart_item);
     @GET("/basket/{user_id}")
     Call<ArrayList<CartItem>> selectCartInfo(@Path("user_id") String user_id);
-    @DELETE("/basket/delete/{user_id}/{item_id}")
+    @DELETE("/basket/{user_id}/{item_id}")
     Call<CartItem> deleteCartInfo(@Path("user_id") String user_id, @Path("item_id") String item_id);
 
     /*
