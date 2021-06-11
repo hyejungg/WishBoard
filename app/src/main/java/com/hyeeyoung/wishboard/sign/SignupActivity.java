@@ -152,9 +152,8 @@ public class SignupActivity extends AppCompatActivity {
      * @prams : Retrofit을 이용하여 서버에 데이터 값 저장하는 함수
      * */
     private void save(String email, String pw_re){
-        //user_item = new UserItem(null, email, pw_re, true, ""); // @brief : option_noti는 초기값 true
         user_item = new UserItem(null, email, pw_re, true, ""); // @brief : option_noti는 초기값 true
-        Log.e("회원정보 등록", "정보" + email + ", "+ pw_re);
+        //Log.e("회원정보 등록", "정보" + email + ", "+ pw_re);
 
         // @brief : Retrofit
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
@@ -177,7 +176,7 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                // @brief : 통신 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
                 Log.e("회원정보 등록", "서버 연결 실패");
                 //Log.i("회원정보 등록", "onFailure: " + t.getMessage());
             }
