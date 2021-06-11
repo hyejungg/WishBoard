@@ -61,6 +61,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
         this.wish_list = data;
         this.user_id = user_id;
         this.item_id = item_id;
+        notifyDataSetChanged(); // @brief : 데이터 변경사항 반영
     }
 
     @Override
@@ -88,7 +89,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
         viewholder.item_price.setText(item.getItem_price());
         viewholder.cart.setImageResource(R.drawable.cart_black);
 
-        // @param : 아이템 클릭 시 아이템 상세조회로 이동동
+        // @param : 아이템 클릭 시 아이템 상세조회로 이동
        viewholder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +97,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
                 v.getContext().startActivity(intent);
             }
         });
-       // @brief : 아이템을 장바구니에 담거나 제거하는 경우, 해당 버튼의 컬러를 변경 (추후 구현)
+       /* @TODO : 아이템 정보를 조회해 왔을 때 장바구니에 이미 담긴 애들은 색상이 변경되어 있어야 함 (추후 구현)
+        *  @brief : 아이템을 장바구니에 담거나 제거// 해당 버튼의 컬러를 변경 (추후 구현)
+        */
        viewholder.cart.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
@@ -117,6 +120,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
         return (null != wish_list ? wish_list.size() : 0);
     }
 
+    /**
+     * @brief : 장바구니에 아이템 정보를 추가
+     * @param user_id 사용자 아이디
+     * @param item_id 아이템 아이디
+//     * @param item_count 아이템 수량
+     */
     private void addCart(String user_id, String item_id){
         // @brief : 서버에 들어갈 CartItem 초기화
         cart_item = new CartItem(user_id, item_id);
@@ -133,11 +142,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
                     // @brief : 정상적으로 통신 성공한 경우
                     try{
                         res_cart_item = response.body();
-                        cart_item.setQty(res_cart_item.getQty());
+                        cart_item.setItem_count(res_cart_item.getItem_count());
                     }catch(Exception e){
                         e.printStackTrace();
                     }
-                    Log.i("Cart 등록", "성공" + "\n cart_item의 qty : " + cart_item.getQty());
+                    Log.i("Cart 등록", "성공" + "\n cart_item의 qty : " + cart_item.getItem_count());
                 }else{
                     // @brief : 통신에 실패한 경우
                     Log.e("Cart 등록", "오류");
@@ -152,7 +161,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
             }
         });
     }
-
+    /**
+     * @brief : 장바구니에 아이템 정보를 삭제
+     */
     private void deleteCart(){
         Log.i("CartItem delete값 확인", cart_item.user_id + " / " + cart_item.item_id);
         // @params : 서버의 응답을 받는 CartItem
@@ -164,11 +175,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
             public void onResponse(Call<CartItem> call, Response<CartItem> response) {
                 if(response.isSuccessful()){
                     // @brief : 정상적으로 통신 성공한 경우
-                    try{
-                        res_cart_item = response.body(); // @deprecated : 사용 안하면 지울 것
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
                     Log.i("Cart 삭제", "성공");
                 }else{
                     // @brief : 통신에 실패한 경우
