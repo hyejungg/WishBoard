@@ -149,13 +149,12 @@ public class CartActivity extends AppCompatActivity {
      */
     private void setTotal(ArrayList<CartItem> array_cart){
         int total_price = 0;
-        // @deprecated : test용
-//        Log.i("Cart array_cart Size", String.valueOf(array_cart.size()));
-//        Log.i("Cart array_cart[i] price", array_cart.get(0).getItem_price());
-//        Log.i("Cart array_cart[i] price", array_cart.get(1).getItem_price());
-//        Log.i("Cart array_cart[i] price", array_cart.get(2).getItem_price());
-//        Log.i("Cart array_cart[i] price", array_cart.get(3).getItem_price());
         for(int i = 0; i < array_cart.size(); i++){
+            // @brief : 가격데이터 예외처리
+            if(array_cart.get(i).getItem_price() == null){ // @ brief : DB에 저장된 값이 null인 경우 0으로 초기화
+                array_cart.get(i).setItem_price(0+"");
+            }
+            // @brief : DB에서 가져온 아이템의 가격 정보를 이용하여 Total 금액을 구함
             int temp_price = Integer.parseInt(array_cart.get(i).getItem_price());
             total_price += temp_price;
         }
