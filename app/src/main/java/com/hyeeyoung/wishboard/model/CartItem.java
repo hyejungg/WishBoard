@@ -6,10 +6,10 @@ public class CartItem {
     public String user_id;
     public String item_id;
 
-    private int item_image; // @param : 서버연동 후 String으로 변경 예정
+    private String item_image;
     private String item_name;
     private String item_price;
-    private int qty;
+    private String item_count;
 
     public CartItem() {
     }
@@ -19,14 +19,14 @@ public class CartItem {
         this.item_id = item_id;
     }
 
-    public CartItem(int item_image, String item_name, String item_price, int qty) {
+    public CartItem(String item_image, String item_name, String item_price, String item_count) {
         this.item_image = item_image;
         this.item_name = item_name;
         this.item_price = item_price;
-        this.qty = qty;
+        this.item_count = item_count;
     }
 
-    public int getItem_image() {
+    public String getItem_image() {
         return item_image;
     }
 
@@ -38,11 +38,11 @@ public class CartItem {
         return item_price;
     }
 
-    public int getQty() {
-        return qty;
+    public String getItem_count() {
+        return item_count;
     }
 
-    public void setItem_image(int item_image) {
+    public void setItem_image(String item_image) {
         this.item_image = item_image;
     }
 
@@ -54,7 +54,7 @@ public class CartItem {
         this.item_price = item_price;
     }
 
-    public void setQty(int qty) {
-        this.qty = qty;
+    public void setItem_count(String qty) {
+        this.item_count = item_count;
     }
 }
