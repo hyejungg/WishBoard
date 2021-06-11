@@ -20,7 +20,7 @@ import retrofit2.http.Query;
 public interface IRemoteService {
 
     //@brief : 네트워크 설정
-    String BASE_URL = "http://13.125.227.20/"; // @brief : IP 주소 적기
+    String BASE_URL = "http://ec2-13-125-227-20.ap-northeast-2.compute.amazonaws.com/"; // @brief : IP 주소 적기 13.125.227.20
     String IMAGE_URL = "https://wishboardbucket.s3.ap-northeast-2.amazonaws.com/wishboard/";
     /*@brief : 각 요청 URL
     String NEW_ITEM_URL = BASE_URL+"/item/";
