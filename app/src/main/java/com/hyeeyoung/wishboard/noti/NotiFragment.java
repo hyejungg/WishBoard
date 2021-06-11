@@ -11,12 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.adapter.NotiAdapter;
 import com.hyeeyoung.wishboard.model.NotiItem;
 
-import com.hyeeyoung.wishboard.model.NotiItem;
-import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
 import java.util.ArrayList;

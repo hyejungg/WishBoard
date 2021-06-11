@@ -14,14 +14,11 @@ import android.widget.TextView;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.CartAdapter;
 import com.hyeeyoung.wishboard.model.CartItem;
-import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
