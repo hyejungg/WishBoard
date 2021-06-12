@@ -298,6 +298,8 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                     item_url.setText("");
                     item_memo.setText("");
 
+                    Toast.makeText(getContext(), "위시리스트에 추가했습니다.", Toast.LENGTH_SHORT).show(); // @brief : 아이템 정보 입력을 요구
+
                 } else { // @brief : 통신에 실패한 경우
                     Log.e("아이템 등록", "Retrofit 통신 실패");
                 }

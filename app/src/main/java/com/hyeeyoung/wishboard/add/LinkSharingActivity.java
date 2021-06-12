@@ -202,14 +202,14 @@ public class LinkSharingActivity extends AppCompatActivity {
          */
 
         // @brief : 가격데이터 예외처리
-        if(get_item_price == null){ // @ brief : 공유페이지에서 가져온 가격데이터 또는 사용자의 입력 값이 없는 경우 null로 초기화
+        if(get_item_price.equals("")){ // @ brief : 공유페이지에서 가져온 가격데이터 또는 사용자의 입력 값이 없는 경우 null로 초기화
             wish_item.setItem_price(null);
         } else{ // @ brief : 사용자의 입력 값이 있는 경우
             wish_item.setItem_price(get_item_price); // @ brief : 입력값으로 초기화
         }
 
         // @brief : 메모데이터 예외처리
-        if(get_item_memo == null){ // @ brief : 사용자가 메모를 입력하지 않은 경우
+        if(get_item_memo.equals("")){ // @ brief : 사용자가 메모를 입력하지 않은 경우
             wish_item.setItem_memo(null);
         } else{ // @ brief : 사용자가 메모를 입력한 경우
             wish_item.setItem_memo(get_item_memo);

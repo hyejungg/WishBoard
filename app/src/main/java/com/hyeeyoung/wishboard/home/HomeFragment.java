@@ -122,13 +122,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     if (wish_list.size() > 0) { // @brief : 가져온 아이템이 하나 이상인 경우
                         Log.i("아이템 가져오기", "Retrofit 통신 성공");
                         Log.i("가져온 아이템 살펴보기", wish_list+""); // @deprecated : 테스트용
-                        init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+                        //init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
                     }
                 } else { // @brief : 통신에 실패한 경우
                     Log.e("아이템 가져오기", "Retrofit 통신 실패");
-                    init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+                    //init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
                 }
-                //init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+                init();
             }
 
             @Override
