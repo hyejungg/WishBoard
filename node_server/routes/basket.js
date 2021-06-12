@@ -7,7 +7,7 @@ router.get("/:user_id", function (req, res) {
   var user_id = Number(req.params.user_id);
 
   var sql =
-  "SELECT a.item_image, a.item_name, a.item_price, b.item_count FROM items a JOIN basket b ON a.item_id = b.item_id WHERE b.user_id = ?";
+  "SELECT a.item_image, a.item_name, a.item_price, b.item_count FROM items a JOIN basket b ON a.item_id = b.item_id WHERE b.user_id = ? ORDER BY a.item_id DESC";
 
   console.log("sql_select : " + sql);
 
