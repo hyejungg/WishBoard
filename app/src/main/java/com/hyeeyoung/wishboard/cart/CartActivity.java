@@ -73,8 +73,6 @@ public class CartActivity extends AppCompatActivity {
      * @param user_id 사용자 아이디
      */
     private void getData(String user_id) {
-        Log.i("CartItem select값 확인", user_id); // @descr
-
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
         Call<ArrayList<CartItem>> call = remote_service.selectCartInfo(user_id);
         call.enqueue(new Callback<ArrayList<CartItem>>() {

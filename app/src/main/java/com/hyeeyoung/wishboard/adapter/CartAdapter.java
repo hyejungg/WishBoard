@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.CartItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -75,6 +76,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         CartItem item = cartList.get(position);
+
+        try { // @brief : 아이템 이미지를 화면에 보여준다.
+            Picasso.get().load(item.getItem_image()).into(holder.item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
+        } catch (IllegalArgumentException i) {
+            Log.d("checkings", "아이템 사진 없음");
+        }
 //        holder.item_image.setImageResource(item.getItem_image());
         holder.item_name.setText(item.getItem_name());
         holder.item_price.setText(item.getItem_price());
