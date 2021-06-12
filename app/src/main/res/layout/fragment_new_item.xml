@@ -61,7 +61,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
                     android:scaleType="centerCrop"
-                    android:background="@color/mediumGray"/>
+                    android:foreground="@color/semiTransparent"/>
                 <!--@todo : 추후 레이아웃 클릭이 아닌 플러스버튼 클릭으로 변경-->
                 <ImageView
                     android:id="@+id/plus_image"
