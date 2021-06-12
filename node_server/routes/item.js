@@ -48,7 +48,9 @@ router.get('/home/:user_id', function(req, res, next) {
     console.log("user_id : " + user_id);
 
     // @brief : 요청한 사용자 아이디로 서버에서 해당 사용자의 item을 select한다.
-    var sql = "SELECT item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo FROM items WHERE user_id = ? ORDER BY item_id DESC"; //@TODO : user_id 지우기
+
+    var sql = "SELECT i.item_id, i.user_id, i.folder_id, i.item_image, i.item_name, i.item_price, i.item_url, i.item_memo, b.item_id cart_item_id FROM items i left outer join basket b on i.item_id = b.item_id WHERE i.user_id = ? ORDER BY i.item_id DESC";
+    //var sql = "SELECT item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo FROM items WHERE user_id = ? ORDER BY item_id DESC"; //@TODO : user_id 지우기, 해당 주석 지우지 말기
     console.log("sql : " + sql);
 
     db.get().query(sql, [user_id], function (err, rows) {
