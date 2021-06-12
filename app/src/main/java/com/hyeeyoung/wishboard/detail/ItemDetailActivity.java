@@ -19,6 +19,9 @@ import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.squareup.picasso.Picasso;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,12 +50,24 @@ public class ItemDetailActivity extends AppCompatActivity {
         });
     }
 
+    // @brief domain : 쇼핑몰 url을 도메인네임으로 변경한 것
+    public static String getDomainName(String url) throws URISyntaxException {
+        URI uri = new URI(url);
+        String domain = uri.getHost();
+
+        // @brief : 도메인 네임으로 바꾸지 못한 경우
+        if(domain == null) return "";
+
+        return domain.startsWith("www.") ? domain.substring(4) : domain;
+    }
+
     private void init(WishItem wish_item){
         //TextView itme_folder = findViewById(R.id.folder_name); // @TODO : 폴더 연동 후 작업하기
         ImageView item_image = findViewById(R.id.item_image);
         TextView item_price = findViewById(R.id.item_price);
         TextView item_name = findViewById(R.id.item_name);
         TextView item_memo = findViewById(R.id.tag);
+        TextView item_url = findViewById(R.id.domain_name);
         Button go_to_shop = findViewById(R.id.go_to_shop);
 
         // @brief : 아이템 이미지 디스플레이
@@ -71,6 +86,22 @@ public class ItemDetailActivity extends AppCompatActivity {
             item_memo.setText(wish_item.getItem_memo());
         }
 
+        // @brief : 쇼핑몰 url을 도메인네임으로 변경하여 디스플레이
+        if (wish_item.getItem_url() != null) {
+            try {
+                String domain = getDomainName(wish_item.getItem_url()); // @brief domain : 쇼핑몰 url을 도메인네임으로 변경한 것
+
+                // @brief : 도메인 주소로 바꾼 경우
+                if(!domain.equals(""))
+                    item_url.setText(domain); // @brief : 해당 도메인으로 디스플레이
+                else // @brief : 도메인 주소로 바꾸지 못한 경우
+                    item_url.setText(wish_item.getItem_url()); // @brief : 기존 url로 디스플레이
+            } catch (URISyntaxException e) {
+                Log.e("아이템 상세정보 가져오기", "url 없음");
+            }
+        }
+
+        // @brief : 쇼핑몰로 이동하기 버튼 클릭 시 해당쇼핑몰로 이동
         go_to_shop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,8 +114,6 @@ public class ItemDetailActivity extends AppCompatActivity {
 
             }
         });
-
-        // @TODO : url 언급하기
     }
 
     /**
@@ -107,7 +136,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 // @brief : 서버연결 성공한 경우
                 if(response.isSuccessful()){
                      Log.i("아이템 상새정보 가져오기", "Retrofit 통신 성공");
-                     Log.i("아이템 상새정보 가져오기", wish_item+""); // @deprecated : 테스트용
+                     //Log.i("아이템 상새정보 가져오기", wish_item+""); // @deprecated : 테스트용
                      init(wish_item); // @brief : onCreateView 메서드에서 해당 위치로 옮김
                 } else { // @brief : 통신에 실패한 경우
                     Log.e("아이템 상새정보 가져오기", "Retrofit 통신 실패");
