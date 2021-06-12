@@ -37,6 +37,18 @@
             android:fontFamily="@font/nanum_square_eb"
             android:text="의류" />
 
+<!--        <TextView-->
+<!--            android:id="@+id/url"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textAlignment="textEnd"-->
+<!--            android:textSize="13dp"-->
+<!--            android:textColor="@color/mediumGray"-->
+<!--            android:fontFamily="@font/nanum_square_r"-->
+<!--            android:text="sfsdg" />-->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +84,25 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/sample"/>
+                    android:foreground="@color/ultraSemiTransparent"/>
+
+<!--                <TextView-->
+<!--                    android:id="@+id/url"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    app:layout_constraintEnd_toEndOf="@id/item_image"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@id/item_image"-->
+<!--                    android:paddingVertical="2dp"-->
+<!--                    android:paddingHorizontal="10dp"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:layout_margin="15dp"-->
+<!--                    android:layout_gravity="right|bottom"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textSize="13dp"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:fontFamily="@font/nanum_square_r"-->
+<!--                    android:text="sfsdg"-->
+<!--                    android:background="@drawable/button_white"/>-->
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -83,19 +113,21 @@
                     android:layout_gravity="right|bottom">
 
                     <ImageView
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:src="@drawable/round_sticker" />
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/round_sticker_white" />
+
                     <TextView
                         android:id="@+id/d_day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:textAllCaps="true"
-                        android:textSize="17dp"
+                        android:textSize="15dp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/nanum_square_b"
                         android:text="D-15" />
+
                 </FrameLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
@@ -104,15 +136,28 @@
                 android:layout_weight="1"
                 android:padding="15dp"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/domain_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="false"
+                    android:textSize="13dp"
+                    android:textColor="@color/mediumGray"
+                    android:fontFamily="@font/nanum_square_r"
+                    android:text="" />
+
                 <TextView
                     android:id="@+id/item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="true"
+                    android:layout_marginTop="15dp"
+                    android:textAllCaps="false"
+                    android:maxLines="1"
                     android:textSize="20dp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/nanum_square_eb"
-                    android:text="GROVE 21 S/S RIA CARDIGAN - IVORY" />
+                    android:text="name" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -123,9 +168,9 @@
                         android:id="@+id/item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="15dp"
+                        android:textSize="20dp"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/nanum_square_b"
+                        android:fontFamily="@font/nanum_square_eb"
                         android:text="129,000" />
 
                     <TextView
@@ -133,7 +178,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dp"
-                        android:textSize="15dp"
+                        android:textSize="20dp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/nanum_square_b"
                         android:text="원" />
@@ -171,10 +216,12 @@
                     android:paddingVertical="5dp"
                     android:visibility="invisible"
                     android:background="@drawable/background_tag"
+                    android:textAllCaps="false"
                     android:textSize="15dp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/nanum_square_b"
-                    android:text="S사이즈" />
+                    android:text="" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -208,13 +255,13 @@
         <Button
             android:id="@+id/go_to_shop"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:outlineProvider="none"
             android:background="@drawable/button_green"
             android:textSize="14dp"
             android:textColor="@color/black"
-            android:fontFamily="@font/nanum_square_eb"
+            android:fontFamily="@font/nanum_square_b"
             android:text="쇼핑몰로 이동하기"/>
     </LinearLayout>
 </LinearLayout>

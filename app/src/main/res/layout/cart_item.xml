@@ -10,17 +10,21 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginRight= "15dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/sample"/>
-    <RelativeLayout
-        android:layout_width="wrap_content"
+        android:foreground="@color/ultraSemiTransparent"
+        android:scaleType="centerCrop" />
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:layout_alignTop="@id/item_image"
         android:layout_toRightOf="@id/item_image">
         <TextView
             android:id="@+id/item_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            android:maxLines="1"
             android:textSize="15dp"
             android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_b"
@@ -30,12 +34,11 @@
             android:id="@+id/x"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_alignParentEnd="true"
             android:onClick="onClick"
             android:src="@drawable/x"
             android:background="@android:color/transparent" />
 
-    </RelativeLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
