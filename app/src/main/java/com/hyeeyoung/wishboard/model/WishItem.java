@@ -5,7 +5,7 @@ package com.hyeeyoung.wishboard.model;
  */
 
 public class WishItem {
-    public String item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo;
+    public String item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo, cart_item_id;
 
     public WishItem() {
     }
@@ -65,6 +65,14 @@ public class WishItem {
         this.item_memo = item_memo;
     }
 
+    public void setCart_item_id(String cart_item_id) {
+        this.cart_item_id = cart_item_id;
+    }
+
+    public String getCart_item_id() {
+        return cart_item_id;
+    }
+
     @Override
     public String toString() {
         return "WishItem{" +
@@ -76,6 +84,7 @@ public class WishItem {
                 ", item_price='" + item_price + '\'' +
                 ", item_url='" + item_url + '\'' +
                 ", item_memo='" + item_memo + '\'' +
+                ", cart_item_id='" + cart_item_id + '\'' +
                 '}';
     }
 }

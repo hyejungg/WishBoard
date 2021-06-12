@@ -35,17 +35,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     private Intent intent;
     protected Context context;
     protected boolean isClicked = true;
-
-    private CartItem cart_item;
-    private CartItem res_cart_item;
+    private CartItem cart_item, res_cart_item;
     private String user_id;
-    private String item_id;
-    private boolean isCheckedCart;
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView item_image;
-        protected TextView item_name;
-        protected TextView item_price;
+        protected TextView item_name, item_price;
         protected Button cart;
         protected ConstraintLayout item;
 
@@ -58,10 +53,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
             this.item = (ConstraintLayout) view.findViewById(R.id.item);
         }
     }
-//    public ItemAdapter(ArrayList<WishItem> data) {
-//        this.wish_list = data;
-//        notifyDataSetChanged(); // @brief : 데이터 변경사항 반영
-//    }
 
     public ItemAdapter(ArrayList<WishItem> data, String user_id){
         this.wish_list = data;
@@ -84,7 +75,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, final int position) {
         WishItem item = wish_list.get(position);
 
-        try { // @brief : 아이템 이미지를 화면에 보여준다.
+        /**
+         * @brief : 아이템 이미지를 화면에 보여준다.
+         */
+        try {
             Picasso.get().load(item.getItem_image()).into(viewholder.item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
         } catch (IllegalArgumentException i) {
             Log.d("checkings", "아이템 사진 없음");
@@ -92,21 +86,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
 
         viewholder.item_name.setText(item.getItem_name());
         viewholder.item_price.setText(item.getItem_price());
-//        viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
-        //viewholder.cart.setImageResource(R.drawable.cart_black);
 
-        /** @TODO : 아이템 정보를 조회해 왔을 때 장바구니에 이미 담긴 애들은 색상이 변경되어 있어야 함 (추후 구현)
-         *  @param : cart 버튼 클릭 정보 SharedPreferences로저장
-         *  @see : 전체 아이템에 대하여 색상이 변경되는 현상 발생.... -> 수정 필요
+        /**
+         * @brief : 장바구니에 저장된 아이템은 장바구니 버튼을 활성화(그린컬러 적용)
          */
-//        if(!SaveSharedPreferences.getCheckedCart(context))
-//            viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
-//        else
-//            viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
+        if (item.getCart_item_id() == null) {
+            viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
+        }else{
+            viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
+        }
 
-        // @param : 아이템 클릭 시 아이템 상세조회로 이동
-
-       viewholder.item.setOnClickListener(new View.OnClickListener() {
+        /**
+         * @param : 아이템 클릭 시 아이템 상세조회로 이동
+         */
+        viewholder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(v.getContext(), ItemDetailActivity.class);
@@ -114,27 +107,26 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
                 v.getContext().startActivity(intent);
             }
         });
-       /* @TODO : 아이템 정보를 조회해 왔을 때 장바구니에 이미 담긴 애들은 색상이 변경되어 있어야 함 (추후 구현)
-        *  @brief : 아이템을 장바구니에 담거나 제거// 해당 버튼의 컬러를 변경 (추후 구현)
-        */
-       viewholder.cart.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               if (isClicked == true){
-                   //viewholder.cart.setImageResource(R.drawable.cart_green);
-                   viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
-                   isClicked = false;
-                   SaveSharedPreferences.setCheckedCart(context, true);
-                   addCart(user_id, item.getItem_id());
-               }else {
-                   //viewholder.cart.setImageResource(R.drawable.cart_black);
-                   viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
-                   isClicked = true;
-                   SaveSharedPreferences.setCheckedCart(context, false);
-                   deleteCart(user_id, item.getItem_id());
-               }
-           }
-       });
+
+        /**
+         *  @brief : 아이템을 장바구니에 담거나 제거
+         */
+        viewholder.cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked == true){
+                    viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
+                    isClicked = false;
+                    SaveSharedPreferences.setCheckedCart(context, true);
+                    addCart(user_id, item.getItem_id());
+                }else {
+                    viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
+                    isClicked = true;
+                    SaveSharedPreferences.setCheckedCart(context, false);
+                    deleteCart(user_id, item.getItem_id());
+                }
+            }
+        });
     }
     @Override
     public int getItemCount() {
@@ -145,7 +137,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
      * @brief : 장바구니에 아이템 정보를 추가
      * @param user_id 사용자 아이디
      * @param item_id 아이템 아이디
-//     * @param item_count 아이템 수량 (추후 구현)
      */
     private void addCart(String user_id, String item_id){
         // @brief : 서버에 들어갈 CartItem 초기화
@@ -183,6 +174,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
             }
         });
     }
+
     /**
      * @brief : 장바구니에 아이템 정보를 삭제
      * @param user_id 사용자 아이디
