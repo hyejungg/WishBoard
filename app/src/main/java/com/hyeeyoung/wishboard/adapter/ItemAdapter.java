@@ -21,6 +21,7 @@ import com.hyeeyoung.wishboard.model.CartItem;
 
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     private CartItem res_cart_item;
     private String user_id;
     private String item_id;
+    private boolean isCheckedCart;
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView item_image;
@@ -90,8 +92,18 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
 
         viewholder.item_name.setText(item.getItem_name());
         viewholder.item_price.setText(item.getItem_price());
-        viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
+//        viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
         //viewholder.cart.setImageResource(R.drawable.cart_black);
+
+        /** @TODO : 아이템 정보를 조회해 왔을 때 장바구니에 이미 담긴 애들은 색상이 변경되어 있어야 함 (추후 구현)
+         *  @param : cart 버튼 클릭 정보 SharedPreferences로저장
+         *  @see : 전체 아이템에 대하여 색상이 변경되는 현상 발생.... -> 수정 필요
+         */
+//        if(!SaveSharedPreferences.getCheckedCart(context))
+//            viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
+//        else
+//            viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
+
         // @param : 아이템 클릭 시 아이템 상세조회로 이동
 
        viewholder.item.setOnClickListener(new View.OnClickListener() {
@@ -112,12 +124,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
                    //viewholder.cart.setImageResource(R.drawable.cart_green);
                    viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
                    isClicked = false;
+                   SaveSharedPreferences.setCheckedCart(context, true);
                    addCart(user_id, item.getItem_id());
                }else {
                    //viewholder.cart.setImageResource(R.drawable.cart_black);
                    viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
                    isClicked = true;
-                   //deleteCart();
+                   SaveSharedPreferences.setCheckedCart(context, false);
                    deleteCart(user_id, item.getItem_id());
                }
            }
@@ -132,7 +145,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
      * @brief : 장바구니에 아이템 정보를 추가
      * @param user_id 사용자 아이디
      * @param item_id 아이템 아이디
-//     * @param item_count 아이템 수량
+//     * @param item_count 아이템 수량 (추후 구현)
      */
     private void addCart(String user_id, String item_id){
         // @brief : 서버에 들어갈 CartItem 초기화
