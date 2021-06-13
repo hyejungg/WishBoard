@@ -152,7 +152,7 @@ public class SignupActivity extends AppCompatActivity {
      * @param pw_re 재입력한 비밀번호
      * @see : private -> public static으로 변경. SigninActivity에서 카카오/구글 로그인 시 user_id 저장을 위해
      * */
-    public static void save(String email, String pw_re){
+    protected static void save(String email, String pw_re){
         // @brief : 카카오, 구글로 로그인하는 경우 -> pw가 없으므로
         if(pw_re.equals("")) pw_re = "0";
 
