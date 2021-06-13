@@ -25,7 +25,7 @@ public class IntroActivity extends AppCompatActivity {
                 intent = new Intent(IntroActivity.this, MainActivity.class);
             }
 
-            intent = new Intent(IntroActivity.this, MainActivity.class); // @deprecated : 추후 로그인 완벽 구현 시 삭제 예정
+//            intent = new Intent(IntroActivity.this, MainActivity.class); // @deprecated : 추후 로그인 완벽 구현 시 삭제 예정
             startActivity(intent);
             finish(); // @brief : Activity 화면 제거
         }
