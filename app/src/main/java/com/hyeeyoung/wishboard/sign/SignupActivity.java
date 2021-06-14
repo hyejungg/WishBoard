@@ -58,6 +58,9 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * @brief : 뷰 초기화
+     */
     private void init(){
         edit_email = findViewById(R.id.edit_email);
         edit_pw = findViewById(R.id.edit_pw);
@@ -65,6 +68,9 @@ public class SignupActivity extends AppCompatActivity {
         btn_signup = findViewById(R.id.btn_signup);
     }
 
+    /**
+     * @brief : 로그인 버튼을 클릭했을 때, 동작을 지정
+     */
     public void onClick(View v){
         switch (v.getId()){
             // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
@@ -96,7 +102,7 @@ public class SignupActivity extends AppCompatActivity {
      *@prams : 아이디 유효성 검사 함수
      * */
     private void isValidId() {
-        Pattern EMAIL_PATTENRN = Patterns.EMAIL_ADDRESS;
+        Pattern EMAIL_PATTENRN = Patterns.EMAIL_ADDRESS; // @brief : 이메일 형식에 맞도록 패턴 생성 (@~.~)
         if(EMAIL_PATTENRN.matcher(email).matches()){
             isCheckId = true;
         }else{
@@ -112,13 +118,12 @@ public class SignupActivity extends AppCompatActivity {
         pw = edit_pw.getText().toString();
         pw_re = edit_pw_re.getText().toString();
 
-        // @brief :
-        Pattern PASSWORD_PATTENRN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&]).{8}.$");
+        Pattern PASSWORD_PATTENRN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&]).{8}.$"); // @brief : 8자리 이상의 영문자, 숫자, 특수 문자 조합 정규식 패턴 생성
         Matcher match_pw = PASSWORD_PATTENRN.matcher(pw);
         Matcher match_pw_re = PASSWORD_PATTENRN.matcher(pw_re);
-        Log.i("pw", pw + " //**// " + pw_re);
-        if( (pw.length() != 0 && pw_re.length() != 0) && pw.length() == pw_re.length()) { //뭔가 입력함
-            if (match_pw.matches() == match_pw_re.matches()){ //형식에 맞는 경우
+        Log.i("pw", pw + " //**// " + pw_re); // @deprecated : test용
+        if( (pw.length() != 0 && pw_re.length() != 0) && pw.length() == pw_re.length()) {
+            if (match_pw.matches() == match_pw_re.matches()){ // @brief : 정규식에 통과한 경우 (입력 형식에 맞음)
                 setBtnBackgroud();
             } else {
                 Toast.makeText(this, "비밀번호 형식에 맞춰 작성해주세요.", Toast.LENGTH_SHORT).show();

@@ -32,8 +32,7 @@ public class CartActivity extends AppCompatActivity {
     private ImageButton cart;
     private ArrayList<CartItem> array_cart;
 
-    // @params : total 변수
-    private TextView total;
+    private TextView total; // @params : total 변수
     private String user_id = "";
 
     @Override
@@ -57,7 +56,9 @@ public class CartActivity extends AppCompatActivity {
         getData(user_id);
     }
 
-
+    /**
+     * @brief : <- 버튼을 클릭했을 때, 동작을 지정
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
@@ -80,6 +81,7 @@ public class CartActivity extends AppCompatActivity {
             public void onResponse(Call<ArrayList<CartItem>> call, Response<ArrayList<CartItem>> response) {
                 array_cart = response.body();
 
+                // @brief : 가져온 정보가 없는 경우, 빈 ArrayList<>로 초기화
                 if (array_cart == null) array_cart = new ArrayList<>();
 
                 if (response.isSuccessful()) {
@@ -103,11 +105,14 @@ public class CartActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * @brief : 뷰 초기화
+     */
     private void init() {
-        // @brief : 뷰 초기화
         total = findViewById(R.id.total);
         cart = findViewById(R.id.cart);
 
+        // @brief : recyclerView 관련 초기화
         recyclerView = findViewById(R.id.recyclerview_cart_list);
         adapter = new CartAdapter(array_cart);
         recyclerView.setAdapter(adapter);
