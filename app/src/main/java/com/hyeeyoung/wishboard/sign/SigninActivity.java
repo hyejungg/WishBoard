@@ -74,6 +74,9 @@ public class SigninActivity extends AppCompatActivity {
 //        updateGoogleLogin();
     }
 
+    /**
+     * @brief : 로그인 버튼을 클릭했을 때, 동작을 지정
+     */
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_signin:
@@ -99,17 +102,22 @@ public class SigninActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @brief : 뷰 초기화
+     */
     private void init() {
+        // @brief : 뷰 초기화
         edit_email = findViewById(R.id.email);
         edit_pw = findViewById(R.id.pw);
     }
 
     /**
-     * @params : 메인액티비티로 넘기기 위한 함수
+     * @params : 로그인 성공 시 메인액티비티로 넘기기 위한 함수
      **/
     private void goMainActivity(boolean isLogin) {
         // @brief : 로그인 성공 시 MainActivity로 이동
         if (isLogin) {
+            // @brief : 로그인 이후 해당 기기에서 재로그인 없이 이용할 수 있도록 sharedpreferences에 저장
             SaveSharedPreferences.setUserEmail(this, res_user_item.email);
             SaveSharedPreferences.setUserId(this, res_user_item.user_id);
 
@@ -127,6 +135,7 @@ public class SigninActivity extends AppCompatActivity {
      * @see : 구글, 카카오 로그인의 경우 -> user_id를 생성 후 가져오기 위해 이 함수 사용
      **/
     private void signInWish(String email, String pw) {
+        // @biref : 로그인 요청 시 @body에 담아서 전송 -> user_item에 담아 전송
         user_item.setEmail(email);
         user_item.setPassword(pw);
 
@@ -139,13 +148,15 @@ public class SigninActivity extends AppCompatActivity {
                     // @brief : 정상적으로 통신 성공한 경우
                     try {
                         res_user_item = response.body();
-                        // @brief : 로그인 이후 필요한 User_id
+                        // @brief : 로그인 이후 필요한 user_id, email 저장
                         res_user_item.user_id = res_user_item.getUser_id();
                         res_user_item.email = res_user_item.getEmail();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Log.i("Wish 로그인", "성공" + "\n" + res_user_item.user_id + " / " + res_user_item.email);
+                    Log.i("Wish 로그인", "성공" + "\n" + res_user_item.user_id + " / " + res_user_item.email); // @deprecated : 확인용
+
+                    // @brief : 로그인 성공 시 메인 화면으로 이동
                     goMainActivity(true);
                 } else {
                     // @brief : 통신에 실패한 경우

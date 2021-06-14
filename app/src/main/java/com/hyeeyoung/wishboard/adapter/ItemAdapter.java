@@ -109,17 +109,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
         });
 
         /**
-         *  @brief : 아이템을 장바구니에 담거나 제거
+         *  @brief : 아이템을 장바구니에 추가/제거
          */
         viewholder.cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isClicked == true){
+                if (isClicked == true){ // @brief : 추가하는 경우
                     viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
                     isClicked = false;
                     SaveSharedPreferences.setCheckedCart(context, true);
                     addCart(user_id, item.getItem_id());
-                }else {
+                }else { // @brief : 제거하는 경우
                     viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
                     isClicked = true;
                     SaveSharedPreferences.setCheckedCart(context, false);
@@ -141,7 +141,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     private void addCart(String user_id, String item_id){
         // @brief : 서버에 들어갈 CartItem 초기화
         cart_item = new CartItem(user_id, item_id);
-        Log.i("CartItem add값 확인", user_id + " / " + item_id);
+        Log.i("CartItem add값 확인", user_id + " / " + item_id); // @deprecated : 확인용
 
         // @params : 서버의 응답을 받는 CartItem
         res_cart_item = new CartItem();
@@ -154,11 +154,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
                     // @brief : 정상적으로 통신 성공한 경우
                     try{
                         res_cart_item = response.body();
-                        cart_item.setItem_count(res_cart_item.getItem_count());
+                        cart_item.setItem_count(res_cart_item.getItem_count()); // @brief : item_count를 서버로부터 받아 user_id별 count값 재할당
                     }catch(Exception e){
                         e.printStackTrace();
                     }
-                    Log.i("Cart 등록", "성공" + "\n cart_item의 qty : " + cart_item.getItem_count());
+                    Log.i("Cart 등록", "성공");
                 }else{
                     // @brief : 통신에 실패한 경우
                     Log.e("Cart 등록", "오류");
@@ -181,8 +181,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
      * @param item_id 아이템 아이디
      */
     private void deleteCart(String user_id, String item_id){
-        Log.i("CartItem delete값 확인", user_id + " / " + item_id);
+        Log.i("CartItem delete값 확인", user_id + " / " + item_id); // @deprecated : 확인용
 
+        // @brief : delete는 보안을 위해 @body로 담아 전송 -> CartItem에 정보를 담아 전송
         CartItem delete_cart = new CartItem(user_id, item_id);
 
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
