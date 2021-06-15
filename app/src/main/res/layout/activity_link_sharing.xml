@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="wrap_content">-->
-
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     android:id="@+id/layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,14 +29,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp">
 
-            <TextView
+            <EditText
                 android:id="@+id/item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/nanum_square_b"
-                android:text=""
+                android:inputType="text"
                 android:textColor="@color/black"
+                android:background="@null"
                 android:textSize="15dp" />
 
             <LinearLayout
@@ -63,7 +61,7 @@
                     android:textColorHint="@color/mediumGray"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
-
+<!-- @brief : 원 표시 추가할지 고민 중-->
 <!--                <TextView-->
 <!--                    android:id="@+id/won"-->
 <!--                    android:layout_width="wrap_content"-->
@@ -171,12 +169,11 @@
                 android:fontFamily="@font/nanum_square_b"
                 android:gravity="center_vertical"
                 android:hint="메모를 입력해보세요."
+                android:background="@null"
                 android:inputType="text"
                 android:paddingHorizontal="15dp"
                 android:textColorHint="@color/mediumGray"
                 android:textSize="15dp" />
-            <!-- @deprecated : android:background="@drawable/background_memo" 배경추가할지 고민 중-->
-
         </RelativeLayout>
 
         <Button
@@ -202,6 +199,3 @@
         android:layout_gravity="center_horizontal"
         android:src="@mipmap/ic_main_round" />
 </FrameLayout>
-
-
-    <!--</RelativeLayout>-->

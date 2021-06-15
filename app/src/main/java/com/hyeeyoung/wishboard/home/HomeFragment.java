@@ -93,10 +93,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0){
             user_id = SaveSharedPreferences.getUserId(this.getActivity());
-            Log.i("Wish/HomeFragment", "user_id = " + user_id); // @deprecated : test용
+            //Log.i("Wish/HomeFragment", "user_id = " + user_id); // @deprecated : test용
             selectItemInfo(user_id);
         }
-       //init(); // @deprecated : 처음 인트로에서 메인으로 이동할 때 아이템이 보이지 않는 문제로 init() 위치 옮김
+        // @todo : 유저아이디를 가져오지 못하는 경우 예외처리하기
         return view;
     }
 
@@ -110,7 +110,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback<ArrayList<WishItem>>() {
             @Override
             public void onResponse(Call<ArrayList<WishItem>> call, Response<ArrayList<WishItem>> response) {
-                wish_list = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨.
+                wish_list = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 리턴됨.
 
                 // @brief : 가져온 아이템이 없는 경우
                 if (wish_list == null) {
@@ -122,13 +122,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     if (wish_list.size() > 0) { // @brief : 가져온 아이템이 하나 이상인 경우
                         Log.i("아이템 가져오기", "Retrofit 통신 성공");
                         Log.i("가져온 아이템 살펴보기", wish_list+""); // @deprecated : 테스트용
-                        //init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+                        init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
                     }
                 } else { // @brief : 통신에 실패한 경우
                     Log.e("아이템 가져오기", "Retrofit 통신 실패");
-                    //init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+                    init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
                 }
-                init();
             }
 
             @Override
