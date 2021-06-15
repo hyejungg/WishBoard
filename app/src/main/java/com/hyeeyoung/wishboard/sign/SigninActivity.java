@@ -114,7 +114,7 @@ public class SigninActivity extends AppCompatActivity {
             SaveSharedPreferences.setUserId(this, res_user_item.user_id);
 
             Intent goMain = new Intent(this, MainActivity.class);
-            Toast.makeText(this, "로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
             startActivity(goMain);
         }
 
