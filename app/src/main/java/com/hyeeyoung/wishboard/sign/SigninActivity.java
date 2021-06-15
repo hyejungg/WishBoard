@@ -69,11 +69,14 @@ public class SigninActivity extends AppCompatActivity {
         super.onStart();
         // @TODO : 위치 상 intro로 옮겨야 할 것 같은데 추후 결정 ......
         // @see : onStart()될 때마다 해당 기기에서 kakao 로그인한 기록이 있는 경우, 자동으로 로그인 정보를 가져옴
-        updateKakaoLogin();
+//        updateKakaoLogin();
         // @see : onStart()될 때마다 해당 기기에서 google 로그인한 기록이 있는 경우, 자동으로 로그인 정보를 가져옴
-        updateGoogleLogin();
+//        updateGoogleLogin();
     }
 
+    /**
+     * @brief : 로그인 버튼을 클릭했을 때, 동작을 지정
+     */
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_signin:
@@ -99,17 +102,22 @@ public class SigninActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @brief : 뷰 초기화
+     */
     private void init() {
+        // @brief : 뷰 초기화
         edit_email = findViewById(R.id.email);
         edit_pw = findViewById(R.id.pw);
     }
 
     /**
-     * @params : 메인액티비티로 넘기기 위한 함수
+     * @params : 로그인 성공 시 메인액티비티로 넘기기 위한 함수
      **/
     private void goMainActivity(boolean isLogin) {
         // @brief : 로그인 성공 시 MainActivity로 이동
-        if(isLogin){
+        if (isLogin) {
+            // @brief : 로그인 이후 해당 기기에서 재로그인 없이 이용할 수 있도록 sharedpreferences에 저장
             SaveSharedPreferences.setUserEmail(this, res_user_item.email);
             SaveSharedPreferences.setUserId(this, res_user_item.user_id);
 
@@ -119,10 +127,15 @@ public class SigninActivity extends AppCompatActivity {
         }
 
     }
+
     /****************************************
-     * @params : wishboard 로그인 관련 함수
+     * @brief : wishboard 로그인 관련 함수
+     * @param email 이메일주소
+     * @param pw 비밀번호
+     * @see : 구글, 카카오 로그인의 경우 -> user_id를 생성 후 가져오기 위해 이 함수 사용
      **/
-    private void signInWish(String email, String pw){
+    private void signInWish(String email, String pw) {
+        // @biref : 로그인 요청 시 @body에 담아서 전송 -> user_item에 담아 전송
         user_item.setEmail(email);
         user_item.setPassword(pw);
 
@@ -131,19 +144,21 @@ public class SigninActivity extends AppCompatActivity {
         call.enqueue(new Callback<UserItem>() {
             @Override
             public void onResponse(Call<UserItem> call, Response<UserItem> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     // @brief : 정상적으로 통신 성공한 경우
-                    try{
+                    try {
                         res_user_item = response.body();
-                        // @brief : 로그인 이후 필요한 User_id
+                        // @brief : 로그인 이후 필요한 user_id, email 저장
                         res_user_item.user_id = res_user_item.getUser_id();
                         res_user_item.email = res_user_item.getEmail();
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Log.i("Wish 로그인", "성공" + "\n" + res_user_item.user_id + " / " + res_user_item.email);
+                    Log.i("Wish 로그인", "성공" + "\n" + res_user_item.user_id + " / " + res_user_item.email); // @deprecated : 확인용
+
+                    // @brief : 로그인 성공 시 메인 화면으로 이동
                     goMainActivity(true);
-                }else{
+                } else {
                     // @brief : 통신에 실패한 경우
                     Log.e("Wish 로그인", "오류");
                     Toast.makeText(SigninActivity.this, "다시 입력하세요.", Toast.LENGTH_SHORT).show();
@@ -160,6 +175,7 @@ public class SigninActivity extends AppCompatActivity {
             }
         });
     }
+
     /****************************************
      * @params : kakao 로그인 관련 함수
      **/
@@ -177,13 +193,14 @@ public class SigninActivity extends AppCompatActivity {
      */
     Function2<OAuthToken, Throwable, Unit> callback = (oAuthToken, throwable) -> {
         if (oAuthToken != null) {
-            Log.i("카카오 로그인", "성공");
+            Log.i("[카카오] 로그인", "성공");
+//            updateKakaoLogin();
+            updateKakaoLogin();
         }
         if (throwable != null) {
-            Log.i("카카오 로그인", "실패");
+            Log.i("[카카오] 로그인", "실패");
             Log.e("signInKakao()", throwable.getLocalizedMessage());
         }
-        updateKakaoLogin();
         return null;
     };
 
@@ -192,15 +209,16 @@ public class SigninActivity extends AppCompatActivity {
         UserApiClient.getInstance().me((user, throwable) -> {
             if (user != null) {
                 // @brief : 로그인 성공
-                Log.i("UserApiClient", user.toString());
-
+                Log.i("[카카오] 로그인 정보", user.toString());
                 // @brief : 로그인한 유저의 email주소와 token 값 가져오기. pw는 제공 X
                 email = user.getKakaoAccount().getEmail();
-//                token = String.valueOf(user.getId());
-//                pw = null;
+                Log.i("[카카오] 로그인 정보", email + "");
 
-                // @brief : 로그인 성공했으므로 메인엑티비티로 이동
-                goMainActivity(user != null);
+                /* @TODO : 이 로직이 맞는지 ..... 보안상의 문제가 있어 보여서 조금 더 다른 방법 고안 필요 + 처음엔 로그인 실패 뜨고 재차 한 번 더 눌러줘야 로그인 됨
+                   @brief : email주소를 user db에 넣어 user_id 생성
+                   @see SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동 */
+                SignupActivity.save(email, "");
+                signInWish(email, "0");
             } else {
                 // @brief : 로그인 실패
 
@@ -214,21 +232,23 @@ public class SigninActivity extends AppCompatActivity {
         UserApiClient.getInstance().logout((throwable) -> {
             if (throwable != null) {
                 // @brief : 로그아웃 실패
+                Log.e("[카카오] 로그아웃", "실패", throwable);
                 Toast.makeText(this, "카카오 로그아웃을 실패했습니다.", Toast.LENGTH_SHORT).show();
             } else {
                 // @brief : 로그아웃 성공
+                Log.i("[카카오] 로그아웃", "성공");
                 Toast.makeText(this, "카카오 로그아웃이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
             }
             return null;
         });
         // @brief : 카카오 연결 끊기
-        UserApiClient.getInstance().logout((throwable) -> {
+        UserApiClient.getInstance().unlink((throwable) -> {
             if (throwable != null) {
                 // @brief : 연결 끊기 실패
-                Log.e("kakaoLogout", "연결 끊기 실패", throwable);
+                Log.e("[카카오] 로그아웃", "연결 끊기 실패", throwable);
             } else {
                 // @brief : 연결 끊기 성공
-                Log.e("kakaoLogout", "연결 끊기 성공. SDK에서 토큰 삭제");
+                Log.i("kakaoLogout", "연결 끊기 성공. SDK에서 토큰 삭제");
             }
             return null;
         });
@@ -265,12 +285,14 @@ public class SigninActivity extends AppCompatActivity {
                 try {
                     // @brief : 구글 로그인 성공 했다면 -> task의 정보를 가져옴
                     GoogleSignInAccount account = task.getResult(ApiException.class);
-                    Log.d("firebaseAuthWithGoogle", account.getIdToken());
                     token = account.getIdToken();
+                    Log.d("[구글] 로그인", "task의 token 정보\n" + token);
+                    email = account.getEmail();
+                    Log.d("[구글] 로그인", "task의 이메일 정보\n" + email);
                     firebaseAuthWithGoogle(account);
                 } catch (ApiException e) {
                     // @brief : 구글 로그인 실패 했다면
-                    Log.w("firebaseAuthWithGoogle", "Google sign in failed", e);
+                    Log.e("[구글] 로그인", "task 정보 실패", e);
                 }
             }
         }
@@ -288,12 +310,17 @@ public class SigninActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // @brief : 로그인 성공 시
-                        Log.d("firebaseAuthWithGoogle", "signInWithCredential:success");
                         user = mAuth.getCurrentUser();
+                        Log.i("[구글] 로그인", "signInWithCredential:성공");
                         Toast.makeText(getApplicationContext(), "구글 로그인 성공", Toast.LENGTH_LONG).show();
+                        /* @TODO : 이 로직이 맞는지 ..... 보안상의 문제가 있어 보여서 조금 더 다른 방법 고안 필요 + 처음엔 로그인 실패 뜨고 재차 한 번 더 눌러줘야 로그인 됨
+                           @brief : email주소를 user db에 넣어 user_id 생성
+                           @see SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동 */
+                        SignupActivity.save(email, "");
+                        signInWish(email, "0");
                     } else {
                         // @brief : 로그인 실패 시
-                        Log.w("firebaseAuthWithGoogle", "signInWithCredential:failure", task.getException());
+                        Log.e("[구글] 로그인", "signInWithCredential:실패" + task.getException());
                         Toast.makeText(getApplicationContext(), "구글 로그인 실패", Toast.LENGTH_LONG).show();
                     }
                 });

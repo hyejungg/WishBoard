@@ -6,10 +6,10 @@ public class CartItem {
     public String user_id;
     public String item_id;
 
-    private String item_image;
-    private String item_name;
-    private String item_price;
-    private String item_count;
+    private String item_image; // @parmas : 서버로부터 받아와 표시될 item_image
+    private String item_name; // @parmas : 서버로부터 받아와 표시될 item_name
+    private String item_price; // @parmas : 서버로부터 받아와 표시될 item_price
+    private String item_count; // @parmas : 서버로부터 받아와 표시될 item_count
 
     public CartItem() {
     }

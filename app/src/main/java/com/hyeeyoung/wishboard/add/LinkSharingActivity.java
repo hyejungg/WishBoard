@@ -163,7 +163,6 @@ public class LinkSharingActivity extends AppCompatActivity {
          * https://stackoverflow.com/questions/35295760/custom-date-time-picker-using-numberpicker-and-fragmentdialog-in-android
          * https://developer.android.com/guide/topics/resources/string-resource?hl=ko#java
          */
-
     }
 
     // @param : 날짜 넘버피커 내 디스플레이 될 날짜값 배열 반환
@@ -190,16 +189,21 @@ public class LinkSharingActivity extends AppCompatActivity {
     }
 
     private WishItem getWishItem() {
-        wish_item.user_id = user_id; // @todo : 회원정보와 연동
-        wish_item.folder_id = "1";
+        wish_item.user_id = user_id;
+        wish_item.folder_id = "1"; // @todo : 폴더 연동 후 수정
 
+        String get_item_name = item_name.getText().toString();
         String get_item_price = item_price.getText().toString();
         String get_item_memo = item_memo.getText().toString();
 
         /**
          * @brief : 아이템 정보에 대한 null값 예외처리
-         * @TODO : 아이템 이미지, 상품명에 대한 예외처리도 추가
+         * @TODO : 아이템 이미지에 대한 예외처리도 추가
          */
+        // @brief : 상품명데이터 예외처리
+        if(!get_item_name.equals("")){ //@ brief : 입력값으로 초기화
+            wish_item.setItem_name(get_item_name); // // @ brief : 사용자의 입력 값이 있는 경우
+        }
 
         // @brief : 가격데이터 예외처리
         if(get_item_price.equals("")){ // @ brief : 공유페이지에서 가져온 가격데이터 또는 사용자의 입력 값이 없는 경우 null로 초기화
@@ -344,7 +348,7 @@ public class LinkSharingActivity extends AppCompatActivity {
             item_price.setText(get_price);
 
             // @brief : 아이템 객체의 상품명 초기화
-            wish_item.setItem_name(get_title);
+            //wish_item.setItem_name(get_title);
 
             try { // @brief : 피카소로 이미지 로딩 속도 개선
                 Picasso.get().load(get_image).into(item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이

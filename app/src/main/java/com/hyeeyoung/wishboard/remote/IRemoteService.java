@@ -44,17 +44,12 @@ public interface IRemoteService {
     Call<CartItem> insertCartInfo(@Body CartItem cart_item);
     @GET("/basket/{user_id}")
     Call<ArrayList<CartItem>> selectCartInfo(@Path("user_id") String user_id);
-
-    /* @see : delete의 경우 body로 숨겨서 전달해야 함!!
-     *        retrofit에서 제공하는 @DELETE 어노테이션을 이용하여 전달할 때는 Body로 전달 할 수 없음
-     *        HTTP 어노테이션을 사용하여 전달
-     *        @DELETE 어노테이션을 이용할 경우, @Path로 전달 가능
+    @HTTP(method = "DELETE", path = "/basket", hasBody = true)
+    Call<CartItem> deleteCartInfo(@Body CartItem cart_item);
+    /* @see : delete의 경우 보안을 위해 body로 숨겨서 전달할 때 HTTP 어노테이션을 사용하여 전달
+     *        retrofit에서 제공하는 @DELETE 어노테이션을 이용할 경우, @Path로 전달 가능
      *        참고 사이트 : https://square.github.io/retrofit/2.x/retrofit/retrofit2/http/HTTP.html
      */
-//    @DELETE("/basket/{user_id}/{item_id}")
-//    Call<CartItem> deleteCartInfo(@Path("user_id") String user_id, @Path("item_id") String item_id);
-    @HTTP(method = "DELETE", path = "/basket", hasBody = true)
-    Call<CartItem> deleteCartInfo(@Body CartItem cart_item); // @brief : delete의 경우 body로 숨겨서 전달해야 함!!
 
     /*
     @brief :

@@ -16,6 +16,7 @@ var root_router = require('./routes/root');
 var item = require('./routes/item');
 var user = require('./routes/user');
 var noti = require('./routes/noti');
+var basket = require('./routes/basket');
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -30,8 +31,9 @@ app.use(bodyParser.urlencoded({extended: false}));
  */
 app.use('/', root_router); 
 app.use('/item', item); //@ brief /new_item : 안드로이드에서 작성한 경로
-app.use('/user',user);
-app.use('/noti',noti);
+app.use('/user', user);
+app.use('/noti', noti);
+app.use('/basket', basket);
 app.use(express.static(path.join(__dirname, 'public')));
 
 //@brief 4.데이터베이스 연결
