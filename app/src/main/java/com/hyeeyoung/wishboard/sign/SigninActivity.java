@@ -29,6 +29,9 @@ import com.kakao.sdk.auth.LoginClient;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
 
+import java.util.Arrays;
+import java.util.List;
+
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 import retrofit2.Call;
@@ -213,6 +216,20 @@ public class SigninActivity extends AppCompatActivity {
                 // @brief : 로그인한 유저의 email주소와 token 값 가져오기. pw는 제공 X
                 email = user.getKakaoAccount().getEmail();
                 Log.i("[카카오] 로그인 정보", email + "");
+                // @brief : 로그인한 유저의 email주소를 못가져올 경우 추가 정보 요청하기
+                if(email == null){
+                    List<String> scopes = Arrays.asList("account_email");
+                    LoginClient.getInstance().loginWithNewScopes(this, scopes, (token, error) -> {
+                        if(error != null){
+                            Log.e("[카카오] 로그인 추가정보 요청", "실패",  error);
+                        }else{
+                            Log.i("[카카오] 로그인 추가정보 요청", "성공");
+                            Log.i("[카카오] 로그인 추가정보 요청", String.valueOf(token.getScopes()));
+                            email = token.getScopes().toString();
+                        }
+                        return null;
+                    } );
+                }
 
                 /* @TODO : 이 로직이 맞는지 ..... 보안상의 문제가 있어 보여서 조금 더 다른 방법 고안 필요 + 처음엔 로그인 실패 뜨고 재차 한 번 더 눌러줘야 로그인 됨
                    @brief : email주소를 user db에 넣어 user_id 생성
