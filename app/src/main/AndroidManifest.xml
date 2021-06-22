@@ -7,11 +7,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- @brief : 인터넷 접속 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- @brief : 저장소 접근 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" /> <!--카메라 권한-->
-    <uses-feature android:name="android.hardware.camera" android:required="true"/> <!--카메라 기능 사용-->
-
-<!-- @param android:networkSecurityConfig="@xml/network_security_config" : http 프로토콜 접속 시 예외발생 조치를 위한 설정파일-->
-<!-- @param android:usesCleartextTraffic="true" : http 프로토콜 접속 시 예외발생 조치를 위한 설정파일-->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 카메라 권한 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".sign.KakaoApplication"
@@ -23,24 +22,25 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="Instantiatable">
-
+        <activity android:name=".add.NewItemActivity"></activity>
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".add.LinkSharingActivity"
             android:theme="@style/AppThemePopup">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-
         <activity android:name=".sign.SigninActivity" />
         <activity android:name=".sign.SignupActivity" />
 
@@ -51,13 +51,11 @@
         <activity android:name=".detail.ItemDetailActivity"/>
         <activity android:name=".cart.CartActivity" />
         <activity android:name=".folder.FolderListActivity" />
-
-        <activity android:name=".MainActivity"/>
-
-        <!-- @ brief : kakao 로그인을 위해 Redirect URI 접근 -->
+        <activity android:name=".MainActivity" /> <!-- @ brief : kakao 로그인을 위해 Redirect URI 접근 -->
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- @ see : Redirect URI == kakao{네이티브 앱 키 값} -->
@@ -65,17 +63,16 @@
                     android:host="oauth"
                     android:scheme="kakaoe5c80a93a90709e1f697d50166b62b30" />
             </intent-filter>
-        </activity>
-
-    <!-- @brief: 이미지의 캐시가 저장될 수 있는 경로를 지정 -->
+        </activity> <!-- @brief: 이미지의 캐시가 저장될 수 있는 경로를 지정 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.hyeeyoung.wishboard"
             android:exported="false"
             android:grantUriPermissions="true">
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/filepaths" />
-    </provider>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
+
 </manifest>

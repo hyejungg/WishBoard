@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/save" />
+            android:src="@drawable/save"
+            android:onClick="onClick"/>
     </LinearLayout>
     <TextView
         android:id="@+id/add_date"
@@ -52,7 +53,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/item_image_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:onClick="onClick">
                 <ImageView
                     android:id="@+id/item_image"
                     android:layout_width="match_parent"

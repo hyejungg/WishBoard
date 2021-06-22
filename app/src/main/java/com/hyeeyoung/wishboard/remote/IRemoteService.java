@@ -10,9 +10,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface IRemoteService {
@@ -66,4 +69,12 @@ public interface IRemoteService {
     // @brief : 홈화면에서 로그인한 사용자의 아이템 정보를 요청
     @GET("/item/detail/{item_id}")
     Call<WishItem> selectItemDetails(@Path("item_id") String item_id);
+
+    // @brief : 아이템 상세조회에서 아이템 수정
+    @PUT("/item/detail/{item_id}")
+    Call<WishItem> updateItem(@Path("item_id") String item_id, @Body WishItem wish_item);
+
+    // @brief : 아이템 상세조회에서 아이템 삭제
+    @DELETE("/item/detail/{item_id}")
+    Call<Void> deleteItem(@Path("item_id") String item_id);
 }
