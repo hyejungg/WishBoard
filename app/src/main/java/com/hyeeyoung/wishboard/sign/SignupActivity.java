@@ -17,6 +17,7 @@ import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
+import com.kakao.sdk.user.model.User;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +33,7 @@ public class SignupActivity extends AppCompatActivity {
     private String pw; // @params : DB에 들어갈 사용자 pw
     private String pw_re;  //@deprecated : DB에 안넣고 이 안에서 유효성 검사 시 필요
     private boolean option_noti = true; // @parmas : DB에 들어갈 사용자 option_noti //기본값 true
-    private UserItem user_item;
+    //public UserItem user_item;
 
     private boolean isCheckPw = false;
     private boolean isCheckId = false;
@@ -57,6 +58,9 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * @brief : 뷰 초기화
+     */
     private void init(){
         edit_email = findViewById(R.id.edit_email);
         edit_pw = findViewById(R.id.edit_pw);
@@ -64,6 +68,9 @@ public class SignupActivity extends AppCompatActivity {
         btn_signup = findViewById(R.id.btn_signup);
     }
 
+    /**
+     * @brief : 로그인 버튼을 클릭했을 때, 동작을 지정
+     */
     public void onClick(View v){
         switch (v.getId()){
             // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
@@ -72,15 +79,9 @@ public class SignupActivity extends AppCompatActivity {
                 // @brief : 오른쪽 -> 왼쪽으로 화면 전환
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
                 break;
-
             case R.id.btn_signup:
                 // @brief : 비밀번호 유효성 검사
                 isValidPassWd();
-
-                /**
-                 * @see : 서버와 연결 성공하면 token 값을 생성, 이 값과 함께 db에 저장
-                 *         이후 이 token 값은 로그인 화면에서 사용?
-                 */
 
                 // @brief : 회원가입 성공하여 로그인 화면으로 이동
                 if(isCheckId && isCheckPw) {
@@ -101,7 +102,7 @@ public class SignupActivity extends AppCompatActivity {
      *@prams : 아이디 유효성 검사 함수
      * */
     private void isValidId() {
-        Pattern EMAIL_PATTENRN = Patterns.EMAIL_ADDRESS;
+        Pattern EMAIL_PATTENRN = Patterns.EMAIL_ADDRESS; // @brief : 이메일 형식에 맞도록 패턴 생성 (@~.~)
         if(EMAIL_PATTENRN.matcher(email).matches()){
             isCheckId = true;
         }else{
@@ -117,13 +118,12 @@ public class SignupActivity extends AppCompatActivity {
         pw = edit_pw.getText().toString();
         pw_re = edit_pw_re.getText().toString();
 
-        // @brief :
-        Pattern PASSWORD_PATTENRN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&]).{8}.$");
+        Pattern PASSWORD_PATTENRN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&]).{8}.$"); // @brief : 8자리 이상의 영문자, 숫자, 특수 문자 조합 정규식 패턴 생성
         Matcher match_pw = PASSWORD_PATTENRN.matcher(pw);
         Matcher match_pw_re = PASSWORD_PATTENRN.matcher(pw_re);
-        Log.i("pw", pw + " //**// " + pw_re);
-        if( (pw.length() != 0 && pw_re.length() != 0) && pw.length() == pw_re.length()) { //뭔가 입력함
-            if (match_pw.matches() == match_pw_re.matches()){ //형식에 맞는 경우
+        Log.i("pw", pw + " //**// " + pw_re); // @deprecated : test용
+        if( (pw.length() != 0 && pw_re.length() != 0) && pw.length() == pw_re.length()) {
+            if (match_pw.matches() == match_pw_re.matches()){ // @brief : 정규식에 통과한 경우 (입력 형식에 맞음)
                 setBtnBackgroud();
             } else {
                 Toast.makeText(this, "비밀번호 형식에 맞춰 작성해주세요.", Toast.LENGTH_SHORT).show();
@@ -135,6 +135,10 @@ public class SignupActivity extends AppCompatActivity {
 
         }
     }
+
+    /**
+     * @breif : 회원가입 가능 시 버튼이 초록색으로 변경
+     */
     private void setBtnBackgroud(){
         if(isCheckId){ // @brief : 아이디도 입력되어 있다면,
             Drawable bg_btn_green = getResources().getDrawable(R.drawable.button_green);
@@ -148,13 +152,18 @@ public class SignupActivity extends AppCompatActivity {
 
     }
     /**
-     * @prams : Retrofit을 이용하여 서버에 데이터 값 저장하는 함수
+     * @brief : Retrofit을 이용하여 서버에 데이터 값 저장하는 함수
+     * @param email 이메일 주소
+     * @param pw_re 재입력한 비밀번호
+     * @see : private -> public static으로 변경. SigninActivity에서 카카오/구글 로그인 시 user_id 저장을 위해
      * */
-    private void save(String email, String pw_re){
-        user_item = new UserItem(null, email, pw_re, true, ""); // @brief : option_noti는 초기값 true
-        //Log.e("회원정보 등록", "정보" + email + ", "+ pw_re);
+    protected static void save(String email, String pw_re){
+        // @brief : 카카오, 구글로 로그인하는 경우 -> pw가 없으므로
+        if(pw_re.equals("")) pw_re = "0";
 
-        // @brief : Retrofit
+        UserItem user_item = new UserItem(null, email, pw_re, true, ""); // @brief : option_noti는 초기값 true
+
+        // @brief : Retrofit 통신을 통해 서버에 user 정보 저장 요청
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
         Call<ResponseBody> call = remote_service.signUpUser(user_item);
         call.enqueue(new Callback<ResponseBody>(){
