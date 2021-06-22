@@ -35,6 +35,7 @@ import com.hyeeyoung.wishboard.service.AwsS3Service;
 import java.io.File;
 
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -119,31 +120,37 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_new_item, container, false);
+
+        init();
+
+        if (SaveSharedPreferences.getUserId(this.getActivity()).length() != 0)
+            user_id = SaveSharedPreferences.getUserId(this.getActivity());
+
+        return view;
+    }
+
+    public void init(){
         item_image_layout = (ConstraintLayout) view.findViewById(R.id.item_image_layout);
         btn_folder = (LinearLayout) view.findViewById(R.id.btn_folder);
         btn_noti = (LinearLayout) view.findViewById(R.id.btn_noti);
         save = (ImageButton) view.findViewById(R.id.save);
+
+        item_image_layout.setOnClickListener(this);
+        btn_folder.setOnClickListener(this);
+        btn_noti.setOnClickListener(this);
+        save.setOnClickListener(this);
 
         item_name = (EditText) view.findViewById(R.id.item_name);
         item_price = (EditText) view.findViewById(R.id.item_price);
         item_url = (EditText) view.findViewById(R.id.item_url);
         item_memo = (EditText) view.findViewById(R.id.item_memo);
         item_image = (ImageView) view.findViewById(R.id.item_image);
-        item_image_layout.setOnClickListener(this);
-        btn_folder.setOnClickListener(this);
-        btn_noti.setOnClickListener(this);
-        save.setOnClickListener(this);
         layout = (LinearLayout)view.findViewById(R.id.layout);
 
         // @brief : TedPermission 라이브러리 -> 카메라 권한 획득
         new WindowPermission(getContext()).setPermission(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA
         );
-
-        if (SaveSharedPreferences.getUserId(this.getActivity()).length() != 0)
-            user_id = SaveSharedPreferences.getUserId(this.getActivity());
-
-        return view;
     }
 
     /**

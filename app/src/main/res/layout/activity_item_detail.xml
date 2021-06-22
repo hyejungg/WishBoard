@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:src="@drawable/back"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent"
+        android:onClick="onClick"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -241,7 +242,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:src="@drawable/delete"
-                android:background="@android:color/transparent" />
+                android:background="@android:color/transparent"
+                android:onClick="onClick"/>
 
             <ImageButton
                 android:id="@+id/edit"
@@ -249,7 +251,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:src="@drawable/edit"
-                android:background="@android:color/transparent" />
+                android:background="@android:color/transparent"
+                android:onClick="onClick"/>
         </LinearLayout>
 <!--        @brief : outlineProvider="none" 버튼 음영 없애기 위함-->
         <Button
@@ -262,6 +265,7 @@
             android:textSize="14dp"
             android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_b"
-            android:text="쇼핑몰로 이동하기"/>
+            android:text="쇼핑몰로 이동하기"
+            android:onClick="onClick"/>
     </LinearLayout>
 </LinearLayout>
