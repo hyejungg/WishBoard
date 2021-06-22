@@ -76,7 +76,7 @@ router.get('/home/:user_id', function(req, res, next) {
 //item/detail/:user_id
 router.get('/detail/:item_id', function(req, res, next) {
     // @brief : express 모듈을 사용하면 /:를 통해서 클라이언트에서 주소를 통해 요청한 값을 params로 가져올 수 있다
-    var item_id = req.params.item_id;
+    var item_id = Number(req.params.item_id);
     console.log("item_id : " + item_id);
 
     // @brief : 요청한 아이템 아이디로 서버에서 해당 item을 select한다.
@@ -101,6 +101,76 @@ router.get('/detail/:item_id', function(req, res, next) {
              }
          db.releaseConn(); //@brief : err가 떠도 conn은 반드시 release() 해주어야한다.
     });
+});
+
+//item/detail/:item_id
+router.put('/detail/:item_id', function(req, res){
+  var item_id = Number(req.params.item_id);
+  //var folder_id = Number(req.body.folder_id); // @todo : 폴더 연동 시 사용
+  var item_name = req.body.item_name;
+  var item_image = req.body.item_image;
+  var item_price = req.body.item_price;
+  var item_url = req.body.item_url;
+  var item_memo = req.body.item_memo;
+
+  console.log("item_id : " + item_id)
+
+  var sql = "UPDATE items SET item_name = ?, item_image = ?, item_price = ?, item_url = ?, item_memo = ? WHERE item_id = ?";
+  var params = [item_name, item_image, item_price, item_url, item_memo, item_id];
+  console.log("sql_update : " + sql);
+
+  db.get().query(sql, params, function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (result.length === 0) {
+        console.log("Failed to updated the items for data.");
+        res.status(500).json({
+          success: false,
+          message: "wish boarad 서버 에러",
+        });
+      } else {
+        console.log("Successfully updated data into the items!!");
+        res.status(200).json({
+          success: true,
+          message: "아이템 수정 성공",
+        });
+      }
+    }
+    db.releaseConn();
+  });
+});
+
+
+//item/detail/:item_id
+router.delete('/detail/:item_id', function(req, res){
+  var item_id = Number(req.params.item_id);
+  console.log("item_id : " + item_id)
+
+  var sql = "DELETE FROM items WHERE item_id = ?";
+
+  console.log("sql_delete : " + sql);
+
+  db.get().query(sql, [item_id], function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (result.length === 0) {
+        console.log("Failed to deleted the items for data.");
+        res.status(500).json({
+          success: false,
+          message: "wish boarad 서버 에러",
+        });
+      } else {
+        console.log("Successfully deleted data into the items!!");
+        res.status(200).json({
+          success: true,
+          message: "아이템 삭제 성공",
+        });
+      }
+    }
+    db.releaseConn();
+  });
 });
 
 module.exports = router;
