@@ -1,14 +1,19 @@
 package com.hyeeyoung.wishboard.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -24,10 +29,11 @@ import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.hyeeyoung.wishboard.sign.SigninActivity;
 
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,7 +90,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ImageButton cart, more;
     private Button[] buttons;
     private String user_id;
-    private String item_id;
+//    private Boolean is_updated = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +99,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0){
             user_id = SaveSharedPreferences.getUserId(this.getActivity());
-            //Log.i("Wish/HomeFragment", "user_id = " + user_id); // @deprecated : test용
+            Log.i("Wish/HomeFragment", "user_id = " + user_id); // @deprecated : test용
             selectItemInfo(user_id);
         }
         // @todo : 유저아이디를 가져오지 못하는 경우 예외처리하기
@@ -126,6 +132,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     }
                 } else { // @brief : 통신에 실패한 경우
                     Log.e("아이템 가져오기", "Retrofit 통신 실패");
+                    Log.i("아이템 가져오기", response.message());
                     init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
                 }
             }
@@ -145,7 +152,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void init() {
         // @brief : 각 위시 아이템 뷰를 초기화
         recycler_view = view.findViewById(R.id.recyclerview_wish_list);
-        //adapter = new ItemAdapter(wish_list);
         adapter = new ItemAdapter(wish_list, user_id);
 
         recycler_view.setAdapter(adapter);
@@ -224,5 +230,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
         }
         buttons[position].setTextColor(ContextCompat.getColor(HomeFragment.this.getContext(), R.color.black));
+    }
+
+    // @todo : 아이템 정보를 수정하는 경우에만 수정된 내용을 반영해서 UI 업데이트하기 (1번 방법, 메인 엑티비티에서 받아와야함)
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == RESULT_OK) {
+//            if(data.getBooleanExtra("item_id", false));
+//                selectItemInfo(user_id);
+//        }
+//    }
+
+    // @brief : 아이템상세조회화면에서 아이템 정보를 수정한 후 홈으로 복귀 하는 등 프래그먼트가 재개될 때 아이템 정보를 다시 가져오고 UI를 업데이트함
+    @Override
+    public void onResume() {
+        super.onResume();
+        selectItemInfo(user_id);
+
+//        if(is_updated)
+//            selectItemInfo(user_id);
+
+        // @todo : 아이템 정보를 수정하는 경우에만 수정된 내용을 반영해서 UI 업데이트하기 (2번 방법)
+//        Bundle bundle = getArguments();
+//        if(bundle != null) {
+//            if(bundle.getBoolean("is_updated"))
+//                selectItemInfo(user_id);
+//        }
     }
 }

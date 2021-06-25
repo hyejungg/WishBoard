@@ -162,6 +162,11 @@ public class ItemDetailActivity extends AppCompatActivity {
             // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
             case R.id.back:
                 // @todo : 수정된 아이템으로 HomeFragment UI 수정하기 위함
+//                HomeFragment fragment = new HomeFragment();
+//                Bundle bundle2 = new Bundle(1);
+//                bundle2.putBoolean("is_updated", is_updated);
+//                fragment.setArguments(bundle2);
+
 //                if(is_updated){
 //                Intent intent = new Intent();
 //                intent.putExtra("is_update", true);
@@ -169,6 +174,7 @@ public class ItemDetailActivity extends AppCompatActivity {
 //                } else{
 //                    setResult(RESULT_OK);
 //                }
+
                 onBackPressed();
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit); // @brief : 오른쪽 -> 왼쪽으로 화면 전환
                 break;
