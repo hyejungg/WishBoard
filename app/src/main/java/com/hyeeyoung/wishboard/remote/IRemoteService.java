@@ -1,5 +1,6 @@
 package com.hyeeyoung.wishboard.remote;
 
+import com.hyeeyoung.wishboard.adapter.CartAdapter;
 import com.hyeeyoung.wishboard.model.CartItem;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.model.WishItem;
@@ -36,24 +37,34 @@ public interface IRemoteService {
     @POST("/item")
     Call<ResponseBody> insertItemInfo(@Body WishItem wish_item);
 
-    // @brief : 회원 정보 관련 요청
+    // @brief : wishbaord 앱 회원가입 요청
     @POST("/user/signup")
     Call<ResponseBody> signUpUser(@Body UserItem user_item);
+
+    // @brief : wishbaord 앱 로그인 요청
     @POST("/user/signin")
     Call<UserItem> signInUser(@Body UserItem user_item);
 
-    // @brief : 장바구니 관련 요청
+    // @brief : 장바구니 데이터 추가 요청
     @POST("/basket")
     Call<CartItem> insertCartInfo(@Body CartItem cart_item);
+
+    // @brief : 장바구니 데이터 조회 요청
     @GET("/basket/{user_id}")
     Call<ArrayList<CartItem>> selectCartInfo(@Path("user_id") String user_id);
+
+    // @brief : 장바구니 데이터 삭제 요청
     @HTTP(method = "DELETE", path = "/basket", hasBody = true)
-    Call<CartItem> deleteCartInfo(@Body CartItem cart_item);
+    Call<ResponseBody> deleteCartInfo(@Body CartItem cart_item);
     /* @see : delete의 경우 보안을 위해 body로 숨겨서 전달할 때 HTTP 어노테이션을 사용하여 전달
      *        retrofit에서 제공하는 @DELETE 어노테이션을 이용할 경우, @Path로 전달 가능
      *        참고 사이트 : https://square.github.io/retrofit/2.x/retrofit/retrofit2/http/HTTP.html
      */
-
+    // @brief : 장바구니 데이터 수정 요청
+//    @PUT("/basket/{user_id}/{item_id}")
+//    Call<ArrayList<CartItem>> updateCartInfo(@Path("user_id") String user_id, @Path("item_id") String item_id, @Body CartItem cartItem);
+    @PUT("/basket")
+    Call<ResponseBody> updateCartInfo(@Body ArrayList<CartItem> cartItem);
     /*
     @brief :
         @GET( EndPoint-자원위치(URI) )  ET 방식, BASE_URL/home/{user_id} 호출
