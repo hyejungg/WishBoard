@@ -3,13 +3,14 @@ package com.hyeeyoung.wishboard.model;
 public class CartItem {
     // @parmas : 서버와 연동하기 위해 사용될 변수
     // @see : public으로 선언한 이유는 다른 클래스에서 접근하기 위함
-    public String user_id;
-    public String item_id;
+    private String user_id;
+    private String item_id;
 
     private String item_image; // @parmas : 서버로부터 받아와 표시될 item_image
     private String item_name; // @parmas : 서버로부터 받아와 표시될 item_name
     private String item_price; // @parmas : 서버로부터 받아와 표시될 item_price
     private String item_count; // @parmas : 서버로부터 받아와 표시될 item_count
+    private boolean isCheckCount = false; // @params : count 변경 시 사용 //default : false
 
     public CartItem() {
     }
@@ -19,12 +20,17 @@ public class CartItem {
         this.item_id = item_id;
     }
 
-    public CartItem(String item_image, String item_name, String item_price, String item_count) {
+    public CartItem(String item_image, String item_name, String item_price, String item_count, boolean isCheckCount) {
         this.item_image = item_image;
         this.item_name = item_name;
         this.item_price = item_price;
         this.item_count = item_count;
+        this.isCheckCount = isCheckCount;
     }
+
+    public String getUser_id() { return user_id; }
+
+    public String getItem_id() { return item_id; }
 
     public String getItem_image() {
         return item_image;
@@ -42,6 +48,14 @@ public class CartItem {
         return item_count;
     }
 
+    public boolean isCheckCount() {
+        return isCheckCount;
+    }
+
+    public void setUser_id(String user_id) { this.user_id = user_id; }
+
+    public void setItem_id(String item_id) { this.item_id = item_id; }
+
     public void setItem_image(String item_image) {
         this.item_image = item_image;
     }
@@ -54,7 +68,25 @@ public class CartItem {
         this.item_price = item_price;
     }
 
-    public void setItem_count(String qty) {
+    public void setItem_count(String item_count) {
         this.item_count = item_count;
     }
+
+    public void setCheckCount(boolean checkCount) {
+        isCheckCount = checkCount;
+    }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "user_id='" + user_id + '\'' +
+                ", item_id='" + item_id + '\'' +
+                ", item_image='" + item_image + '\'' +
+                ", item_name='" + item_name + '\'' +
+                ", item_price='" + item_price + '\'' +
+                ", item_count='" + item_count + '\'' +
+                ", isCheckCount=" + isCheckCount +
+                '}';
+    }
 }
+

@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -119,7 +120,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
                     isClicked = false;
                     SaveSharedPreferences.setCheckedCart(context, true);
                     addCart(user_id, item.getItem_id());
-                }else { // @brief : 제거하는 경우
+                }else{ // @brief : 제거하는 경우
                     viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
                     isClicked = true;
                     SaveSharedPreferences.setCheckedCart(context, false);
@@ -138,6 +139,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
      * @param user_id 사용자 아이디
      * @param item_id 아이템 아이디
      */
+    // @TODO : 이미 장바구니에 값이 존재하는 경우, insert가 불가하도록 예외처리 필요
     private void addCart(String user_id, String item_id){
         // @brief : 서버에 들어갈 CartItem 초기화
         cart_item = new CartItem(user_id, item_id);
@@ -154,7 +156,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
                     // @brief : 정상적으로 통신 성공한 경우
                     try{
                         res_cart_item = response.body();
-                        cart_item.setItem_count(res_cart_item.getItem_count()); // @brief : item_count를 서버로부터 받아 user_id별 count값 재할당
+//                        cart_item.setItem_count(res_cart_item.getItem_count()); // @brief : item_count를 서버로부터 받아 user_id별 count값 재할당
                     }catch(Exception e){
                         e.printStackTrace();
                     }
@@ -180,20 +182,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
      * @param user_id 사용자 아이디
      * @param item_id 아이템 아이디
      */
-    private void deleteCart(String user_id, String item_id){
+    public static void deleteCart(String user_id, String item_id){
         Log.i("CartItem delete값 확인", user_id + " / " + item_id); // @deprecated : 확인용
 
         // @brief : delete는 보안을 위해 @body로 담아 전송 -> CartItem에 정보를 담아 전송
         CartItem delete_cart = new CartItem(user_id, item_id);
 
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
-        Call<CartItem> call = remote_service.deleteCartInfo(delete_cart); //@brief : Body로 보내야해서 객체로 변경
-        call.enqueue(new Callback<CartItem>() {
+        Call<ResponseBody> call = remote_service.deleteCartInfo(delete_cart); //@brief : Body로 보내야해서 객체로 변경
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<CartItem> call, Response<CartItem> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     // @brief : 정상적으로 통신 성공한 경우
-                    Log.i("Cart 삭제", "성공");
+                    String str = response.body().toString();
+                    Log.i("Cart 삭제", "성공 " + str);
                 }else{
                     // @brief : 통신에 실패한 경우
                     Log.e("Cart 삭제", "오류");
@@ -201,7 +204,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
             }
 
             @Override
-            public void onFailure(Call<CartItem> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // @brief : 통신 실패 시 callback
                 Log.e("Cart 등록", "서버 연결 실패");
                 t.fillInStackTrace();

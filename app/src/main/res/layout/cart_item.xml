@@ -30,7 +30,7 @@
             android:fontFamily="@font/nanum_square_b"
             android:text="ITEM NAME" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/x"
             android:layout_width="12dp"
             android:layout_height="12dp"
@@ -45,7 +45,7 @@
         android:layout_toRightOf="@id/item_image"
         android:layout_alignBottom="@id/item_image"
         android:layout_marginTop="10dp">
-        <ImageButton
+        <ImageView
             android:id="@+id/minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_r"
             android:text="1" />
-        <ImageButton
+        <ImageView
             android:id="@+id/plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
