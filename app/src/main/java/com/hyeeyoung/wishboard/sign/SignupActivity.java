@@ -155,7 +155,7 @@ public class SignupActivity extends AppCompatActivity {
      * @brief : Retrofit을 이용하여 서버에 데이터 값 저장하는 함수
      * @param email 이메일 주소
      * @param pw_re 재입력한 비밀번호
-     * @see : private -> public static으로 변경. SigninActivity에서 카카오/구글 로그인 시 user_id 저장을 위해
+     * @see : private -> protected static으로 변경. SigninActivity에서 카카오/구글 로그인 시 user_id 저장을 위해
      * */
     protected static void save(String email, String pw_re){
         // @brief : 카카오, 구글로 로그인하는 경우 -> pw가 없으므로

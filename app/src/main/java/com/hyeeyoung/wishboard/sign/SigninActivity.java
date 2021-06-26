@@ -56,7 +56,7 @@ public class SigninActivity extends AppCompatActivity {
     // @params : google 로그인 관련 변수
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth mAuth;
-    private int RC_SIGN_IN = 1001; // @ brief : 성공코드 ...임의로 설정함
+    private int RC_SIGN_IN = 1001; // @ brief : 성공코드 //임의로 설정함
     private FirebaseUser user;
 
     @Override
@@ -65,16 +65,6 @@ public class SigninActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         init();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // @TODO : 위치 상 intro로 옮겨야 할 것 같은데 추후 결정 ......
-        // @see : onStart()될 때마다 해당 기기에서 kakao 로그인한 기록이 있는 경우, 자동으로 로그인 정보를 가져옴
-//        updateKakaoLogin();
-        // @see : onStart()될 때마다 해당 기기에서 google 로그인한 기록이 있는 경우, 자동으로 로그인 정보를 가져옴
-//        updateGoogleLogin();
     }
 
     /**
@@ -125,10 +115,8 @@ public class SigninActivity extends AppCompatActivity {
             SaveSharedPreferences.setUserId(this, res_user_item.user_id);
 
             Intent goMain = new Intent(this, MainActivity.class);
-            //Toast.makeText(this, "로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
             startActivity(goMain);
         }
-
     }
 
     /****************************************
@@ -158,6 +146,7 @@ public class SigninActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     Log.i("Wish 로그인", "성공" + "\n" + res_user_item.user_id + " / " + res_user_item.email); // @deprecated : 확인용
+                    Toast.makeText(SigninActivity.this, "로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
 
                     // @brief : 로그인 성공 시 메인 화면으로 이동
                     goMainActivity(true);
@@ -178,7 +167,6 @@ public class SigninActivity extends AppCompatActivity {
             }
         });
     }
-
     /****************************************
      * @params : kakao 로그인 관련 함수
      **/
@@ -197,11 +185,12 @@ public class SigninActivity extends AppCompatActivity {
     Function2<OAuthToken, Throwable, Unit> callback = (oAuthToken, throwable) -> {
         if (oAuthToken != null) {
             Log.i("[카카오] 로그인", "성공");
-//            updateKakaoLogin();
+            Toast.makeText(this, "카카오 로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
             updateKakaoLogin();
         }
         if (throwable != null) {
             Log.i("[카카오] 로그인", "실패");
+            Toast.makeText(this, "카카오 로그인을 실패했습니다.", Toast.LENGTH_SHORT).show();
             Log.e("signInKakao()", throwable.getLocalizedMessage());
         }
         return null;
@@ -230,10 +219,10 @@ public class SigninActivity extends AppCompatActivity {
                         return null;
                     } );
                 }
-
-                /* @TODO : 이 로직이 맞는지 ..... 보안상의 문제가 있어 보여서 조금 더 다른 방법 고안 필요 + 처음엔 로그인 실패 뜨고 재차 한 번 더 눌러줘야 로그인 됨
-                   @brief : email주소를 user db에 넣어 user_id 생성
-                   @see SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동 */
+                /** @brief : email주소를 user db에 넣어 user_id 생성
+                  * @see : SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동
+                          현재 Users 테이블의 email 값이 unique로 되어있어 이미 존재하는 경우 db에 추가 안되고 바로 signInWish로 넘어감
+                  */
                 SignupActivity.save(email, "");
                 signInWish(email, "0");
             } else {
@@ -282,7 +271,6 @@ public class SigninActivity extends AppCompatActivity {
                 .build();
         // @brief : 내 앱에서 구글의 계정을 가져다 쓸 예정
         googleSignInClient = GoogleSignIn.getClient(this, gso);
-
         // @brief : Firebase auth 초기화
         mAuth = FirebaseAuth.getInstance();
     }
@@ -329,16 +317,18 @@ public class SigninActivity extends AppCompatActivity {
                         // @brief : 로그인 성공 시
                         user = mAuth.getCurrentUser();
                         Log.i("[구글] 로그인", "signInWithCredential:성공");
-                        Toast.makeText(getApplicationContext(), "구글 로그인 성공", Toast.LENGTH_LONG).show();
-                        /* @TODO : 이 로직이 맞는지 ..... 보안상의 문제가 있어 보여서 조금 더 다른 방법 고안 필요 + 처음엔 로그인 실패 뜨고 재차 한 번 더 눌러줘야 로그인 됨
-                           @brief : email주소를 user db에 넣어 user_id 생성
-                           @see SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동 */
+                        Toast.makeText(getApplicationContext(), "구글 로그인이 정상적으로 성공하였습니다.", Toast.LENGTH_LONG).show();
+
+                        /** @brief : email주소를 user db에 넣어 user_id 생성
+                         * @see : SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동
+                                 현재 Users 테이블의 email 값이 unique로 되어있어 이미 존재하는 경우 db에 추가 안되고 바로 signInWish로 넘어감
+                         */
                         SignupActivity.save(email, "");
                         signInWish(email, "0");
                     } else {
                         // @brief : 로그인 실패 시
                         Log.e("[구글] 로그인", "signInWithCredential:실패" + task.getException());
-                        Toast.makeText(getApplicationContext(), "구글 로그인 실패", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "구글 로그인이 실패하였습니다.", Toast.LENGTH_LONG).show();
                     }
                 });
     }
