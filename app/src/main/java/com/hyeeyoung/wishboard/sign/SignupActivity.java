@@ -32,8 +32,6 @@ public class SignupActivity extends AppCompatActivity {
     private String email; // @params : DB에 들어갈 사용자 email
     private String pw; // @params : DB에 들어갈 사용자 pw
     private String pw_re;  //@deprecated : DB에 안넣고 이 안에서 유효성 검사 시 필요
-    private boolean option_noti = true; // @parmas : DB에 들어갈 사용자 option_noti //기본값 true
-    //public UserItem user_item;
 
     private boolean isCheckPw = false;
     private boolean isCheckId = false;
@@ -161,7 +159,7 @@ public class SignupActivity extends AppCompatActivity {
         // @brief : 카카오, 구글로 로그인하는 경우 -> pw가 없으므로
         if(pw_re.equals("")) pw_re = "0";
 
-        UserItem user_item = new UserItem(null, email, pw_re, true, ""); // @brief : option_noti는 초기값 true
+        UserItem user_item = new UserItem(null, email, pw_re, true); // @brief : option_noti는 초기값 true
 
         // @brief : Retrofit 통신을 통해 서버에 user 정보 저장 요청
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);

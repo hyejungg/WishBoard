@@ -11,15 +11,13 @@ public class UserItem {
     public String email; // @params : DB에 들어갈 사용자 email
     public String password; // @params : DB에 들어갈 사용자 pw
     private boolean option_notification = true; // @parmas : DB에 들어갈 사용자 option_noti //기본값 true
-    public String token = " "; // @params : DB에 들어갈 사용자 id //기본 값 우선 공백으로 설정
 
     public UserItem(){}
-    public UserItem(String user_id, String email, String password, boolean option_notification, String token) {
+    public UserItem(String user_id, String email, String password, boolean option_notification) {
         this.user_id = user_id;
         this.email = email;
         this.password = password;
         this.option_notification = option_notification;
-        this.token = token;
     }
 
     public String getUser_id() {
@@ -54,17 +52,13 @@ public class UserItem {
         this.option_notification = option_notification;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    @NonNull
     @Override
     public String toString() {
-        return super.toString();
+        return "UserItem{" +
+                "user_id='" + user_id + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", option_notification=" + option_notification +
+                '}';
     }
 }
