@@ -50,3 +50,8 @@ exports.releaseConn = function () {
 exports.get = function () {
   return pool;
 };
+
+// @brief : 다중 쿼리 사용 시 이용
+exports.format = function () {
+  mysql.format();
+};

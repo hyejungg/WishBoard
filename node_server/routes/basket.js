@@ -105,107 +105,56 @@ router.delete("/", function (req, res) {
     }
   });
 });
-
 // @brief : 장바구니 수정
 router.put("/", function (req, res) {
-   console.log(req.body);
-	console.log(req.body.length);
-  // var user_id = Number(req.params.user_id);
-  // var item_id = Number(req.params.item_id);
+  console.log(req.body);
 
-  // console.log(user_id + " " + item_id);
+  for (var i = 0; i < req.body.length; i++) {
+    console.log(
+      req.body[i].user_id +
+        " " +
+        req.body[i].item_id +
+        " " +
+        req.body[i].item_count +
+        " "
+    );
+  }
+  var user_id = req.body[0].user_id; // @prams: user_id는 한 명이므로
+ 
+  var sqls = "UPDATE basket SET item_count = CASE ";
+  var params = [];
 
-  // var sql =
-  //   "UPDATE basket SET item_count = ? WHERE user_id = ? AND item_id = ?";
-
-  var sqls = "";
- /* var values = [
-     { user_id : Number(req.body.user_id),
-       item_id : Number(req.body.item_id),
-       item_count : Number(req.body.item_count)}
-   ];*/
-
-  // values.forEach(function(item){
-  //   sqls += mysql.format("UPDATE basket SET item_count = ? WHERE user_id = ? AND item_id = ?", item));
-  // })
-
-  //for (var item in values) {
-  //  sqls += db.format(
-  //    "UPDATE basket SET item_count = ? WHERE user_id = ? AND item_id = ?",
-  //    item
-  //  );
-  //}
-	//
-  // var params = [user_id, item_id];
-
-   for(var i = 0; i < req.body.length; i++){
-  //  console.log(values[i] + "\n");
-    
-    console.log(req.body[i].user_id + " " + req.body[i].item_id + " " + req.body[i].item_count + " " );
+  for (var i = 0; i < req.body.length; i++) {
+    sqls += "WHEN item_id = ? then ? ";
+    params.push(req.body[i].item_id);
+    params.push(req.body[i].item_count);
+    if (i == req.body.length - 1) {  //마지막 원소라면
+      sqls += "ELSE item_count END WHERE user_id = ?";
+      params.push(user_id);
+    }
   }
 
-/*  values.forEach(function (item){
-    sqls += "UPDATE basket SET item_count = ? WHERE user_id = ? AND item_id = ?"
-      ,item.item_count,
-      item.user_id,
-      item.item_id;
-  });
+  console.log("sqls : " + sqls + "\nparams : " + params);
 
-	console.log(sqls);
-
-  db.get().query(sqls, function (err, result) {
+  db.get().query(sqls, params, function (err, result) {
     if (err) {
       console.log(err);
     } else {
       if (result.length === 0) {
-        console.log("Failed to deleted the basket for data.");
+        console.log("Failed to updated the basket for data.");
         res.status(500).json({
           success: false,
           message: "wish boarad 서버 에러",
         });
       } else {
-        console.log("Successfully deleted data into the basket!!");
+        console.log("Successfully updated data into the basket!!");
         res.status(200).json({
           success: true,
           message: "장바구니 데이터베이스 수정 성공",
-          item_count: result[0].item_count,
-          item_price: result[0].item.item_price,
         });
       }
       db.releaseConn();
     }
-  }); */
-
-	sqls = "UPDATE basket SET item_count = ? WHERE user_id = ? AND item_id = ?"
-    
-    for(var i = 0; i < req.body.length; i++){
-	//sqls = "UPDATE basket SET item_count = ? WHERE user_id = ? AND item_id = ?"
-    console.log(sqls);
-    
-    console.log(req.body[i].item_count, req.body[i].user_id, req.body[i].item_id);
-		db.get().query(sqls,[req.body[i].item_count, req.body[i].user_id, req.body[i].item_id], function (err, result) {
-      if (err) {
-        console.log(err);
-      } else {
-        if (result.length === 0) {
-          console.log("Failed to updated the basket for data.");
-          res.status(500).json({
-            success: false,
-            message: "wish boarad 서버 에러",
-          });
-        } else {
-	  if(i === req.body.length){	
-            console.log("Successfully updated data into the basket!!");
-  	    res.status(200).json({
-              success: true,
-              message: "장바구니 데이터베이스 수정 성공",
-            });
-         }
-	}
-        db.releaseConn();
-      }
-    });
-  }
+  });
 });
-
 module.exports = router;
