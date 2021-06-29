@@ -2,6 +2,7 @@ package com.hyeeyoung.wishboard.remote;
 
 import com.hyeeyoung.wishboard.adapter.CartAdapter;
 import com.hyeeyoung.wishboard.model.CartItem;
+import com.hyeeyoung.wishboard.model.NotiItem;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.model.WishItem;
 
@@ -36,6 +37,10 @@ public interface IRemoteService {
     // @brief : 아이템 정보 저장 요청
     @POST("/item")
     Call<ResponseBody> insertItemInfo(@Body WishItem wish_item);
+
+    // @brief : 알림 정보 저장 요청
+    @POST("/noti")
+    Call<ResponseBody> insertItemNoti(@Body NotiItem noti_item);
 
     // @brief : wishbaord 앱 회원가입 요청
     @POST("/user/signup")

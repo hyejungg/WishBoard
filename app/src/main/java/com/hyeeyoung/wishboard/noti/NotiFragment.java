@@ -107,8 +107,8 @@ public class NotiFragment extends Fragment {
         NotiItem item = new NotiItem();
         item.setItem_image(icon);
         item.setItem_name(mainText);
-        item.setNoti_type(notiType);
-        item.setNoti_date(notiDate);
+        item.setItem_notification_type(notiType);
+        item.setItem_notification_date(notiDate);
         notiList.add(item);
     }
 
