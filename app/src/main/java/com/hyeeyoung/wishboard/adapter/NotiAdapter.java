@@ -51,8 +51,8 @@ public class NotiAdapter extends RecyclerView.Adapter<NotiAdapter.CustomViewHold
         NotiItem item = notiList.get(position);
         viewholder.item_image.setImageResource(item.getItem_image());
         viewholder.item_name.setText(item.getItem_name());
-        viewholder.noti_type.setText(item.getNoti_type());
-        viewholder.noti_date.setText(item.getNoti_date());
+        viewholder.noti_type.setText(item.getItem_notification_type());
+        viewholder.noti_date.setText(item.getItem_notification_date());
     }
     @Override
     public int getItemCount() {

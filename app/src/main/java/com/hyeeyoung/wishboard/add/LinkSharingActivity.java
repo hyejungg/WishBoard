@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.hyeeyoung.wishboard.adapter.SpinnerAdapter;
 import com.hyeeyoung.wishboard.R;
+import com.hyeeyoung.wishboard.model.NotiItem;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
@@ -47,7 +48,12 @@ public class LinkSharingActivity extends AppCompatActivity {
 
     // @param : 알림 날짜 넘버피커 변수
     private NumberPicker date, hour, minute;
-    String dates[]; // @param : 디스플레이 될 날짜를 담는 문자열 배열
+    /**
+     * @param : 디스플레이 될 날짜를 담는 문자열 배열
+     * dates[] : 팝업창에 디스플레이할 날짜 배열로, 포맷은 MMM dd일 EEE로 설정함
+     * dates_server[] : DB에 저장될 날짜 배열로 datetime 타입 포맷인 yyyy-mm-dd hh:mm:ss로 설정함
+     */
+    String dates[], dates_server[];
     Calendar now = Calendar.getInstance();
 
     // @param : 알림 유형 스피너 변수
@@ -57,14 +63,17 @@ public class LinkSharingActivity extends AppCompatActivity {
 
     // @param : 아이템정보가 디스플레이될 뷰를 가리키는 변수
     TextView item_name;
-    EditText item_price;
-    EditText item_memo;
+    EditText item_price, item_memo;
     ImageView item_image;
+
+    // @brief : 위시리스트에 아이템 저장을 위한 아이템 객체와 알림 객체
     WishItem wish_item;
+    NotiItem noti_item;
+
     //TextView won;
     String site_url = ""; // @param : 가져온 데이터 보관
-
     String user_id = "";
+    //private String item_id, noti_type, noti_date; // @todo : 알림 등록 시에만 알림 객체를 설정할 경우에 사용될 알림 설정 값
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +97,7 @@ public class LinkSharingActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 // @brief : 추후 작성 예정
+                noti_item.setItem_notification_type(noti_types_array.get(i));
             }
 
             @Override
@@ -109,7 +119,7 @@ public class LinkSharingActivity extends AppCompatActivity {
 
     void init() {
         // @param : 알림 유형 스피너 관련 변수
-        noti_types_array = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.noti_types_array)));
+        noti_types_array = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.noti_types_array)));
         noti_type_spinner = findViewById(R.id.noti_type_spinner);
         spinner_adapter = new SpinnerAdapter(this, noti_types_array);
         noti_type_spinner.setAdapter(spinner_adapter);
@@ -119,6 +129,7 @@ public class LinkSharingActivity extends AppCompatActivity {
         hour = findViewById(R.id.num_picker_hour);
         minute = findViewById(R.id.num_picker_minute);
         dates = getDatesFromCalender();
+        dates_server = getDatesFromCalenderForServer();
 
         item_name = findViewById(R.id.item_name);
         item_image = findViewById(R.id.item_image);
@@ -127,11 +138,11 @@ public class LinkSharingActivity extends AppCompatActivity {
         //won = findViewById(R.id.won);
 
         wish_item = new WishItem();
+        noti_item = new NotiItem();
     }
 
     // @FIXME : 알림 날짜 초기화 함수로 실행 시 앱 중단
     void initNumperPicker() {
-
         // @brief : 날짜 넘버피커 설정
         date.setMinValue(0);
         date.setMaxValue(dates.length - 1);
@@ -165,27 +176,34 @@ public class LinkSharingActivity extends AppCompatActivity {
          */
     }
 
-    // @param : 날짜 넘버피커 내 디스플레이 될 날짜값 배열 반환
+    // @brief : 날짜 넘버피커 내 디스플레이 될 날짜값 배열 반환
     private String[] getDatesFromCalender() {
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
-
+        Calendar c = Calendar.getInstance();
         List<String> dates = new ArrayList<>();
-        DateFormat dateFormat = new SimpleDateFormat("MMM dd일 EEE"); // @param : 날짜 포맷 지정
-        dates.add(dateFormat.format(c1.getTime()));
+        DateFormat dateFormat = new SimpleDateFormat("MMM dd일 EEE"); // @param : 날짜 포맷 지정, MMM과 EEE는 각각 한자리 값(6월, 수)로 표현하기 위한 포맷임
 
-        for (int i = 0; i < 60; i++) {
-            c1.add(Calendar.DATE, 1);
-            dates.add(dateFormat.format(c1.getTime()));
-        }
-        c2.add(Calendar.DATE, -60);
-
-        for (int i = 0; i < 60; i++) {
-            c2.add(Calendar.DATE, 1);
-            dates.add(dateFormat.format(c2.getTime()));
+        // @brief : 현재부터 90일 후까지의 날짜 배열 생성
+        for (int i = 0; i < 90; i++) {
+            c.add(Calendar.DATE, 1);
+            dates.add(dateFormat.format(c.getTime()));
         }
 
         return dates.toArray(new String[dates.size() - 1]);
+    }
+
+    // @brief : 서버에 저장될 날짜값 배열 반환
+    private String[] getDatesFromCalenderForServer() {
+        Calendar c = Calendar.getInstance();
+        List<String> dates_server = new ArrayList<>();
+        DateFormat dateFormat_server = new SimpleDateFormat("yyyy-MM-dd"); // @param : 서버에 저장될 날짜 포맷 지정
+
+        // @brief : 현재부터 90일 후까지의 날짜 배열 생성
+        for (int i = 0; i < 90; i++) {
+            c.add(Calendar.DATE, 1);
+            dates_server.add(dateFormat_server.format(c.getTime()));
+        }
+
+        return dates_server.toArray(new String[dates_server.size() - 1]);
     }
 
     private WishItem getWishItem() {
@@ -218,12 +236,15 @@ public class LinkSharingActivity extends AppCompatActivity {
         } else{ // @ brief : 사용자가 메모를 입력한 경우
             wish_item.setItem_memo(get_item_memo);
         }
+        String noti_date = dates_server[date.getValue()] + " " + hour.getValue() + ":" + minute.getValue() + ":00";
+        noti_item.setItem_notification_date(noti_date);
+        Log.i("링크공유로 아이템 등록", "date: " + noti_date);
 
         return wish_item;
     }
 
     /**
-     * @brief : 사용자가 입력한 정보를 저장한다.
+     * @brief : 사용자가 입력한 아이템 정보를 저장한다.
      */
     private void save() {
         wish_item = getWishItem(); // @brief : 생성된 아이템 객체 가져오기
@@ -238,6 +259,15 @@ public class LinkSharingActivity extends AppCompatActivity {
                     String seq = null;
                     try {
                         seq = response.body().string();
+                        // @brief : 사용자가 알림을 설정한 경우
+                        if (!noti_item.getItem_notification_type().equals("알림 유형 선택")){ // @brief : 알림 유형을 지정한 경우
+                            // @ noti_item(알림) 객체의 user_id, item_id 설정
+                            noti_item.setUser_id(user_id);
+                            noti_item.setItem_id(seq);
+                            addNoti(); // @brief : 알림 등록 요청
+                        }
+                        else
+                            Log.i("알림 등록", "onResponse: " + "알림 선택 하지 않음");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -252,6 +282,40 @@ public class LinkSharingActivity extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
                 Log.e("아이템 간편 등록", "서버 연결 실패");
+            }
+        });
+    }
+
+    /**
+     * @brief : 사용자가 알림을 설정한 경우 알림정보를 저장한다.
+     */
+
+    private void addNoti(){
+        Log.i("알림 정보 확인하기", "addNoti: " + noti_item);
+        IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
+        Call<ResponseBody> call = remote_service.insertItemNoti(noti_item);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // @brief : 정상적으로 통신 성공한 경우
+                    String seq = null;
+                    try {
+                        seq = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("알림 등록", "성공 : " + seq);
+
+                } else {
+                    // @brief : 통신에 실패한 경우
+                    Log.e("알림 등록", "오류" + response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e("Notification 등록", "서버 연결 실패" + t.getMessage());
             }
         });
     }
@@ -358,6 +422,7 @@ public class LinkSharingActivity extends AppCompatActivity {
             }
         }
 
+        // @brief : price 속성을 포함하는 태그의 속성값이 숫자로만 구성된 문자열인지 검사
         public boolean isNumber(String text) {
             try {
                 Integer.parseInt(text);
