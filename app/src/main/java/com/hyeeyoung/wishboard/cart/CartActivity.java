@@ -7,12 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.CartAdapter;
@@ -39,35 +37,52 @@ public class CartActivity extends AppCompatActivity {
     private static TextView total; // @params : total 변수
     private String user_id = "";
 
-    Handler handler = new Handler();
-    Runnable updater;
+    Handler timerHandler; // @params : 장바구니 total 값 변경 핸들러
+    Runnable updater; // @params : 핸들러에 post할 메세지
     private boolean isUpdate = false; // @params : +,-,x 버튼 클릭 시(값이 변경된 경우) //default : false
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-//        ImageButton back = findViewById(R.id.back);
-        // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
-//        back.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View v) {
-//                onBackPressed();
-//                // @brief : 오른쪽 -> 왼쪽으로 화면 전환
-//                overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
-//            }
-//        });
-
         if (SaveSharedPreferences.getUserId(this).length() != 0)
             user_id = SaveSharedPreferences.getUserId(this);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         // @brief : 서버와 연결하여 데이터 가져옴
         getData(user_id);
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // @brief : 총 total값 변경 handler 설정
+        updater = new Runnable() {
+            @Override
+            public void run() {
+                setTotal();
+                timerHandler.postDelayed(updater,800); //@brief : 0.8초 뒤에 총 구매값 변경
+            }
+        };
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //@brief : back버튼 클릭 시에도 업데이트 변경 시 값 수정할 수 있도록
+        if(isUpdate)
+            updateCart(array_cart);
+    }
+
+    //@brief : 액티비티 메모리에서 제거 시
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacks(updater);
+        timerHandler.removeCallbacks(updater);
     }
 
     /**
@@ -78,10 +93,9 @@ public class CartActivity extends AppCompatActivity {
             // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
             case R.id.back:
                 onBackPressed();
-                if(isUpdate)
-                    updateCart(array_cart);
                 // @brief : 오른쪽 -> 왼쪽으로 화면 전환
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
+                onStop(); // @brief : 액티비티 종료 -> 장바구니 update 처리
         }
     }
 
@@ -167,14 +181,7 @@ public class CartActivity extends AppCompatActivity {
         });
 
         // @brief : 장바구니 내 아이템별 가격 및 개수가 update될 때마다 total값 변경 display
-        final Handler timerHandler = new Handler();
-        updater = new Runnable() {
-            @Override
-            public void run() {
-                setTotal();
-                timerHandler.postDelayed(updater,900); //@brief : 0.9초 뒤에 총 구매값 변경
-            }
-        };
+        timerHandler = new Handler();
         timerHandler.post(updater);
         adapter.notifyDataSetChanged();
     }
