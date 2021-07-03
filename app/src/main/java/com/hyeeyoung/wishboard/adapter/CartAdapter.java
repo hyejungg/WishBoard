@@ -91,6 +91,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
         holder.item_name.setText(item.getItem_name());
         holder.item_count.setText(item.getItem_count());
 
+        if(item.getItem_price() == null){
+            item.setItem_price("0");
+        }
+
         // @brief : item_count 값에 따른 가격처리
         if(item.getItem_count() != "1"){
             int icount = Integer.parseInt(item.getItem_count());
