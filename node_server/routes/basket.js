@@ -45,7 +45,7 @@ router.post("/", function (req, res) {
   var user_id = Number(req.body.user_id);
   var item_id = Number(req.body.item_id);
 
-  var sql = "INSERT INTO basket (user_id, item_id) VALUES (?, ?)";
+  var sql = "INSERT INTO basket (user_id, item_id, item_count) VALUES (?, ?, 1)";
   var params = [user_id, item_id];
 
   console.log("sql_insert : " + sql);
