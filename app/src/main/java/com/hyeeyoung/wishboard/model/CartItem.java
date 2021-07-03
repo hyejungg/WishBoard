@@ -2,7 +2,6 @@ package com.hyeeyoung.wishboard.model;
 
 public class CartItem {
     // @parmas : 서버와 연동하기 위해 사용될 변수
-    // @see : public으로 선언한 이유는 다른 클래스에서 접근하기 위함
     private String user_id;
     private String item_id;
 
@@ -18,14 +17,6 @@ public class CartItem {
     public CartItem(String user_id, String item_id) {
         this.user_id = user_id;
         this.item_id = item_id;
-    }
-
-    public CartItem(String item_image, String item_name, String item_price, String item_count, boolean isCheckCount) {
-        this.item_image = item_image;
-        this.item_name = item_name;
-        this.item_price = item_price;
-        this.item_count = item_count;
-        this.isCheckCount = isCheckCount;
     }
 
     public String getUser_id() { return user_id; }

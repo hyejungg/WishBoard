@@ -97,7 +97,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
             int ori_iprice = Integer.parseInt(item.getItem_price());
             int new_iprice = icount * ori_iprice; //변경된 아이템 가격
             holder.item_price.setText(String.valueOf(new_iprice));
-        }else {
+        }else{
             holder.item_price.setText(item.getItem_price());
         }
 
