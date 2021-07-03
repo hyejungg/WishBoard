@@ -12,14 +12,13 @@ router.post("/signup", function (req, res) {
   var email = req.body.email;
   var before_pw = req.body.password;
   var option_notification = req.body.option_notification;
-  var token = req.body.token;
 
   // @parms: DB에 저장되는 비밀번호
   const password = bcrypt.hashSync(before_pw, 10);
 
   var sql_insert =
-    "INSERT INTO users (email, password, option_notification, token) VALUES (?, ?, ?, ?)";
-  var params = [email, password, option_notification, token];
+    "INSERT INTO users (email, password, option_notification) VALUES (?, ?, ?)";
+  var params = [email, password, option_notification];
 
   console.log("sql_insert : " + sql_insert);
 
@@ -30,6 +29,7 @@ router.post("/signup", function (req, res) {
       res.status(200).json({
         success: true,
         message: "wish board 앱 회원가입 성공 ",
+//	user_id: result[0].insertId,
       });
       db.releaseConn(); // @brief : connection pool 반환
     }
