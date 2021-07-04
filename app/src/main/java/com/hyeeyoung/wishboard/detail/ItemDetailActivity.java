@@ -61,10 +61,9 @@ public class ItemDetailActivity extends AppCompatActivity {
         TextView item_memo = findViewById(R.id.tag);
         TextView item_url = findViewById(R.id.domain_name);
 
-        // @brief : 아이템 이미지 디스플레이
-        try {
+        try { // @brief : 아이템 이미지 디스플레이
             Log.i("아이템 상세정보 가져오기", "init: " + wish_item.getItem_image());
-            Picasso.get().load(wish_item.getItem_image()).into(item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
+            Picasso.get().load(wish_item.getItem_image()).error(R.mipmap.ic_main).into(item_image); // @brief : 이미지 가져올 떄 에러 발생 시 기본 이미지 적용
         } catch (IllegalArgumentException i) {
             Log.d("아이템 상세정보 가져오기", "아이템 사진 없음");
         }
@@ -161,20 +160,6 @@ public class ItemDetailActivity extends AppCompatActivity {
         switch (v.getId()) {
             // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
             case R.id.back:
-                // @todo : 수정된 아이템으로 HomeFragment UI 수정하기 위함
-//                HomeFragment fragment = new HomeFragment();
-//                Bundle bundle2 = new Bundle(1);
-//                bundle2.putBoolean("is_updated", is_updated);
-//                fragment.setArguments(bundle2);
-
-//                if(is_updated){
-//                Intent intent = new Intent();
-//                intent.putExtra("is_update", true);
-//                setResult(Activity.RESULT_OK, intent);
-//                } else{
-//                    setResult(RESULT_OK);
-//                }
-
                 onBackPressed();
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit); // @brief : 오른쪽 -> 왼쪽으로 화면 전환
                 break;
