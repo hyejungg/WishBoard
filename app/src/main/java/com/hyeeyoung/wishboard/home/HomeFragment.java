@@ -81,6 +81,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    // @brief : 로그인한 유저의 아이템 정보를 가져오기
+    @Override
+    public void onStart() {
+        super.onStart();
+        selectItemInfo(user_id);
+    }
+
+    // @todo : 아이템 정보를 수정하는 경우에만 수정된 내용을 반영해서 UI 업데이트하기 (2번 방법)
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+
+//        Bundle bundle = getArguments();
+//        if(bundle != null) {
+//            Log.e("홈", "아이템 업데이트 여부 가져오기" + bundle.getBoolean("is_updated"));
+//            if(bundle.getBoolean("is_updated"))
+//                selectItemInfo(user_id);
+//        }
+//    }
+
     private View view;
     RecyclerView recycler_view;
     ItemAdapter adapter;
@@ -100,7 +120,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0){
             user_id = SaveSharedPreferences.getUserId(this.getActivity());
             Log.i("Wish/HomeFragment", "user_id = " + user_id); // @deprecated : test용
-            selectItemInfo(user_id);
         }
         // @todo : 유저아이디를 가져오지 못하는 경우 예외처리하기
         return view;
@@ -180,9 +199,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-
         int position = 0; // @param : 버튼 배열 내 인덱스로 사용, 선택된 폴더의 인덱스를 표시
-
         // @brief : 초기 폴더명 버튼 텍스트 컬러를 그레이로 지정
         for(int i = 0; i < buttons.length ; i++){
             buttons[i].setTextColor(ContextCompat.getColor(HomeFragment.this.getContext(), R.color.darkGray));
@@ -242,20 +259,4 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //        }
 //    }
 
-    // @brief : 아이템상세조회화면에서 아이템 정보를 수정한 후 홈으로 복귀 하는 등 프래그먼트가 재개될 때 아이템 정보를 다시 가져오고 UI를 업데이트함
-    @Override
-    public void onResume() {
-        super.onResume();
-        selectItemInfo(user_id);
-
-//        if(is_updated)
-//            selectItemInfo(user_id);
-
-        // @todo : 아이템 정보를 수정하는 경우에만 수정된 내용을 반영해서 UI 업데이트하기 (2번 방법)
-//        Bundle bundle = getArguments();
-//        if(bundle != null) {
-//            if(bundle.getBoolean("is_updated"))
-//                selectItemInfo(user_id);
-//        }
-    }
 }
