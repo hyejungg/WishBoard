@@ -63,7 +63,11 @@ public class SigninActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         init();
     }
 
@@ -88,7 +92,7 @@ public class SigninActivity extends AppCompatActivity {
                 signInGoogle();
                 break;
             case R.id.btn_email_signup:
-                // @brief : wish board 앱 회원가입 처리
+                // @brief : wish board 앱 회원가입 처리화면으로 이동
                 intent = new Intent(this, SignupActivity.class);
                 startActivity(intent);
                 break;
@@ -116,6 +120,7 @@ public class SigninActivity extends AppCompatActivity {
 
             Intent goMain = new Intent(this, MainActivity.class);
             startActivity(goMain);
+            finish();
         }
     }
 
@@ -163,7 +168,7 @@ public class SigninActivity extends AppCompatActivity {
             public void onFailure(Call<UserItem> call, Throwable t) {
                 // @brief : 통신 실패 시 callback
                 Log.e("Wish 로그인", "서버 연결 실패");
-                t.fillInStackTrace();
+                Log.e("Wish 로그인", "onFailure: " + t.getMessage());
             }
         });
     }
