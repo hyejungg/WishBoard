@@ -28,6 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CartActivity extends AppCompatActivity {
+    private static final String TAG = "장바구니";
     RecyclerView recyclerView;
     CartAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
@@ -65,7 +66,7 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void run() {
                 setTotal();
-                timerHandler.postDelayed(updater,800); //@brief : 0.8초 뒤에 총 구매값 변경
+                timerHandler.postDelayed(updater,500); //@brief : 0.5초 뒤에 총 구매값 변경
             }
         };
     }
@@ -116,10 +117,10 @@ public class CartActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     if (array_cart.size() > 0) // @deprecated : test용
-                        Log.i("Cart 조회", "성공" + "\n " + array_cart + "");
+                        Log.i("TAG", "조회 성공" + "\n " + array_cart + "");
                 } else {
                     // @brief : 통신에 실패한 경우
-                    Log.e("Cart 조회", "오류");
+                    Log.e("TAG", "조회 오류");
                 }
                 init();
             }
@@ -127,7 +128,7 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ArrayList<CartItem>> call, Throwable t) {
                 // @brief : 통신 실패 시 callback
-                Log.e("Cart 조회", "서버 연결 실패");
+                Log.e("TAG", "조회 서버 연결 실패");
                 t.printStackTrace();
             }
 
@@ -153,7 +154,6 @@ public class CartActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new CartAdapter.OnItemClickListener() {
             @Override
             public void onMinusClick(int position, CartAdapter.CustomViewHolder holder) {
-                Log.i("[Activity] -버튼 클릭", "성공");
                 CartAdapter.decCount(position, holder);
                 adapter.notifyDataSetChanged();
                 isUpdate = true;
@@ -161,7 +161,6 @@ public class CartActivity extends AppCompatActivity {
 
             @Override
             public void onPlusClick(int position, CartAdapter.CustomViewHolder holder) {
-                Log.i("[Activity] +버튼 클릭", "성공");
                 CartAdapter.incCount(position, holder);
                 adapter.notifyDataSetChanged();
                 isUpdate = true;
@@ -169,14 +168,12 @@ public class CartActivity extends AppCompatActivity {
 
             @Override
             public void onXbtnClick(int position) {
-                Log.i("[Activity] x버튼 클릭", "성공");
                 // @see : x버튼의 경우 ItemAdapter.deleteCart()를 동작하도록 함
                 CartItem item = array_cart.get(position);
                 ItemAdapter.deleteCart(user_id, item.getItem_id());
                 array_cart.remove(position);
                 adapter.notifyDataSetChanged();
                 isUpdate = true;
-                // @TODO : itemAdapter에서 초록 버튼 해제 (미해결)
             }
         });
 
@@ -188,7 +185,6 @@ public class CartActivity extends AppCompatActivity {
 
     /**
      * @brief : 화면 하단의 장바구니 내 총 합산 금액을 보여줌
-//     * @param array_cart 서버의 response로 받아 온 arrayList
      */
     private void setTotal() {
         int total_price = 0;
@@ -228,8 +224,6 @@ public class CartActivity extends AppCompatActivity {
             }
         }
 
-        Log.i("Cart 업데이트 : req_item", "\n" + req_item); // @deprecated : test용
-
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
         Call<ResponseBody> call = remote_service.updateCartInfo(req_item);
         call.enqueue(new Callback<ResponseBody>() {
@@ -242,17 +236,17 @@ public class CartActivity extends AppCompatActivity {
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-                    Log.i("Cart 업데이트", "성공" + "\n "  + seq);
+                    Log.i("TAG", "업데이트 성공" + "\n "  + seq);
                 } else {
                     // @brief : 통신에 실패한 경우
-                    Log.e("Cart 업데이트", "오류");
+                    Log.e("TAG", "업데이트 오류");
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // @brief : 통신 실패 시 callback
-                Log.e("Cart 업데이트", "서버 연결 실패");
+                Log.e("TAG", "업데이트 서버 연결 실패");
                 t.printStackTrace();
             }
         });
