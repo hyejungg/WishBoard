@@ -45,7 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LinkSharingActivity extends AppCompatActivity {
-
+    private static final String TAG = "링크공유로 아이템 등록";
     // @param : 알림 날짜 넘버피커 변수
     private NumberPicker date, hour, minute;
     /**
@@ -111,7 +111,7 @@ public class LinkSharingActivity extends AppCompatActivity {
             // @breif : 전송데이터 타입이 텍스트인 경우
             if ("text/plain".equals(type)) {
                 site_url = intent.getStringExtra(Intent.EXTRA_TEXT); // @params : site url은 String에 보관. DB 저장용
-                Log.i("LinkTest", "handleSendText: " + site_url);
+                Log.i(TAG, "handleSendText: " + site_url);
                 new JsoupAsyncTask(site_url).execute();
             }
         }
@@ -238,7 +238,7 @@ public class LinkSharingActivity extends AppCompatActivity {
         }
         String noti_date = dates_server[date.getValue()] + " " + hour.getValue() + ":" + minute.getValue() + ":00";
         noti_item.setItem_notification_date(noti_date);
-        Log.i("링크공유로 아이템 등록", "date: " + noti_date);
+        Log.i(TAG, "date: " + noti_date);
 
         return wish_item;
     }
@@ -267,21 +267,21 @@ public class LinkSharingActivity extends AppCompatActivity {
                             addNoti(); // @brief : 알림 등록 요청
                         }
                         else
-                            Log.i("알림 등록", "onResponse: " + "알림 선택 하지 않음");
+                            Log.i(TAG, "onResponse: " + "알림 선택 하지 않음");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.e("아이템 간편 등록", seq);
+                    Log.e(TAG, seq);
 
                 } else {
                     // @brief : 통신에 실패한 경우
-                    Log.e("아이템 간편 등록", "Retrofit 통신 실패");
+                    Log.e(TAG, "Retrofit 통신 실패");
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
-                Log.e("아이템 간편 등록", "서버 연결 실패");
+                Log.e(TAG, "서버 연결 실패");
             }
         });
     }
@@ -291,7 +291,7 @@ public class LinkSharingActivity extends AppCompatActivity {
      */
 
     private void addNoti(){
-        Log.i("알림 정보 확인하기", "addNoti: " + noti_item);
+        Log.i(TAG, "addNoti : " + noti_item);
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
         Call<ResponseBody> call = remote_service.insertItemNoti(noti_item);
         call.enqueue(new Callback<ResponseBody>() {
@@ -305,17 +305,17 @@ public class LinkSharingActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.e("알림 등록", "성공 : " + seq);
+                    Log.e(TAG, "알림 등록 성공 : " + seq);
 
                 } else {
                     // @brief : 통신에 실패한 경우
-                    Log.e("알림 등록", "오류" + response.message());
+                    Log.e(TAG, "알림 등록 오류" + response.message());
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
-                Log.e("Notification 등록", "서버 연결 실패" + t.getMessage());
+                Log.e(TAG, "서버 연결 실패" + t.getMessage());
             }
         });
     }
@@ -331,6 +331,16 @@ public class LinkSharingActivity extends AppCompatActivity {
                 finish();
                 break;
         }
+    }
+
+    // @brief : price 속성을 포함하는 태그의 속성값이 숫자로만 구성된 문자열인지 검사
+    public boolean isNumber(String text) {
+        try {
+            Integer.parseInt(text);
+            return true;
+        } catch (NumberFormatException e) {
+        }
+        return false;
     }
 
     // @brief : 오픈그래프 메타태그 파싱을 통해 아이템 정보 가져오기
@@ -418,18 +428,8 @@ public class LinkSharingActivity extends AppCompatActivity {
                 Picasso.get().load(get_image).into(item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
                 wish_item.setItem_image(get_image); // @brief : 아이템 객체의 이미지 초기화
             } catch (IllegalArgumentException i) {
-                Log.d("checkings", "사진이 없음");
+                Log.d(TAG, "사진이 없음");
             }
-        }
-
-        // @brief : price 속성을 포함하는 태그의 속성값이 숫자로만 구성된 문자열인지 검사
-        public boolean isNumber(String text) {
-            try {
-                Integer.parseInt(text);
-                return true;
-            } catch (NumberFormatException e) {
-            }
-            return false;
         }
     }
 }
