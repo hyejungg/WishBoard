@@ -39,6 +39,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SigninActivity extends AppCompatActivity {
+    private static final String TAG_WISH = "Wish 로그인";
+    private static final String TAG_KAKAO = "Kakao 로그인";
+    private static final String TAG_GOOGLE = "Google 로그인";
     private Intent intent;
 
     // @params : 서버와 연결하여 DB에 등록할 정보를 담는 변수
@@ -150,14 +153,14 @@ public class SigninActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Log.i("Wish 로그인", "성공" + "\n" + res_user_item.user_id + " / " + res_user_item.email); // @deprecated : 확인용
+                    Log.i(TAG_WISH, "성공" + "\n" + res_user_item.user_id + " / " + res_user_item.email); // @deprecated : 확인용
                     Toast.makeText(SigninActivity.this, "로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
 
                     // @brief : 로그인 성공 시 메인 화면으로 이동
                     goMainActivity(true);
                 } else {
                     // @brief : 통신에 실패한 경우
-                    Log.e("Wish 로그인", "오류");
+                    Log.e(TAG_WISH, "오류");
                     Toast.makeText(SigninActivity.this, "다시 입력하세요.", Toast.LENGTH_SHORT).show();
                     edit_email.setText("");
                     edit_pw.setText("");
@@ -167,8 +170,8 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserItem> call, Throwable t) {
                 // @brief : 통신 실패 시 callback
-                Log.e("Wish 로그인", "서버 연결 실패");
-                Log.e("Wish 로그인", "onFailure: " + t.getMessage());
+                Log.e(TAG_WISH, "서버 연결 실패");
+                Log.e(TAG_WISH, "onFailure: " + t.getMessage());
             }
         });
     }
@@ -189,12 +192,12 @@ public class SigninActivity extends AppCompatActivity {
      */
     Function2<OAuthToken, Throwable, Unit> callback = (oAuthToken, throwable) -> {
         if (oAuthToken != null) {
-            Log.i("[카카오] 로그인", "성공");
+            Log.i(TAG_KAKAO, "성공");
             Toast.makeText(this, "카카오 로그인이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
             updateKakaoLogin();
         }
         if (throwable != null) {
-            Log.i("[카카오] 로그인", "실패");
+            Log.i(TAG_KAKAO, "실패");
             Toast.makeText(this, "카카오 로그인을 실패했습니다.", Toast.LENGTH_SHORT).show();
             Log.e("signInKakao()", throwable.getLocalizedMessage());
         }
@@ -206,28 +209,26 @@ public class SigninActivity extends AppCompatActivity {
         UserApiClient.getInstance().me((user, throwable) -> {
             if (user != null) {
                 // @brief : 로그인 성공
-                Log.i("[카카오] 로그인 정보", user.toString());
+                Log.i(TAG_KAKAO, "정보:" + user.toString());
                 // @brief : 로그인한 유저의 email주소와 token 값 가져오기. pw는 제공 X
                 email = user.getKakaoAccount().getEmail();
-                Log.i("[카카오] 로그인 정보", email + "");
+                Log.i(TAG_KAKAO, "정보:" + email + "");
                 // @brief : 로그인한 유저의 email주소를 못가져올 경우 추가 정보 요청하기
                 if(email == null){
                     List<String> scopes = Arrays.asList("account_email");
                     LoginClient.getInstance().loginWithNewScopes(this, scopes, (token, error) -> {
                         if(error != null){
-                            Log.e("[카카오] 로그인 추가정보 요청", "실패",  error);
+                            Log.e(TAG_KAKAO, "추가정보 요청 실패",  error);
                         }else{
-                            Log.i("[카카오] 로그인 추가정보 요청", "성공");
-                            Log.i("[카카오] 로그인 추가정보 요청", String.valueOf(token.getScopes()));
+                            Log.i(TAG_KAKAO, "추가정보 요청 성공\n" + token.getScopes());
                             email = token.getScopes().toString();
                         }
                         return null;
                     } );
                 }
                 /** @brief : email주소를 user db에 넣어 user_id 생성
-                  * @see : SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동
-                          현재 Users 테이블의 email 값이 unique로 되어있어 이미 존재하는 경우 db에 추가 안되고 바로 signInWish로 넘어감
-                  */
+                 *  @see : SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동
+                 */
                 SignupActivity.save(email, "");
                 signInWish(email, "0");
             } else {
@@ -243,11 +244,11 @@ public class SigninActivity extends AppCompatActivity {
         UserApiClient.getInstance().logout((throwable) -> {
             if (throwable != null) {
                 // @brief : 로그아웃 실패
-                Log.e("[카카오] 로그아웃", "실패", throwable);
+                Log.e(TAG_KAKAO, "로그아웃 실패", throwable);
                 Toast.makeText(this, "카카오 로그아웃을 실패했습니다.", Toast.LENGTH_SHORT).show();
             } else {
                 // @brief : 로그아웃 성공
-                Log.i("[카카오] 로그아웃", "성공");
+                Log.i(TAG_KAKAO, "로그아웃 성공");
                 Toast.makeText(this, "카카오 로그아웃이 정상적으로 수행됐습니다.", Toast.LENGTH_SHORT).show();
             }
             return null;
@@ -256,10 +257,10 @@ public class SigninActivity extends AppCompatActivity {
         UserApiClient.getInstance().unlink((throwable) -> {
             if (throwable != null) {
                 // @brief : 연결 끊기 실패
-                Log.e("[카카오] 로그아웃", "연결 끊기 실패", throwable);
+                Log.e(TAG_KAKAO, "로그아웃 + 연결 끊기 실패", throwable);
             } else {
                 // @brief : 연결 끊기 성공
-                Log.i("kakaoLogout", "연결 끊기 성공. SDK에서 토큰 삭제");
+                Log.i(TAG_KAKAO, "로그아웃 + 연결 끊기 성공. SDK에서 토큰 삭제");
             }
             return null;
         });
@@ -296,13 +297,13 @@ public class SigninActivity extends AppCompatActivity {
                     // @brief : 구글 로그인 성공 했다면 -> task의 정보를 가져옴
                     GoogleSignInAccount account = task.getResult(ApiException.class);
                     token = account.getIdToken();
-                    Log.d("[구글] 로그인", "task의 token 정보\n" + token);
+                    Log.d(TAG_GOOGLE, "task의 token 정보\n" + token);
                     email = account.getEmail();
-                    Log.d("[구글] 로그인", "task의 이메일 정보\n" + email);
+                    Log.d(TAG_GOOGLE, "task의 이메일 정보\n" + email);
                     firebaseAuthWithGoogle(account);
                 } catch (ApiException e) {
                     // @brief : 구글 로그인 실패 했다면
-                    Log.e("[구글] 로그인", "task 정보 실패", e);
+                    Log.e(TAG_GOOGLE, "task 정보 실패", e);
                 }
             }
         }
@@ -321,18 +322,17 @@ public class SigninActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // @brief : 로그인 성공 시
                         user = mAuth.getCurrentUser();
-                        Log.i("[구글] 로그인", "signInWithCredential:성공");
+                        Log.i(TAG_GOOGLE, "signInWithCredential:성공");
                         Toast.makeText(getApplicationContext(), "구글 로그인이 정상적으로 성공하였습니다.", Toast.LENGTH_LONG).show();
 
                         /** @brief : email주소를 user db에 넣어 user_id 생성
-                         * @see : SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동
-                                 현재 Users 테이블의 email 값이 unique로 되어있어 이미 존재하는 경우 db에 추가 안되고 바로 signInWish로 넘어감
+                         *  @see : SignupActivity.save()로 user_id 생성, signInWish()로 바로 로그인 후 홈화면으로 이동
                          */
                         SignupActivity.save(email, "");
                         signInWish(email, "0");
                     } else {
                         // @brief : 로그인 실패 시
-                        Log.e("[구글] 로그인", "signInWithCredential:실패" + task.getException());
+                        Log.e(TAG_GOOGLE, "signInWithCredential:실패" + task.getException());
                         Toast.makeText(getApplicationContext(), "구글 로그인이 실패하였습니다.", Toast.LENGTH_LONG).show();
                     }
                 });

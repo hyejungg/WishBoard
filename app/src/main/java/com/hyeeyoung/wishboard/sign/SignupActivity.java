@@ -31,6 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
+    private static final String TAG = "Wish 회원가입 등록";
 
     private String email; // @params : DB에 들어갈 사용자 email
     private String pw; // @params : DB에 들어갈 사용자 pw
@@ -60,7 +61,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i("회원가입", "onStop()");
+        Log.i("TAG", "onStop()");
         finish(); // @berif : back버튼 클릭 시 로그인화면으로 돌아가도록 해당 액티비티 종료
     }
 
@@ -181,17 +182,17 @@ public class SignupActivity extends AppCompatActivity {
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-                    Log.i("회원정보 등록", seq);
+                    Log.i(TAG, seq);
                 }else{
-                    Log.e("회원정보 등록", "Retrofit 통신 실패");
+                    Log.e(TAG, "Retrofit 통신 실패");
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // @brief : 통신 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
-                Log.e("회원정보 등록", "서버 연결 실패");
-                Log.e("회원정보 등록", "onFailure: " + t.getMessage());
+                Log.e(TAG, "서버 연결 실패");
+                Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
