@@ -1,30 +1,22 @@
 package com.hyeeyoung.wishboard.detail;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.add.NewItemActivity;
-import com.hyeeyoung.wishboard.home.HomeFragment;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.squareup.picasso.Picasso;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import retrofit2.Call;
@@ -32,9 +24,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ItemDetailActivity extends AppCompatActivity {
+    private static final String TAG = "아이템 상세정보 조회";
+    static final int UPDATE_REQUEST = 1;
+    private boolean is_updated = false;
     private String item_id;
     WishItem wish_item;
-    static final int UPDATE_REQUEST = 1;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,32 +39,32 @@ public class ItemDetailActivity extends AppCompatActivity {
         // @brief : 선택한 아이템의 상세정보 조회를 위해 홈 > 아이템 어뎁터 > 해당 아이템의 아이디를 받아옴
         Intent intent = getIntent();
         item_id = intent.getStringExtra("item_id");
-        Log.i("아이템 상새정보 가져오기", "아이템 아이디 가져오기: " + item_id);
+        Log.i(TAG, "item_id : " + item_id);
     }
 
     @Override
     protected void onStart() { //@brief : item_id에 해당하는 아이템의 정보를 가져옴
         super.onStart();
         selectItemDetails(item_id);
-        Log.i("아이템 상새정보 가져오기", "onStart: " + "");
+        Log.i(TAG, "onStart: " + "");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("아이템 상새정보 가져오기", "onResume: " + "");
+        Log.i(TAG, "onResume: " + "");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i("아이템 상새정보 가져오기", "onStop: " + "");
+        Log.i(TAG, "onStop: " + "");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("아이템 상새정보 가져오기", "onDestroy: " + "");
+        Log.i(TAG, "onDestroy: " + "");
     }
 
     // @brief domain : 쇼핑몰 url을 도메인네임으로 변경한 것
@@ -91,10 +87,10 @@ public class ItemDetailActivity extends AppCompatActivity {
         TextView item_url = findViewById(R.id.domain_name);
 
         try { // @brief : 아이템 이미지 디스플레이
-            Log.i("아이템 상세정보 가져오기", "init: " + wish_item.getItem_image());
+            Log.i(TAG, "init: " + wish_item.getItem_image());
             Picasso.get().load(wish_item.getItem_image()).error(R.mipmap.ic_main).into(item_image); // @brief : 이미지 가져올 떄 에러 발생 시 기본 이미지 적용
         } catch (IllegalArgumentException i) {
-            Log.d("아이템 상세정보 가져오기", "아이템 사진 없음");
+            Log.d(TAG, "아이템 사진 없음");
         }
 
         item_price.setText(wish_item.getItem_price());
@@ -117,7 +113,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 else // @brief : 도메인 주소로 바꾸지 못한 경우
                     item_url.setText(wish_item.getItem_url()); // @brief : 기존 url로 디스플레이
             } catch (URISyntaxException e) {
-                Log.e("아이템 상세정보 가져오기", "url 없음");
+                Log.e(TAG, "url 없음");
             }
         }
     }
@@ -135,24 +131,24 @@ public class ItemDetailActivity extends AppCompatActivity {
                 wish_item = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨.
                 // @brief : 가져온 아이템이 없는 경우
                 if (wish_item == null) {
-                    Log.i("아이템 상세정보 가져오기", "가져온 아이템 없음");
-                    Log.i("아이템 상세정보 가져오기", response.message());
+                    Log.i(TAG, "가져온 아이템 없음");
+                    Log.i(TAG, response.message());
                 }
 
                 // @brief : 서버연결 성공한 경우
                 if(response.isSuccessful()){
-                    Log.i("아이템 상세정보 가져오기", "Retrofit 통신 성공" + wish_item);
+                    Log.i(TAG, "Retrofit 통신 성공" + wish_item);
                     init();
                 } else { // @brief : 통신에 실패한 경우
-                    Log.e("아이템 상세정보 가져오기", "Retrofit 통신 실패");
-                    Log.i("아이템 상세정보 가져오기", response.message());
+                    Log.e(TAG, "Retrofit 통신 실패");
+                    Log.i(TAG, response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<WishItem> call, Throwable t) {
                 // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
-                Log.e("아이템 상세정보 가져오기", "서버 연결 실패");
+                Log.e(TAG, "서버 연결 실패");
             }
         });
     }
@@ -169,18 +165,18 @@ public class ItemDetailActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     // @brief : 정상적으로 통신 성공한 경우
-                    Log.i("아이템 삭제", "성공");
+                    Log.i(TAG, "아이템 삭제 성공");
                     Toast.makeText(ItemDetailActivity.this, "위시리스트에서 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     // @brief : 통신에 실패한 경우
-                    Log.e("아이템 삭제", "오류");
+                    Log.e(TAG, "아이템 삭제 오류");
+                    Log.i(TAG, response.message());
                 }
-                Log.i("아이템 삭제 code: ", response.message());
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.i("아이템 삭제 message: ", t.getMessage());
+                Log.i(TAG, "아이템 삭제 실패 : "+ t.getMessage());
             }
         });
     }
@@ -195,13 +191,13 @@ public class ItemDetailActivity extends AppCompatActivity {
 
             // @brief : 좌측 하단 삭제 버튼 클릭 시 DB에서 해당 아이템 삭제
             case R.id.delete:
-                Log.i("아이템 상새정보 가져오기", "onClick: " + item_id);
+                Log.i(TAG, "onClick: " + item_id);
                 deleteItem(item_id);
                 break;
 
             // @brief : 좌측 하단 수정 버튼 클릭 시 DB에서 해당 아이템 수정
             case R.id.edit:
-                Log.i("아이템 상새정보 가져오기", "onClick: " + item_id);
+                Log.i(TAG, "onClick: " + item_id);
                 Intent intent = new Intent(ItemDetailActivity.this, NewItemActivity.class);
                 intent.putExtra("item_id", item_id);
                 startActivityForResult(intent, 1);
@@ -219,20 +215,19 @@ public class ItemDetailActivity extends AppCompatActivity {
         }
     }
 
-    boolean is_updated = false;
-
     // @brief : 아이템 수정 후 복귀할 때 UI 업데이트 처리
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("홈 test1",  "onBackPressed: " + is_updated);
+        Log.i(TAG,  "onBackPressed: " + is_updated);
         if (requestCode == UPDATE_REQUEST && resultCode == RESULT_OK)
             is_updated = true;
-        Log.i("홈 test2",  "onBackPressed: " + is_updated);
+        Log.i(TAG,  "onBackPressed: " + is_updated);
     }
 
+    // @todo : 아이템이 수정된 경우에 HomeFragment UI를 수정하도록 구현
     //@Override
-//    public void onBackPressed() { // @brief : 아이템이 수정된 경우에 HomeFragment UI를 수정
+//    public void onBackPressed() {
 //        HomeFragment fragment = new HomeFragment();
 //        Bundle bundle2 = new Bundle(1);
 //        bundle2.putBoolean("is_updated", is_updated);

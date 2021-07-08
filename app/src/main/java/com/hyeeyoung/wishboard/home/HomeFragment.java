@@ -1,19 +1,14 @@
 package com.hyeeyoung.wishboard.home;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -33,7 +28,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -101,9 +95,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //        }
 //    }
 
+    private static final String TAG = "홈";
     private View view;
-    RecyclerView recycler_view;
-    ItemAdapter adapter;
+    private RecyclerView recycler_view;
+    private ItemAdapter adapter;
     private ArrayList<WishItem> wish_list;
     private GridLayoutManager grid_layout_manager;
     private Intent intent;
@@ -119,7 +114,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0){
             user_id = SaveSharedPreferences.getUserId(this.getActivity());
-            Log.i("Wish/HomeFragment", "user_id = " + user_id); // @deprecated : test용
+            Log.i(TAG, "user_id = " + user_id); // @deprecated : test용
         }
         // @todo : 유저아이디를 가져오지 못하는 경우 예외처리하기
         return view;
@@ -145,13 +140,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 // @brief : 서버연결 성공한 경우
                 if(response.isSuccessful()){
                     if (wish_list.size() > 0) { // @brief : 가져온 아이템이 하나 이상인 경우
-                        Log.i("아이템 가져오기", "Retrofit 통신 성공");
-                        Log.i("가져온 아이템 살펴보기", wish_list+""); // @deprecated : 테스트용
+                        Log.i(TAG, "Retrofit 통신 성공");
+                        Log.i(TAG, wish_list+""); // @deprecated : 테스트용
                         init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
                     }
                 } else { // @brief : 통신에 실패한 경우
-                    Log.e("아이템 가져오기", "Retrofit 통신 실패");
-                    Log.i("아이템 가져오기", response.message());
+                    Log.e(TAG, "Retrofit 통신 실패");
+                    Log.i(TAG, response.message());
                     init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
                 }
             }
@@ -159,8 +154,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFailure(Call<ArrayList<WishItem>> call, Throwable t) {
                 // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
-                Log.e("아이템 가져오기", "서버 연결 실패");
-                init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+                Log.e(TAG, "서버 연결 실패");
+                init();
             }
         });
     }
@@ -172,7 +167,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         // @brief : 각 위시 아이템 뷰를 초기화
         recycler_view = view.findViewById(R.id.recyclerview_wish_list);
         adapter = new ItemAdapter(wish_list, user_id);
-
         recycler_view.setAdapter(adapter);
         grid_layout_manager = new GridLayoutManager(this.getActivity(), 2);
         recycler_view.setLayoutManager(grid_layout_manager);
@@ -186,7 +180,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 view.findViewById(R.id.folder3), view.findViewById(R.id.folder4), view.findViewById(R.id.folder5),
                 view.findViewById(R.id.folder6), view.findViewById(R.id.folder7), view.findViewById(R.id.folder8)};
 
-        // @brief : 리스너 등록
+        // @brief : 상단 폴더 버튼 별 리스너 등록
         cart.setOnClickListener(this);
         more.setOnClickListener(this);
         for(int i = 0; i < buttons.length; i++){
@@ -258,5 +252,4 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //                selectItemInfo(user_id);
 //        }
 //    }
-
 }
