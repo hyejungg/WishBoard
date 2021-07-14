@@ -183,6 +183,7 @@ public class LinkSharingActivity extends AppCompatActivity {
         DateFormat dateFormat = new SimpleDateFormat("MMM dd일 EEE"); // @param : 날짜 포맷 지정, MMM과 EEE는 각각 한자리 값(6월, 수)로 표현하기 위한 포맷임
 
         // @brief : 현재부터 90일 후까지의 날짜 배열 생성
+        dates.add(dateFormat.format(c.getTime())); // @brief : 현재날짜
         for (int i = 0; i < 90; i++) {
             c.add(Calendar.DATE, 1);
             dates.add(dateFormat.format(c.getTime()));
@@ -198,6 +199,7 @@ public class LinkSharingActivity extends AppCompatActivity {
         DateFormat dateFormat_server = new SimpleDateFormat("yyyy-MM-dd"); // @param : 서버에 저장될 날짜 포맷 지정
 
         // @brief : 현재부터 90일 후까지의 날짜 배열 생성
+        dates_server.add(dateFormat_server.format(c.getTime())); // @brief : 현재날짜
         for (int i = 0; i < 90; i++) {
             c.add(Calendar.DATE, 1);
             dates_server.add(dateFormat_server.format(c.getTime()));
