@@ -1,5 +1,6 @@
 package com.hyeeyoung.wishboard.sign;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,10 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.hyeeyoung.wishboard.MainActivity;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.kakao.sdk.user.model.User;
 
 import java.util.regex.Matcher;
@@ -28,6 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
+    private static final String TAG = "Wish 회원가입 등록";
 
     private String email; // @params : DB에 들어갈 사용자 email
     private String pw; // @params : DB에 들어갈 사용자 pw
@@ -41,8 +45,6 @@ public class SignupActivity extends AppCompatActivity {
     private EditText edit_pw_re;
     private Button btn_signup;
 
-    private Intent intent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,13 @@ public class SignupActivity extends AppCompatActivity {
             email = edit_email.getText().toString();
             isValidId();
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("TAG", "onStop()");
+        finish(); // @berif : back버튼 클릭 시 로그인화면으로 돌아가도록 해당 액티비티 종료
     }
 
     /**
@@ -71,11 +80,12 @@ public class SignupActivity extends AppCompatActivity {
      */
     public void onClick(View v){
         switch (v.getId()){
-            // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
+            // @brief : back 버튼 클릭 시 이전 화면(로그인 화면)으로 돌아가기
             case R.id.back :
                 onBackPressed();
                 // @brief : 오른쪽 -> 왼쪽으로 화면 전환
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
+                onStop();
                 break;
             case R.id.btn_signup:
                 // @brief : 비밀번호 유효성 검사
@@ -89,8 +99,7 @@ public class SignupActivity extends AppCompatActivity {
                     // @see : 토스트 확인 후 로그인 화면으로 넘어갈 수 있도록 delay 발생시킴
                     Handler timer = new Handler();
                     timer.postDelayed(() -> {
-                        intent = new Intent(SignupActivity.this, SigninActivity.class);
-                        startActivity(intent);
+                        onStop();
                     }, 1000);
                 }
                 break;
@@ -147,7 +156,6 @@ public class SignupActivity extends AppCompatActivity {
             edit_pw.setText("");
             edit_pw_re.setText("");
         }
-
     }
     /**
      * @brief : Retrofit을 이용하여 서버에 데이터 값 저장하는 함수
@@ -174,17 +182,17 @@ public class SignupActivity extends AppCompatActivity {
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-                    Log.i("회원정보 등록", seq);
+                    Log.i(TAG, seq);
                 }else{
-                    Log.e("회원정보 등록", "Retrofit 통신 실패");
+                    Log.e(TAG, "Retrofit 통신 실패");
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // @brief : 통신 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
-                Log.e("회원정보 등록", "서버 연결 실패");
-                //Log.i("회원정보 등록", "onFailure: " + t.getMessage());
+                Log.e(TAG, "서버 연결 실패");
+                Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
     }

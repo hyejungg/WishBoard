@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -34,72 +35,70 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class NewItemActivity extends AppCompatActivity {
 
-    private static final String TAG = "아이템 수동 등록";
+    private static final String TAG = "아이템 정보 수정";
     private ConstraintLayout item_image_layout;
-    private LinearLayout btn_folder, btn_noti;
+    private LinearLayout btn_folder, btn_noti, layout;
     private ImageButton save;
     private ImageView item_image;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
-    private String time_stamp, image_path;
-    WishItem wish_item;
+    private String time_stamp, image_path, current_photo_path, item_id;
+    private WishItem wish_item;
 
     // @ brief : 카메라, 갤러리 접근
     private File file;
     private Uri img_uri, photo_uri, album_uri;
-    private String current_photo_path;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
-    private LinearLayout layout;
     private boolean is_modified_image = false;
-    //private String user_id = "";
-    private String item_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_new_item);
-        init();
 
-        // @brief : 아이템 상세정보 화면에서 받아온 정보로 각종 뷰에 값을 디스플레이
-        try{
+        try{ // @brief : 상세조회화면에서 아이템아이디 값 받아와서 각 뷰에 디스플레이할 해당 아이템 정보를 가져옴.
             Intent intent = getIntent();
-            String[] item_info = intent.getStringArrayExtra("item_info");
-            if(item_info.length > 0){
-                item_name.setText(intent.getStringExtra("item_name"));
-                item_id = item_info[0];
-                Log.i("아이템 수정", "onCreate: " + item_id);
-                item_name.setText(item_info[1]);
-                image_path = item_info[2];
-                try {
-                    Picasso.get().load(item_info[2]).into(item_image);
-                } catch (IllegalArgumentException i) {
-                    Log.d("아이템 상새정보 가져오기", "아이템 사진 없음");
-                }
-                item_price.setText(item_info[3]);
-                item_url.setText(item_info[4]);
-                item_memo.setText(item_info[5]);
-            }
-        }catch (Exception e){
+            item_id = intent.getStringExtra("item_id");
+            if(item_id != null)
+                selectItemInfo(item_id); // @brief : 서버에 아이템 정보를 요정
+            else
+                Toast.makeText(NewItemActivity.this, "아이템 정보를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show();
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public void init(){
-        item_image_layout = (ConstraintLayout) findViewById(R.id.item_image_layout);
-        btn_folder = (LinearLayout) findViewById(R.id.btn_folder);
-        btn_noti = (LinearLayout) findViewById(R.id.btn_noti);
-        save = (ImageButton) findViewById(R.id.save);
+    public void init() {
+        item_image_layout = findViewById(R.id.item_image_layout);
+        btn_folder = findViewById(R.id.btn_folder);
+        btn_noti = findViewById(R.id.btn_noti);
+        save = findViewById(R.id.save);
 
-        item_name = (EditText) findViewById(R.id.item_name);
-        item_price = (EditText) findViewById(R.id.item_price);
-        item_url = (EditText) findViewById(R.id.item_url);
-        item_memo = (EditText) findViewById(R.id.item_memo);
-        item_image = (ImageView) findViewById(R.id.item_image);
-        layout = (LinearLayout)findViewById(R.id.layout);
+        item_name = findViewById(R.id.item_name);
+        item_price = findViewById(R.id.item_price);
+        item_url = findViewById(R.id.item_url);
+        item_memo = findViewById(R.id.item_memo);
+        item_image = findViewById(R.id.item_image);
+        layout = findViewById(R.id.layout);
+
+        try{ // @brief : wish_item 정보가 있는 경우 해당 정보로 각종 뷰 초기화
+            item_name.setText(wish_item.getItem_name());
+            image_path = wish_item.getItem_image();
+            try {
+                Picasso.get().load(image_path).into(item_image);
+            } catch (IllegalArgumentException i) {
+                Log.d(TAG, "아이템 사진 없음");
+            }
+            item_price.setText(wish_item.getItem_price());
+            item_url.setText(wish_item.getItem_url());
+            item_memo.setText(wish_item.getItem_memo());
+
+        }catch (Exception e){ // @brief : wish_item 정보가 없는 경우 예외처리
+            e.printStackTrace();
+        }
 
         // @brief : TedPermission 라이브러리 -> 카메라 권한 획득
         new WindowPermission(this).setPermission(
@@ -108,16 +107,38 @@ public class NewItemActivity extends AppCompatActivity {
     }
 
     /**
-     * @param : wish_item 사용자가 새로 입력한 아이템 객체
-     * @return : 입력하지 않았다면 true, 입력했다면 false
-     * @brief :사용자가 상품명을 입력했는지를 확인
+     * @brief : 서버에서 아이템 아이디에 해당하는 아이템 정보를 조회한다.
+     * @param item_id 아이템 아이디
      */
-    private boolean isNoName(String item_name) {
-        if (item_name.trim().isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+    private void selectItemInfo(String item_id) {
+        IRemoteService remoteService = ServiceGenerator.createService(IRemoteService.class);
+        Call<WishItem> call = remoteService.selectItemDetails(item_id);
+        call.enqueue(new Callback<WishItem>() {
+            @Override
+            public void onResponse(Call<WishItem> call, Response<WishItem> response) {
+                wish_item = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨.
+                // @brief : 가져온 아이템이 없는 경우
+                if (wish_item == null) {
+                    Log.i(TAG, "가져온 아이템 없음");
+                    Log.i(TAG, response.message());
+                }
+
+                // @brief : 서버연결 성공한 경우
+                if(response.isSuccessful()){
+                    Log.i(TAG, "Retrofit 통신 성공" + wish_item);
+                    init();
+                } else { // @brief : 통신에 실패한 경우
+                    Log.e(TAG, "Retrofit 통신 실패");
+                    Log.i(TAG, response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WishItem> call, Throwable t) {
+                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e(TAG, "서버 연결 실패");
+            }
+        });
     }
 
     /**
@@ -148,21 +169,19 @@ public class NewItemActivity extends AppCompatActivity {
             get_item_memo = null;
         }
 
-        if(is_modified_image){ // @brief : 갤러리 이미지로 수정된 경우
-            // @brief : 아이템 등록 시 파일명 중복 방지를 위해 파일명으로 등록 시간으로 지정, 추후 파일명도 추가할 예정
-            time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        if (is_modified_image) { // @brief : 갤러리 이미지로 아이템 이미지가 수정된 경우
+            time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()); // @brief : 아이템 등록 시 파일명 중복 방지를 위해 파일명으로 등록 시간으로 지정, 추후 파일명도 추가할 예정
             String get_item_image = IRemoteService.IMAGE_URL + time_stamp;
-            // @param aws_s3 : @ s3에 이미지 업로드를 위한 s3 객체 생성
-            aws_s3 = new AwsS3Service(getApplicationContext());
+            aws_s3 = new AwsS3Service(getApplicationContext()); // @param aws_s3 : @ s3에 이미지 업로드를 위한 s3 객체 생성
             /**
              * @brief : S3에 이미지 파일 업로드
              * @param image_path : 이미지 파일 경로
              * @param time_stamp : 이미지파일명 중복 방지를 위한 현재 시간 값을 추가해서 파일명 지정함
              */
             aws_s3.uploadFile(new File(image_path), time_stamp);
-            wish_item = new WishItem(null, null, null, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
-        } else{ // @brief : 이미지를 수정하지 않은 경우
-            wish_item = new WishItem(null, null, null, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
+            wish_item = new WishItem(item_id, null, null, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
+        } else { // @brief : 이미지를 수정하지 않은 경우
+            wish_item = new WishItem(item_id, null, null, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
         }
 
         IRemoteService remoteService = ServiceGenerator.createService(IRemoteService.class);
@@ -172,52 +191,70 @@ public class NewItemActivity extends AppCompatActivity {
             public void onResponse(Call<WishItem> call, Response<WishItem> response) {
                 if (response.isSuccessful()) {
                     // @brief : 정상적으로 통신 성공한 경우
-                    Log.i("아이템 수정", "성공");
+                    Log.i(TAG, "성공");
+                    Toast.makeText(NewItemActivity.this, "위시리스트가 수정되었습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     // @brief : 통신에 실패한 경우
-                    Log.e("아이템 수정", "오류");
+                    Log.e(TAG, "오류");
                 }
-                Log.i("아이템 수정 code: ", response.message());
             }
+
             @Override
             public void onFailure(Call<WishItem> call, Throwable t) {
-                Log.i("아이템 수정 message: ", t.getMessage());
+                Log.i(TAG, t.getMessage());
             }
         });
     }
 
+    /**
+     * @param : wish_item 사용자가 새로 입력한 아이템 객체
+     * @return : 입력하지 않았다면 true, 입력했다면 false
+     * @brief :사용자가 상품명을 입력했는지를 확인
+     */
+    private boolean isNoName(String item_name) {
+        if (item_name.trim().isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.item_image_layout:
+            case R.id.item_image_layout: // @brief : 이미지를 클릭한 경우
                 //makeDialog(); // @brief : 다이얼로그 디스플레이
                 selectAlbum();
                 break;
 
-            case R.id.btn_folder:
+            case R.id.btn_folder: // @todo : 폴더 구현 후 작성하기
                 Intent intent = new Intent(NewItemActivity.this, FolderListActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.btn_noti:
-                // @ brief : 추후 사용
+
+            case R.id.btn_noti: // @todo : 알림 구현 후 작성하기
                 break;
 
-            case R.id.save:
+            case R.id.save: // @brief : 저장 버튼을 클릭한 경우
                 // @brief : 아이템 이름을 입력하지 않은 경우
                 if (isNoName(item_name.getText().toString())) {
-                    // @brief : 스낵바 띄우기
-                    //new CustumSnackbar(getView(), "아이템 이름을 입력해주세요.", Snackbar.LENGTH_SHORT).show();
+                    //new CustumSnackbar(getView(), "아이템 이름을 입력해주세요.", Snackbar.LENGTH_SHORT).show(); // @brief : 스낵바 띄우기
                     Toast.makeText(this, "아이템 이름을 입력해주세요.", Toast.LENGTH_SHORT).show(); // @brief : 아이템 정보 입력을 요구
                     return;
                 }
+                // @brief : 수정한 아이템 정보로 서버에 업데이트를 요청
                 updateItem();
-
-                // @brief : itemDetailActivty로 복귀하면서 UI 업데이트를 위해 변경된 데이터 전달
+                Log.i(TAG, "is_modified_image : "+is_modified_image);
                 Intent return_intent = new Intent();
-                Bundle return_bundle = new Bundle();
-                return_bundle.putStringArray("item_info", new String[]{wish_item.getItem_name(), wish_item.getItem_image(), wish_item.getItem_price(), wish_item.getItem_url(), wish_item.getItem_memo()});
-                return_intent.putExtras(return_bundle);
-                setResult(RESULT_OK, return_intent);
-                finish();
+                setResult(RESULT_OK, return_intent); // @brief : itemDetailActivty로 복귀하면서 UI 업데이트를 위해 업데이트(RESULT_OK)결과 전송
+
+                // @brief : 변경사항 적용 후 0.7 초 뒤에 액티비티 종료하는 handler 설정
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish(); // @brief : 0.1 초 뒤에 액티비티 종료
+                    }
+                }, 700);
+
                 break;
         }
     }
@@ -237,7 +274,6 @@ public class NewItemActivity extends AppCompatActivity {
      * @TODO 사진촬영 클릭시 앱 중단되는 문제 발생, 해결 예정
      * @brief : 사진 찍기 클릭
      */
-
     public void takePhoto() {
         // @brief : 촬영 후 이미지 가져옴
         String state = Environment.getExternalStorageState();
@@ -259,12 +295,12 @@ public class NewItemActivity extends AppCompatActivity {
                 }
             }
         } else {
-            Log.v("알림", "저장공간에 접근 불가능");
+            Log.v(TAG, "알림 : 저장공간에 접근 불가능");
             return;
         }
     }
 
-    // @TODO : 카메라와 갤러리에서 가져온 이미지 패스를 처리한 후 S3로 업로드 및 DB에 이미지 경로 저장
+    // @todo : 카메라와 갤러리에서 가져온 이미지 패스를 처리한 후 S3로 업로드 및 DB에 이미지 경로 저장
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -303,12 +339,19 @@ public class NewItemActivity extends AppCompatActivity {
                             Log.i(TAG, "onActivityResult: " + "갤러리 이미지 적용 에러");
                         }
 
-                        // @brief : 이미지뷰에 이미지 디스플레이
-                        item_image.setImageURI(photo_uri);
-                        is_modified_image = true;
+                        Log.i(TAG, "onActivityResult: " + photo_uri);
+
+                        // @brief : 변경된 이미지(photo_uri) 적용 후 0.2 초 뒤에 이미지 뷰에 이미지 디스플레이
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                is_modified_image = true;
+                                item_image.setImageURI(photo_uri); // @brief : 0.2 초 뒤에 이미지 적용
+                            }
+                        }, 200);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.v("알림", "앨범에서 가져오기 에러");
+                        Log.v(TAG, "알림 : 앨범에서 가져오기 에러");
                     }
                 }
                 break;
@@ -317,7 +360,7 @@ public class NewItemActivity extends AppCompatActivity {
             case FROM_CAMERA: {
                 // @brief : 촬영
                 try {
-                    Log.v("알림", "FROM_CAMERA 처리");
+                    Log.v(TAG, "알림 : FROM_CAMERA 처리");
                     galleryAddPic();
                     // @brief : 이미지뷰에 이미지셋팅
                     item_image.setImageURI(img_uri);
@@ -337,11 +380,11 @@ public class NewItemActivity extends AppCompatActivity {
         File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ireh");
 
         if (!storageDir.exists()) {
-            Log.v("알림", "storageDir 존재 x " + storageDir.toString());
+            Log.v(TAG, "알림 : storageDir 존재 x " + storageDir.toString());
             storageDir.mkdirs();
         }
 
-        Log.v("알림", "storageDir 존재함 " + storageDir.toString());
+        Log.v(TAG, "알림 : storageDir 존재함 " + storageDir.toString());
         imageFile = new File(storageDir, imgFileName);
         current_photo_path = imageFile.getAbsolutePath();
 

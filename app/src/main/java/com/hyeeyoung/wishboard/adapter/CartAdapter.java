@@ -26,6 +26,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHolder> {
+    private static final String TAG = "장바구니";
+
     // @see : incCount(), decCount() 에서도 사용하기 위해 static으로 선언
     private static ArrayList<CartItem> cartList;
     protected static Context context;
@@ -86,7 +88,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
         try { // @brief : 아이템 이미지를 화면에 보여준다.
             Picasso.get().load(item.getItem_image()).into(holder.item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
         } catch (IllegalArgumentException i) {
-            Log.e("[카트]이미지 정보", "없음", i);
+            Log.e("TAG", "이미지 정보 없음", i);
         }
         holder.item_name.setText(item.getItem_name());
         holder.item_count.setText(item.getItem_count());
@@ -109,7 +111,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
         holder.minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("[Adapter] -버튼 클릭", "성공");
                 if(listener != null)
                     listener.onMinusClick(position, holder);
             }
@@ -118,7 +119,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
         holder.plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("[Adapter] +버튼 클릭", "성공");
                 if(listener != null)
                     listener.onPlusClick(position, holder);
             }
@@ -126,7 +126,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
         holder.x.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("[Adapter] x버튼 클릭", "성공");
                 if(listener != null)
                     listener.onXbtnClick(position);
             }
@@ -142,8 +141,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
      * @param position
      */
     public static void incCount(int position, CustomViewHolder holder){
-        Log.i("[Adapter] incCount()", "확인"); // @deprecated
-
         CartItem item = cartList.get(position);
 
         // @brief : 해당 아이템의 원래 값을 가져옴
@@ -170,8 +167,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
         }
     }
     public static void decCount(int position, CustomViewHolder holder){
-        Log.i("[Adapter] decCount()", "확인"); // @deprecated
-
         // @brief : diplay 되어있는 아이템 가격 가져옴
         int holder_price = Integer.parseInt(holder.item_price.getText()+"");
 
