@@ -17,8 +17,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import java.io.File;
 
 public class AwsS3Service {
-    private static String BUCKET_NAME = ""; // @param : 생성한 버킷명
-    private static String ACCESS_KEY = ""; // @param : IAM에서 생성한 액세스 키
+    private static String BUCKET_NAME = "";
+    private static String ACCESS_KEY = "";
     private static String SECRET_KEY = "";
 
     private AmazonS3 s3_client;

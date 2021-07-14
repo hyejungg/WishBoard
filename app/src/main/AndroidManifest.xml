@@ -22,7 +22,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="Instantiatable">
-        <activity android:name=".add.NewItemActivity"></activity>
+        <activity android:name=".detail.FolderDetailActivity"></activity>
+        <activity
+            android:name=".folder.FolderMoreActivity"
+            android:theme="@style/AppThemePopup"></activity>
+        <activity
+            android:name=".folder.NewFolderActivity"
+            android:theme="@style/AppThemePopup"></activity>
+        <activity android:name=".add.NewItemActivity" />
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +55,7 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <activity android:name=".detail.ItemDetailActivity"/>
+        <activity android:name=".detail.ItemDetailActivity" />
         <activity android:name=".cart.CartActivity" />
         <activity android:name=".folder.FolderListActivity" />
         <activity android:name=".MainActivity" /> <!-- @ brief : kakao 로그인을 위해 Redirect URI 접근 -->
