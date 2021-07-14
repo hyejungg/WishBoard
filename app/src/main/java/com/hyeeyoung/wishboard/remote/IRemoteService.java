@@ -1,19 +1,14 @@
 package com.hyeeyoung.wishboard.remote;
 
-import com.hyeeyoung.wishboard.adapter.CartAdapter;
 import com.hyeeyoung.wishboard.model.CartItem;
 import com.hyeeyoung.wishboard.model.NotiItem;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.model.WishItem;
-
 import java.util.ArrayList;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
@@ -38,9 +33,10 @@ public interface IRemoteService {
     @POST("/item")
     Call<ResponseBody> insertItemInfo(@Body WishItem wish_item);
 
-    // @brief : 알림 정보 저장 요청
-    @POST("/noti")
-    Call<ResponseBody> insertItemNoti(@Body NotiItem noti_item);
+    // @brief : 홈화면에서 로그인한 사용자의 아이템 정보를 요청
+    @GET("/noti/{user_id}")
+    Call<ArrayList<NotiItem>> selectNotiInfo(@Path("user_id") String user_id);
+
 
     // @brief : wishbaord 앱 회원가입 요청
     @POST("/user/signup")
@@ -93,4 +89,12 @@ public interface IRemoteService {
     // @brief : 아이템 상세조회에서 아이템 삭제
     @DELETE("/item/detail/{item_id}")
     Call<Void> deleteItem(@Path("item_id") String item_id);
+
+    // @brief : 알림 정보 저장 요청
+    @POST("/noti")
+    Call<ResponseBody> insertItemNoti(@Body NotiItem noti_item);
+
+    // @brief : 알림화면에서 사용자가 조회한 알림은 읽은 알림으로 수정 요청
+    @PUT("/noti/{user_id}")
+    Call<ResponseBody> updateNotiRead(@Path("user_id") String user_id);
 }
