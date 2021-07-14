@@ -17,9 +17,9 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import java.io.File;
 
 public class AwsS3Service {
-    private static String BUCKET_NAME = "wishboardbucket"; // @param : 생성한 버킷명
-    private static String ACCESS_KEY = "AKIAQMMT5SR5P24G7BXL"; // @param : IAM에서 생성한 액세스 키
-    private static String SECRET_KEY = "BXomhEgJxaMAYxnG9ySjEggm8JpXUylOZskBYj1Y"; // @param : IAM에서 생성한 시크릿 키
+    private static String BUCKET_NAME = "";
+    private static String ACCESS_KEY = "";
+    private static String SECRET_KEY = "";
 
     private AmazonS3 s3_client;
     private AWSCredentials aws_credentials;
