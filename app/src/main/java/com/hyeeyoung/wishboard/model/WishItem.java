@@ -7,6 +7,8 @@ package com.hyeeyoung.wishboard.model;
 public class WishItem {
     public String item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo, cart_item_id;
 
+    public int item_image2;
+
     public WishItem() {
     }
 
@@ -35,6 +37,11 @@ public class WishItem {
     }
     public void setItem_image(String item_image) {
         this.item_image = item_image;
+    }
+
+    //@deprecated
+    public void setItem_image(int item_image) {
+        this.item_image2 = item_image;
     }
 
     public String getItem_name() {

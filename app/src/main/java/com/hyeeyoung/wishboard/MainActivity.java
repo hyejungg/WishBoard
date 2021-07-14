@@ -1,9 +1,11 @@
 package com.hyeeyoung.wishboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                         setFrag(1);
                         break;
                     case R.id.folder:
+                        fragTransaction.add(folderFragment, "FolderFragment");
                         setFrag(2);
                         break;
                     case R.id.noti:
@@ -71,6 +74,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /**
+         * @brief : NewFolderAticity.java에서 finish()시 MainActivity로 와서 onAticityResult FolderFragment로 보냄
+         * @see : lifecycle에 따라 동작하도록 설정
+         *       참고사이트 : https://stickyny.tistory.com/86
+         */
+        FolderFragment folderFragment = (FolderFragment) getSupportFragmentManager().findFragmentByTag("FolderFragment");
+        folderFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     // @param 초기 프래그먼트 교체 메서드
