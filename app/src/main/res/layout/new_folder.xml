@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_folder_popup"
+        android:padding="17dp">
+
+        <ImageButton
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="25dp"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:src="@drawable/x" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/nanum_square_eb"
+            android:paddingHorizontal="15dp"
+            android:text="새폴더 추가"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cancel"
+            android:layout_marginTop="25dp">
+
+            <LinearLayout
+                android:id="@+id/content_folder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/folder_image"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:onClick="onClick"
+                    android:src="@mipmap/ic_main_round" />
+
+                <EditText
+                    android:id="@+id/folder_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_marginLeft="17dp"
+                    android:background="@null"
+                    android:fontFamily="@font/nanum_square_b"
+                    android:hint="새 폴더명을 입력하세요."
+                    android:inputType="text"
+                    android:paddingHorizontal="15dp"
+                    android:textColorHint="@color/mediumGray"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/folder_name_cnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanum_square_r"
+                    android:text="(0/10글자)"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/content"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/button_none"
+            android:fontFamily="@font/nanum_square_eb"
+            android:onClick="onClick"
+            android:outlineProvider="none"
+            android:text="확인"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+    </RelativeLayout>
+</FrameLayout>
