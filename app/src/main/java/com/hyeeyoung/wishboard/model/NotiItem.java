@@ -1,10 +1,9 @@
 package com.hyeeyoung.wishboard.model;
 
 public class NotiItem {
-    private int item_image; // @param : 서버연동 후 String으로 변경 예정
-    private String item_name;
-    // @parmas : 서버와 연동하기 위해 사용될 변수
-    private String user_id, item_id,item_notification_type, item_notification_date;
+    // @breif : 서버와 연동하기 위해 사용될 변수
+    // @params is_read : 알림 읽음 여부
+    private String user_id, item_id, item_name, item_image, item_notification_type, item_notification_date, is_read;
 
     public NotiItem() {
     }
@@ -13,12 +12,16 @@ public class NotiItem {
         return user_id;
     }
 
-    public int getItem_image() {
+    public String getItem_image() {
         return item_image;
     }
 
     public String getItem_name() {
         return item_name;
+    }
+
+    public String getIs_read() {
+        return is_read;
     }
 
     public String getItem_notification_type() {
@@ -37,10 +40,6 @@ public class NotiItem {
         this.item_id = item_id;
     }
 
-    public void setItem_image(int item_image) {
-        this.item_image = item_image;
-    }
-
     public void setItem_name(String item_name) {
         this.item_name = item_name;
     }
@@ -56,10 +55,11 @@ public class NotiItem {
     @Override
     public String toString() {
         return "NotiItem{" +
-                ", user_id='" + user_id + '\'' +
-                ", item_id='" + item_id + '\'' +
-                ", noti_date='" + item_notification_date + '\'' +
-                ", noti_type='" + item_notification_type + '\'' +
+                "item_name='" + item_name + '\'' +
+                ", item_img='" + item_image + '\'' +
+                ", item_notification_type='" + item_notification_type + '\'' +
+                ", item_notification_date='" + item_notification_date + '\'' +
+                ", is_read='" + is_read + '\'' +
                 '}';
     }
 }
