@@ -86,9 +86,11 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+# android
 app/src/main/res/drawable-*/
 app/src/main/res/font/
 app/src/main/res/mipmap*/
+app/src/main/java/com/hyeeyoung/wishboard/service/AwsS3Service.java
 
 # server
 node_server/node_modules/
