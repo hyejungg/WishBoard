@@ -273,7 +273,6 @@ public class LinkSharingActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.e(TAG, seq);
 
                 } else {
                     // @brief : 통신에 실패한 경우
@@ -307,7 +306,7 @@ public class LinkSharingActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.e(TAG, "알림 등록 성공 : " + seq);
+                    Log.i(TAG, "알림 등록 성공 : " + seq);
 
                 } else {
                     // @brief : 통신에 실패한 경우

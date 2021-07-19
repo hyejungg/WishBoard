@@ -97,7 +97,11 @@ public class NotiFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        updateNotiRead(user_id); // @ brief : 알림 읽음 여부 업데이트 업데이트 요청
+        Log.i(TAG, "onStop [읽지 않은 알림 수 : " + adapter.getUnread_cnt() + "]"); // @deprecated 테스트용, 추후 삭제 예정
+
+        // @brief : 읽지 않은 알림으로 표시된 알림 항목이 있는 경우
+        if(adapter.getUnread_cnt() > 0)
+            updateNotiRead(user_id); // @ brief : 읽지 않음 -> 읽음으로 읽음 여부 업데이트 요청
     }
 
     private void init(ArrayList<NotiItem> noti_list) {

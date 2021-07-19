@@ -17,12 +17,15 @@ import java.util.ArrayList;
 
 public class NotiAdapter extends RecyclerView.Adapter<NotiAdapter.CustomViewHolder> {
     private ArrayList<NotiItem> notiList;
-    private int noti_layout_color; // @brief : 읽지 않은 알림의 배경에 적용할 색상
+    private int noti_layout_color; // @brief : 읽지 않은 알림의 배경색
+    private int unread_cnt = 0; // @brief : 읽지 않은 알림의 개수
+
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView item_image;
         protected TextView noti_title;
         protected TextView noti_date;
         protected RelativeLayout noti_layout;
+
 
         public CustomViewHolder(View view) {
             super(view);
@@ -42,7 +45,8 @@ public class NotiAdapter extends RecyclerView.Adapter<NotiAdapter.CustomViewHold
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.noti_item, viewGroup, false);
         CustomViewHolder viewHolder = new CustomViewHolder(view);
-        noti_layout_color = view.getResources().getColor(R.color.pastelGreen);
+
+        noti_layout_color = view.getResources().getColor(R.color.pastelGreen); // @brief : 읽지 않은 알림의 배경색을 지정
 
         return viewHolder;
     }
@@ -60,14 +64,21 @@ public class NotiAdapter extends RecyclerView.Adapter<NotiAdapter.CustomViewHold
             Log.d("checkings", "아이템 사진 없음");
         }
 
-        // @brief : 읽지 않은 알림인 경우 배경색을 설정
-        if(item.getIs_read() == "0")
+        // @brief : 읽지 않은 알림인 경우 unread 알림 수를 갱신하고 배경색을 설정
+        if(item.getIs_read() == "0") {
+            unread_cnt += 1;
             viewholder.noti_layout.setBackgroundColor(noti_layout_color);
+        }
         viewholder.noti_title.setText("[" + item.getItem_notification_type() + "] " + item.getItem_name());
         viewholder.noti_date.setText(Util.beforeTime(item.getItem_notification_date()));
     }
     @Override
     public int getItemCount() {
         return (null != notiList ? notiList.size() : 0);
+    }
+
+    // @brief : 읽지 않은 알림 수를 반환
+    public int getUnread_cnt() {
+        return unread_cnt;
     }
 }
