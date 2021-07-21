@@ -96,3 +96,4 @@ app/src/main/java/com/hyeeyoung/wishboard/service/AwsS3Service.java
 node_server/node_modules/
 node_server/db_config.js
 node_server/package*.json
+node_server/private/
