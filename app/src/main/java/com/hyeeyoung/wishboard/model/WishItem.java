@@ -76,6 +76,10 @@ public class WishItem {
         this.cart_item_id = cart_item_id;
     }
 
+    public void setFolder_id(String folder_id) {
+        this.folder_id = folder_id;
+    }
+
     public String getCart_item_id() {
         return cart_item_id;
     }

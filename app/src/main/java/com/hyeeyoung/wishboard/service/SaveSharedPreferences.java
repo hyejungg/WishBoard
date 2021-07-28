@@ -8,6 +8,8 @@ public class SaveSharedPreferences {
     static final String PREF_USER_ID = "user_id";
     static final String PREF_USER_EMAIL = "email";
     static final String PREF_USER_CART = "isChecked_cartBtn";
+    static final String PREF_FCM_TOKEN = "fcm_token";
+
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
@@ -29,6 +31,18 @@ public class SaveSharedPreferences {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putBoolean(PREF_USER_CART, isChecked);
         editor.commit();
+    }
+
+    // @param : FCM 토큰 정보 저장
+    public static void setFCMToken(Context ctx, String token) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_FCM_TOKEN, token);
+        editor.commit();
+    }
+
+    // @param : 저장된 FCM 토큰 정보 가져오기
+    public static String getFCMToken(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_FCM_TOKEN, "");
     }
 
     // @param : 저장된 이메일 정보 가져오기

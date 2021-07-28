@@ -3,7 +3,7 @@ package com.hyeeyoung.wishboard.model;
 public class NotiItem {
     // @breif : 서버와 연동하기 위해 사용될 변수
     // @params is_read : 알림 읽음 여부
-    private String user_id, item_id, item_name, item_image, item_notification_type, item_notification_date, is_read;
+    private String user_id, item_id, item_name, item_image, item_notification_type, item_notification_date, is_read, token;
 
     public NotiItem() {
     }
@@ -32,6 +32,10 @@ public class NotiItem {
         return item_notification_date;
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
@@ -55,9 +59,7 @@ public class NotiItem {
     @Override
     public String toString() {
         return "NotiItem{" +
-                "item_name='" + item_name + '\'' +
-                ", item_img='" + item_image + '\'' +
-                ", item_notification_type='" + item_notification_type + '\'' +
+                "item_notification_type='" + item_notification_type + '\'' +
                 ", item_notification_date='" + item_notification_date + '\'' +
                 ", is_read='" + is_read + '\'' +
                 '}';
