@@ -26,6 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// -------------------- https://youngest-programming.tistory.com/76 ---------------------------=
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link NotiFragment#newInstance} factory method to
@@ -97,11 +98,16 @@ public class NotiFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop [읽지 않은 알림 수 : " + adapter.getUnread_cnt() + "]"); // @deprecated 테스트용, 추후 삭제 예정
-
-        // @brief : 읽지 않은 알림으로 표시된 알림 항목이 있는 경우
-        if(adapter.getUnread_cnt() > 0)
-            updateNotiRead(user_id); // @ brief : 읽지 않음 -> 읽음으로 읽음 여부 업데이트 요청
+        try {
+            // @brief : 읽지 않은 알림으로 표시된 알림 항목이 있는 경우
+            if(adapter.getUnread_cnt() > 0) {
+                updateNotiRead(user_id); // @ brief : 읽지 않음 -> 읽음으로 읽음 여부 업데이트 요청
+                Log.i(TAG, "onStop [읽지 않은 알림 수 : " + adapter.getUnread_cnt() + "]"); // @deprecated 테스트용, 추후 삭제 예정
+            }
+        } catch (NullPointerException e){
+            // @brief : 생성한 알림이 없거나 알림이 존재하지 않을 경우
+            e.printStackTrace();
+        }
     }
 
     private void init(ArrayList<NotiItem> noti_list) {

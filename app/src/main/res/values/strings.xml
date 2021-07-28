@@ -3,4 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="kakao_app_key">e5c80a93a90709e1f697d50166b62b30</string>
+    <string name="msg_token_fmt">토큰 : %s</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
 </resources>

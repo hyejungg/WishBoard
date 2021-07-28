@@ -46,6 +46,7 @@ import retrofit2.Response;
 
 public class LinkSharingActivity extends AppCompatActivity {
     private static final String TAG = "링크공유로 아이템 등록";
+    private final static int TIME_PICKER_INTERVAL = 5; // @brief : 알림 시간의 분단위를 5분간격으로 설정
     // @param : 알림 날짜 넘버피커 변수
     private NumberPicker date, hour, minute;
     /**
@@ -135,7 +136,6 @@ public class LinkSharingActivity extends AppCompatActivity {
         item_image = findViewById(R.id.item_image);
         item_price = findViewById(R.id.item_price);
         item_memo = findViewById(R.id.item_memo);
-        //won = findViewById(R.id.won);
 
         wish_item = new WishItem();
         noti_item = new NotiItem();
@@ -158,14 +158,18 @@ public class LinkSharingActivity extends AppCompatActivity {
         // @brief : 시간 설정, 0~23시 까지 넘버피커 설정
         hour.setMinValue(0); // @param : 범위의 최소값을 설정
         hour.setMaxValue(23); // @param : 범위의 최댓값을 설정
-        hour.setValue(now.get(Calendar.HOUR_OF_DAY)); // @param : 초기 설정값 현재 시간으로 설정
+        hour.setValue((now.get(Calendar.HOUR_OF_DAY)+1) % 24); // @param : 초기 설정값을 현재 시간 + 1로 설정 @todo : 지정인 경우 날짜 까지 다음날로 바꾸기 및 테스트 해보기
         hour.setWrapSelectorWheel(true); // @param : +/- 버튼디자인에서 휠스크롤 디자인으로 변경
         hour.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // @param : 키보드로 값을 수정하지 못하도록 포커스 막기
 
         // @brief :  분 설정, 0~59분 까지 넘버피커 설정
         minute.setMinValue(0);
-        minute.setMaxValue(59);
-        minute.setValue(now.get(Calendar.MINUTE));
+        minute.setMaxValue((60 / TIME_PICKER_INTERVAL) - 1); // @brief : 인수는 minutes 배열의 인덱스를 의미
+        List<String> minutes = new ArrayList<>();
+        for (int i = 0; i < 60; i += TIME_PICKER_INTERVAL) {
+            minutes.add(String.format("%02d", i)); //@brief : 2자리 수 형식으로 5분 단위 분을 추가
+        }
+        minute.setDisplayedValues(minutes.toArray(new String[0]));
         minute.setWrapSelectorWheel(true);
         minute.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
@@ -210,7 +214,7 @@ public class LinkSharingActivity extends AppCompatActivity {
 
     private WishItem getWishItem() {
         wish_item.user_id = user_id;
-        wish_item.folder_id = "1"; // @todo : 폴더 연동 후 수정
+        wish_item.setFolder_id(null); // @todo : 폴더 연동 후 수정
 
         String get_item_name = item_name.getText().toString();
         String get_item_price = item_price.getText().toString();
@@ -238,6 +242,15 @@ public class LinkSharingActivity extends AppCompatActivity {
         } else{ // @ brief : 사용자가 메모를 입력한 경우
             wish_item.setItem_memo(get_item_memo);
         }
+
+        // @brief : 알림 시간 예외처리
+//        int cur_hour = now.get(Calendar.HOUR_OF_DAY) * 60;
+//        int cur_minute = now.get(Calendar.MINUTE);
+//        if(cur_hour + cur_minute >= hour.getValue()*60 + minute.getValue()){
+//            Toast.makeText(this, "현재 시간 보다 이전 시간을 알림으로 지정할 수 없습니다.",Toast.LENGTH_SHORT).show();
+//            return null;
+//        }
+
         String noti_date = dates_server[date.getValue()] + " " + hour.getValue() + ":" + minute.getValue() + ":00";
         noti_item.setItem_notification_date(noti_date);
         Log.i(TAG, "date: " + noti_date);
@@ -250,7 +263,9 @@ public class LinkSharingActivity extends AppCompatActivity {
      */
     private void save() {
         wish_item = getWishItem(); // @brief : 생성된 아이템 객체 가져오기
-
+//        if (wish_item == null){ // @brief : 알림 시간 예외처리
+//            return;
+//        }
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
         Call<ResponseBody> call = remote_service.insertItemInfo(wish_item);
         call.enqueue(new Callback<ResponseBody>() {
@@ -266,6 +281,10 @@ public class LinkSharingActivity extends AppCompatActivity {
                             // @ noti_item(알림) 객체의 user_id, item_id 설정
                             noti_item.setUser_id(user_id);
                             noti_item.setItem_id(seq);
+                            // @brief : FCM 디바이스 토큰 가져오기
+                            //noti_item.setToken(FirebaseMessaging.getInstance().getToken() + "");
+                            noti_item.setToken(SaveSharedPreferences.getFCMToken(LinkSharingActivity.this));
+                            //Log.i(TAG, "onResponse: " + SaveSharedPreferences.getFCMToken(LinkSharingActivity.this));
                             addNoti(); // @brief : 알림 등록 요청
                         }
                         else
