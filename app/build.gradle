@@ -89,4 +89,8 @@ dependencies {
 
     // @brief : 권한 요청을 위한 팝업을 쉽게 구성하기 위함
     implementation 'gun0912.ted:tedpermission:2.2.3'
+
+    // @brief : MoreFolderDialog 밑에서 올라오는 diolog 구현을 위해 추가
+    implementation 'com.google.android.material:material:1.2.0-alpha06'
+
 }

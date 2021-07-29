@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.detail.FolderDetailActivity;
-import com.hyeeyoung.wishboard.detail.ItemDetailActivity;
-import com.hyeeyoung.wishboard.folder.FolderMoreActivity;
+import com.hyeeyoung.wishboard.folder.MoreFolderDialog;
 import com.hyeeyoung.wishboard.model.FolderItem;
 
 import java.util.ArrayList;
@@ -26,11 +26,14 @@ import java.util.ArrayList;
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomViewHolder> {
     private static final String TAG = "폴더어댑터";
     private ArrayList<FolderItem> folderList;
+
+    // @param : 폴더이미지 사진
     private int[] folder_images = {R.mipmap.ic_main_round, R.drawable.bag, R.drawable.sofa, R.drawable.shoes, R.drawable.twinkle,
             R.drawable.ring, R.drawable.orange, R.drawable.clothes, R.drawable.camera, R.drawable.bubble};
 
     private Intent intent;
     protected Context context;
+    private String user_id = "", folder_id = "";
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView folder_image;
@@ -46,11 +49,12 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
             this.folder_name = (TextView) view.findViewById(R.id.folder_name);
             this.item_count = (TextView) view.findViewById(R.id.item_count);
             this.more_folder = (ImageButton) view.findViewById(R.id.more_folder);
-            this.item = (ConstraintLayout) view.findViewById(R.id.item);
         }
     }
-    public FolderAdapter(ArrayList<FolderItem> data) {
+    public FolderAdapter(ArrayList<FolderItem> data, String user_id) {
         this.folderList = data;
+        this.user_id = user_id;
+        notifyDataSetChanged(); // @brief : 데이터 변경사항 반영
     }
 
     @Override
@@ -72,27 +76,35 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
         holder.folder_name.setText(item.getFolder_name());
         holder.item_count.setText(item.getItem_count()+"");
 
+        // @brief : 더보기 버튼 클릭 시 더보기 diolog 생성
         holder.more_folder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                folder_id = item.getFolder_id();
                 Log.i(TAG, "더보기 클릭");
-                intent = new Intent(view.getContext(), FolderMoreActivity.class);
-                Bundle bd = new Bundle();
-                Log.i(TAG, String.valueOf(folderList));
-                Log.i(TAG, String.valueOf(position));
-                bd.putParcelableArrayList("folderList", folderList);
-                bd.putInt("position", position); //@TODO : 0
-                intent.putExtra("bundle", bd);
-                view.getContext().startActivity(intent);
+
+                // @brief : 다이얼로그에 전달할 값 bundle 담기
+                Bundle args = new Bundle();
+                args.putString("user_id", user_id);
+                args.putString("folder_id", folder_id);
+                // @brief : 다이얼로그 생성하여 전달 후 보여줌
+                MoreFolderDialog mfd = MoreFolderDialog.getInstance();
+                mfd.setArguments(args);
+                mfd.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),
+                        MoreFolderDialog.TAG_EVENT_DIALOG);
             }
         });
 
-        holder.item.setOnClickListener(new View.OnClickListener() {
+        // @brief : 아이템 버튼 클릭 시 상세조회로 이동
+        // @see : item view 클릭 시 넘어가도록 할 경우 더보기 버튼 클릭이 어려워서 folder_image 클릭 시로 변경
+        holder.folder_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "폴더 상세조회 이동");
                 intent = new Intent(v.getContext(), FolderDetailActivity.class);
-//                intent.putExtra("folder_id",item.getFolder_id()+"");
+                Log.i(TAG, "folderItem send : " + item); //@deprecated 확인용
+                Log.i(TAG, "folder_id send : " + item.getFolder_id()); //@deprecated 확인용
+                intent.putExtra("FolderItem", item);
                 v.getContext().startActivity(intent);
             }
         });
@@ -100,6 +112,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
 
     @Override
     public int getItemCount() {
-        return folderList.size(); //@see : 수정 필요
+        return (null != folderList ? folderList.size() : 0);
     }
 }

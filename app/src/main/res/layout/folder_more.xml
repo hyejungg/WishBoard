@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="56dp"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom">
+    android:layout_height="wrap_content">
+<!--    android:layout_gravity="bottom">-->
+    <!-- @brief : app:behavior_hideable="false" 화면에 안보일 때까지 내릴건지-->
 
     <RelativeLayout
         android:layout_width="match_parent"

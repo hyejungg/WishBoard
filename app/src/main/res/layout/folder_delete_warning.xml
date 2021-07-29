@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_folder_popup"
+        android:padding="17dp">
+
+        <TextView
+            android:id="@+id/context"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="17dp"
+            android:fontFamily="@font/nanum_square_eb"
+            android:paddingTop="18dp"
+            android:paddingBottom="2dp"
+            android:paddingHorizontal="15dp"
+            android:text="정말 삭제하시겠습니까?"
+            android:textColor="@color/black" />
+<!--        @TODO : 임의로 넣음 강조를 위해서. 워딩 수정 필요-->
+        <TextView
+            android:id="@+id/description"
+            android:layout_below="@id/context"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="17dp"
+            android:fontFamily="@font/nanum_square_r"
+            android:padding="10dp"
+            android:paddingHorizontal="11dp"
+            android:text="해당 폴더에 담긴 모든 아이템이 사라질 수 있어요!"
+            android:textColor="@color/darkGray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:layout_below="@id/description">
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_none"
+                android:fontFamily="@font/nanum_square_eb"
+                android:onClick="onClick"
+                android:outlineProvider="none"
+                android:text="취소"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/confirm"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_green"
+                android:fontFamily="@font/nanum_square_eb"
+                android:onClick="onClick"
+                android:outlineProvider="none"
+                android:text="확인"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>
