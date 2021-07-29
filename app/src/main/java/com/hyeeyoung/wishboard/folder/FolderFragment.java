@@ -1,6 +1,6 @@
 package com.hyeeyoung.wishboard.folder;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,24 +8,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hyeeyoung.wishboard.MainActivity;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.FolderAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
 import com.hyeeyoung.wishboard.model.FolderItem;
+import com.hyeeyoung.wishboard.remote.IRemoteService;
+import com.hyeeyoung.wishboard.remote.ServiceGenerator;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
 import java.util.ArrayList;
 
-import static android.app.Activity.RESULT_OK;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class FolderFragment extends Fragment implements View.OnClickListener{
+public class FolderFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -67,7 +69,6 @@ public class FolderFragment extends Fragment implements View.OnClickListener{
     }
 
     private static final String TAG = "폴더";
-    private static final int REQUEST_OK = 0;
     private View view;
     private RecyclerView recyclerView;
     private FolderAdapter adapter;
@@ -76,27 +77,77 @@ public class FolderFragment extends Fragment implements View.OnClickListener{
 
     private Intent intent;
     private ImageButton cart, new_folder;
-    private FolderItem folderItem;
+    private Context context;
+
+    private String user_id = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.fragment_folder, container, false);
-
+        view = inflater.inflate(R.layout.fragment_folder, container, false);
+        context = view.getContext();
+        if (SaveSharedPreferences.getUserId(this.getActivity()).length() != 0) {
+            user_id = SaveSharedPreferences.getUserId(this.getActivity());
+            Log.i(TAG, "user_id = " + user_id); // @deprecated : test용
+        }
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        init();
+        selectFolderInfo(user_id);
     }
 
-    private void init(){
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    /**
+     * @param user_id
+     * @brief : 해당 유저 아이디에 맞는 폴더 정보를 보여줍니다.
+     */
+    private void selectFolderInfo(String user_id) {
+        IRemoteService remoteService = ServiceGenerator.createService(IRemoteService.class);
+        Call<ArrayList<FolderItem>> call = remoteService.selectFolderInfo(user_id);
+        call.enqueue(new Callback<ArrayList<FolderItem>>() {
+            @Override
+            public void onResponse(Call<ArrayList<FolderItem>> call, Response<ArrayList<FolderItem>> response) {
+                foldersList = response.body();
+
+                // @brief : 가져온 폴더 정보가 없는 경우
+                if (foldersList == null) {
+                    foldersList = new ArrayList<>(); // @brief : 아이탬 배열 초기화
+                }
+
+                // @brief : 서버연결 성공한 경우
+                if (response.isSuccessful()) {
+                    if (foldersList.size() > 0) { // @brief : 가져온 폴더 정보가 하나 이상인 경우
+                        Log.i(TAG, "Retrofit 통신 성공");
+                        Log.i(TAG, foldersList + ""); // @deprecated : 테스트용
+                        init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+                    }
+                } else { // @brief : 통신에 실패한 경우
+                    Log.e(TAG, "Retrofit 통신 실패");
+                    Log.i(TAG, response.message());
+                    init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<FolderItem>> call, Throwable t) {
+                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e(TAG, "서버 연결 실패");
+                init();
+            }
+        });
+    }
+
+    private void init() {
         // @brief : 폴더 아이템 뷰 및 어댑터 초기화
         recyclerView = view.findViewById(R.id.recyclerview_folders_list);
-        foldersList = new ArrayList<>();
-        adapter = new FolderAdapter(foldersList);
+        adapter = new FolderAdapter(foldersList, user_id);
         recyclerView.setAdapter(adapter);
         gridLayoutManager = new GridLayoutManager(this.getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -107,69 +158,30 @@ public class FolderFragment extends Fragment implements View.OnClickListener{
 
         cart.setOnClickListener(this);
         new_folder.setOnClickListener(this);
-
-        // @deprecated : add()
-        // @TODO : 서버통신 이후 init 위치 변경 필요 지금 이상태에서 addItem() 없애면 이전 값들은 저장이 안됨
-        addItem(0, "name1", 32);
-        addItem(1, "name2", 1);
-        addItem(2, "name3", 5);
-        addItem(3, "name4", 2);
-        addItem(4, "name5", 124);
-        addItem(5, "name6", 5151);
-        addItem(6, "name7", 231);
-        addItem(7, "name8", 241);
-        addItem(8, "name9", 1);
-        addItem(0, "name10", 23);
-        addItem(1, "name10", 23);
-
-        adapter.notifyDataSetChanged();
     }
-
-    // @deprecated
-    private void addItem(int icon, String name, int count) {
-        FolderItem item = new FolderItem();
-        item.setFolder_image(icon);
-        item.setFolder_name(name);
-        item.setItem_count(count);
-        foldersList.add(item);
-    }
-
 
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             // @brief : 장바구니 버튼 클릭 시 장바구니 화면으로 이동
             case R.id.cart:
                 intent = new Intent(v.getContext(), CartActivity.class);
                 v.getContext().startActivity(intent);
                 break;
+             // @brief : + 버튼 클릭 시 새폴더 추가에 관한 diolog 생성
             case R.id.new_folder:
-                intent = new Intent(v.getContext(), NewFolderActivity.class);
-//                intent.putParcelableArrayListExtra("folderList", foldersList);
-                getActivity().startActivityForResult(intent, REQUEST_OK);
+                // @brief : diolog에 전달 할 값 bundle에 담기
+                Bundle args = new Bundle();
+                args.putInt("where", 1);
+                args.putString("user_id", user_id);
+                args.putString("folder_id", null);
+                // @brief : diolog 생성
+                EditFolderDiolog efd = EditFolderDiolog.getInstance();
+                efd.setArguments(args);
+                efd.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), EditFolderDiolog.TAG_EVENT_DIALOG);
                 break;
         }
     }
 
-    // @brief : 폴더 추가 시 해당 폴더 이름과 사진을 받아옴
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_OK){
-            if (resultCode == RESULT_OK) { // @brief : 성공적으로 가져옴
-                Toast.makeText(view.getContext(), "폴더 생성 성공", Toast.LENGTH_SHORT).show();
-                folderItem = (FolderItem) data.getParcelableExtra("folderItem");
-//                folderItem = (FolderItem) data.getSerializableExtra("folderItem");
-                Log.i(TAG, "intent 받기 성공\n" + folderItem);
-
-                // @brief : 폴더 추가 및 서버 연동, 현재 상태로 어댑터 유지
-                foldersList.add(folderItem);
-                adapter.notifyDataSetChanged();
-            } else {   // RESULT_CANCEL
-                Toast.makeText(view.getContext(), "폴더 생성 실패", Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "intent 받기 실패");
-            }
-        }
-    }
 }

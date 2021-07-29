@@ -9,29 +9,23 @@ import java.io.Serializable;
 
 
 public class FolderItem implements Parcelable {
-    private int folder_id; // @params : db에 저장될 폴더 번호
-    private int folder_image; // @params : folder_id에 매칭되는 카테고리 사진
-    private String folder_name; // @params : 카테고리명 (DB 통신 O)
-    private int item_count; // @params : 카테고리 내 아이템 항목 수 (DB 통신 X / 전달받은 값들의 합만 구하여 출력 시 이용)
+    private String user_id; // @param : user_id
+    private String folder_id; // @param : db에 저장될 폴더 번호
+    private int folder_image; // @param : 카테고리 사진
+    private String folder_name; // @param : 카테고리명
+    private int item_count; // @param : 카테고리 내 아이템 항목 수
 
     public FolderItem() {
     }
 
-    public FolderItem(int folder_id, int folder_image, String folder_item, int folder_count) {
+    public FolderItem(String folder_id, int folder_image, String folder_item, int folder_count) {
         this.folder_id = folder_id;
         this.folder_image = folder_image;
         this.folder_name = folder_item;
         this.item_count = folder_count;
     }
 
-    protected FolderItem(Parcel in) {
-        folder_id = in.readInt();
-        folder_image = in.readInt();
-        folder_name = in.readString();
-        item_count = in.readInt();
-    }
-
-    public int getFolder_id() {
+    public String getFolder_id() {
         return folder_id;
     }
 
@@ -47,7 +41,7 @@ public class FolderItem implements Parcelable {
         return item_count;
     }
 
-    public void setFolder_id(int folder_id) {
+    public void setFolder_id(String folder_id) {
         this.folder_id = folder_id;
     }
 
@@ -64,11 +58,21 @@ public class FolderItem implements Parcelable {
     }
 
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+
     @NonNull
     @Override
     public String toString() {
         return "FolderItem{" +
-                "folder_id='" + folder_id + '\'' +
+                "user_id='" + user_id + '\'' +
+                ", folder_id='" + folder_id + '\'' +
                 ", folder_image='" + folder_image + '\'' +
                 ", folder_name='" + folder_name + '\'' +
                 ", item_count='" + item_count +
@@ -77,6 +81,7 @@ public class FolderItem implements Parcelable {
 
     /**
      * @param : Parcelable 인터페이스의 메소드 및 변경생성자
+     * @see : intent로 객체 및 ArrayList로 전달 시 사용
      */
 
     @Override
@@ -84,9 +89,16 @@ public class FolderItem implements Parcelable {
         return 0;
     }
 
+    protected FolderItem(Parcel in) {
+        folder_id = in.readString();
+        folder_image = in.readInt();
+        folder_name = in.readString();
+        item_count = in.readInt();
+    }
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(this.folder_id);
+        parcel.writeString(this.folder_id);
         parcel.writeInt(this.folder_image);
         parcel.writeString(this.folder_name);
         parcel.writeInt(this.item_count);

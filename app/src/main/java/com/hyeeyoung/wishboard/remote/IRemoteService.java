@@ -1,6 +1,7 @@
 package com.hyeeyoung.wishboard.remote;
 
 import com.hyeeyoung.wishboard.model.CartItem;
+import com.hyeeyoung.wishboard.model.FolderItem;
 import com.hyeeyoung.wishboard.model.NotiItem;
 import com.hyeeyoung.wishboard.model.UserItem;
 import com.hyeeyoung.wishboard.model.WishItem;
@@ -62,8 +63,6 @@ public interface IRemoteService {
      *        참고 사이트 : https://square.github.io/retrofit/2.x/retrofit/retrofit2/http/HTTP.html
      */
     // @brief : 장바구니 데이터 수정 요청
-//    @PUT("/basket/{user_id}/{item_id}")
-//    Call<ArrayList<CartItem>> updateCartInfo(@Path("user_id") String user_id, @Path("item_id") String item_id, @Body CartItem cartItem);
     @PUT("/basket")
     Call<ResponseBody> updateCartInfo(@Body ArrayList<CartItem> cartItem);
     /*
@@ -97,4 +96,28 @@ public interface IRemoteService {
     // @brief : 알림화면에서 사용자가 조회한 알림은 읽은 알림으로 수정 요청
     @PUT("/noti/{user_id}")
     Call<ResponseBody> updateNotiRead(@Path("user_id") String user_id);
+
+    // @brief : 홈화면에서 로그인한 사용자의 폴더 정보를 요청
+   @GET("/folder/{user_id}")
+    Call<ArrayList<FolderItem>> selectFolderInfo(@Path("user_id") String user_id);
+
+    // @brief : 폴더명을 추가 요청
+    @POST("/folder")
+    Call<ResponseBody> insertFolderInfo(@Body FolderItem folderItem);
+
+    // @brief : 폴더명을 수정 요청
+    @PUT("/folder")
+    Call<ResponseBody> updateFolderInfo(@Body FolderItem folderItem);
+
+    // @brief : 폴더 삭제 요청
+    @HTTP(method = "DELETE", path = "/folder", hasBody = true)
+    Call<ResponseBody> deleteFolderInfo(@Body FolderItem folderItem);
+
+    // @brief : 수동등록 및 수정화면에서 보여질 폴더리스트 정보 요청
+    @GET("/folder/list/{user_id}")
+    Call<ArrayList<FolderItem>> selectFolderListInfo(@Path("user_id") String user_id);
+
+    // @brief : 폴더화면 내 아이템 정보 요청
+    @GET("/folder/item/{user_id}/{folder_id}")
+    Call<ArrayList<WishItem>> selectFolderItemInfo(@Path("user_id") String user_id, @Path("folder_id") String folder_id);
 }

@@ -9,16 +9,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.model.FolderListItem;
+import com.hyeeyoung.wishboard.model.FolderItem;
+
 import java.util.ArrayList;
 
 public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.CustomViewHolder> {
     private int lastCheckedPosition = -1;
-    private ArrayList<FolderListItem> folderList;
+    private ArrayList<FolderItem> folderList;
 
-    public FolderListAdapter(ArrayList<FolderListItem> data) {
+    // @param : 폴더이미지 사진
+    private int[] folder_images = {R.mipmap.ic_main_round, R.drawable.bag, R.drawable.sofa, R.drawable.shoes, R.drawable.twinkle,
+            R.drawable.ring, R.drawable.orange, R.drawable.clothes, R.drawable.camera, R.drawable.bubble};
+
+    public FolderListAdapter(ArrayList<FolderItem> data) {
         this.folderList = data;
     }
+
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView folder_image;
         protected TextView folder_name;
@@ -32,7 +38,7 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Cu
             btn_radio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lastCheckedPosition = getBindingAdapterPosition(); // @brieft : 현재 버튼의 위치
+                    lastCheckedPosition = getBindingAdapterPosition(); // @brief : 현재 버튼의 위치
                     btn_radio.setChecked(true);
                     notifyDataSetChanged();
                     Log.i("CheckboxonClick","-------------------------------------"); //@deprecated : test용
@@ -50,11 +56,10 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Cu
     }
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        final FolderListItem item = folderList.get(position);
-        // @see: 카테고리 번호 별 아이템 사진 매칭?
-        holder.folder_image.setImageResource(item.getFolderImage());
-        holder.folder_name.setText(item.getFolderName());
-        holder.btn_radio.setChecked( lastCheckedPosition == position? true : false );
+        FolderItem item = folderList.get(position);
+        holder.folder_image.setImageResource(folder_images[item.getFolder_image()]);
+        holder.folder_name.setText(item.getFolder_name());
+        holder.btn_radio.setChecked(lastCheckedPosition == position);
 
     }
     @Override

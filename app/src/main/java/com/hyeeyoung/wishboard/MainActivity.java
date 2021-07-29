@@ -142,9 +142,10 @@ public class MainActivity extends AppCompatActivity {
          * @see : lifecycle에 따라 동작하도록 설정
          *       참고사이트 : https://stickyny.tistory.com/86
          */
-        FolderFragment folderFragment = (FolderFragment) getSupportFragmentManager().findFragmentByTag("FolderFragment");
-        folderFragment.onActivityResult(requestCode, resultCode, data);
+//        FolderFragment folderFragment = (FolderFragment) getSupportFragmentManager().findFragmentByTag("FolderFragment");
+//        folderFragment.onActivityResult(requestCode, resultCode, data);
     }
+
 
     // @param 초기 프래그먼트 교체 메서드
     private void setFrag(int n) {
