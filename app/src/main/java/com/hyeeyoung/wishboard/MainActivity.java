@@ -36,22 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private NotiFragment notiFragment;
     private MyFragment myFragment;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        init();
-
-        // @ brief : 푸시알림을 클릭해서 메인화면을 들어올 경우 flag 값(3 : 알림 프래그먼트) 받아오고, 그렇지 않은 경우 default flag 값(0 : 홈 프래그먼트)으로 설정한다.
-        int flag = 0;
-        Bundle extras = getIntent().getExtras();
-        if(extras != null) {
-            flag = extras.getInt("flag");
-        }
-        //int flag = intent.getIntExtra("flag", 0);
-        Log.i(TAG, "onStart: " + flag);
-        // @brief 초기 프래그먼트 화면 지정
-        setFrag(flag);
-    }
     public void init(){
         newItemFragment = new NewItemFragment();
         folderFragment = new FolderFragment();
@@ -90,12 +74,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
+        int flag = 0;
+        setFrag(flag);
 
         if(SaveSharedPreferences.getUserId(this).length() != 0)
             user_id = SaveSharedPreferences.getUserId(this);
 
+        // @brief : 파이어베이스 토큰 조회 코드
         if(SaveSharedPreferences.getFCMToken(this).length() == 0){
-            // @brief : 파이어베이스 토큰 조회 코드
             FirebaseMessaging.getInstance().getToken()
                     .addOnCompleteListener(new OnCompleteListener<String>() {
                         @Override
@@ -109,29 +96,9 @@ public class MainActivity extends AppCompatActivity {
                             String token = task.getResult();
                             SaveSharedPreferences.setFCMToken(MainActivity.this, token);
                             Log.i(TAG, "onComplete : " + SaveSharedPreferences.getFCMToken(MainActivity.this));
-                            // Log and toast
-                            //String msg = getString(R.string.msg_token_fmt, token);
-                            //Log.d(TAG, msg);
-                            //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                         }
                     });
         }
-        //       FirebaseMessaging.getInstance().getToken()
-//                .addOnCompleteListener(new OnCompleteListener<String>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<String> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-//                            return;
-//                        }
-//
-//                        // Get new FCM registration token
-//                        String token = task.getResult();
-//                        SaveSharedPreferences.setFCMToken(MainActivity.this, token);
-//                        Log.i(TAG, "onComplete : " + SaveSharedPreferences.getFCMToken(MainActivity.this));
-//                        Log.i(TAG, token);
-//                    }
-//                });
     }
 
     @Override
