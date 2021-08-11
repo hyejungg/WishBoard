@@ -9,14 +9,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.add.NewItemActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
+import com.hyeeyoung.wishboard.util.DateFormatUtil;
 import com.squareup.picasso.Picasso;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import retrofit2.Call;
@@ -29,7 +28,6 @@ public class ItemDetailActivity extends AppCompatActivity {
     private boolean is_updated = false;
     private String item_id;
     WishItem wish_item;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +71,8 @@ public class ItemDetailActivity extends AppCompatActivity {
         String domain = uri.getHost();
 
         // @brief : 도메인 네임으로 바꾸지 못한 경우
-        if(domain == null) return "";
+        if(domain == null)
+            return "";
 
         return domain.startsWith("www.") ? domain.substring(4) : domain;
     }
@@ -85,6 +84,12 @@ public class ItemDetailActivity extends AppCompatActivity {
         TextView item_name = findViewById(R.id.item_name);
         TextView item_memo = findViewById(R.id.tag);
         TextView item_url = findViewById(R.id.domain_name);
+        TextView create_at = findViewById(R.id.create_at);
+        TextView noti_info = findViewById(R.id.noti_info);
+
+        item_price.setText(wish_item.getItem_price());
+        item_name.setText(wish_item.getItem_name());
+        create_at.setText(DateFormatUtil.shortDateYMD(wish_item.getCreate_at()));
 
         try { // @brief : 아이템 이미지 디스플레이
             Log.i(TAG, "init: " + wish_item.getItem_image());
@@ -92,9 +97,6 @@ public class ItemDetailActivity extends AppCompatActivity {
         } catch (IllegalArgumentException i) {
             Log.d(TAG, "아이템 사진 없음");
         }
-
-        item_price.setText(wish_item.getItem_price());
-        item_name.setText(wish_item.getItem_name());
 
         // @brief : 메모가 있는 경우에만 태그를 디스플레이
         if(wish_item.getItem_memo()!=null){
@@ -104,6 +106,7 @@ public class ItemDetailActivity extends AppCompatActivity {
 
         // @brief : 쇼핑몰 url을 도메인네임으로 변경하여 디스플레이
         if (wish_item.getItem_url() != null) {
+            item_url.setVisibility(View.VISIBLE);
             try {
                 String domain = getDomainName(wish_item.getItem_url()); // @brief domain : 쇼핑몰 url을 도메인네임으로 변경한 것
 
@@ -115,6 +118,12 @@ public class ItemDetailActivity extends AppCompatActivity {
             } catch (URISyntaxException e) {
                 Log.e(TAG, "url 없음");
             }
+        }
+
+        // @brief : 알림이 지정된 경우에만 태그를 디스플레이
+        if(wish_item.getItem_notification_type()!=null){
+            noti_info.setVisibility(View.VISIBLE);
+            noti_info.setText(DateFormatUtil.shortDateMDHM(wish_item.getItem_notification_date()) + " " + wish_item.getItem_notification_type());
         }
     }
 

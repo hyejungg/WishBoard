@@ -5,9 +5,7 @@ package com.hyeeyoung.wishboard.model;
  */
 
 public class WishItem {
-    public String item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo, cart_item_id;
-
-    public int item_image2;
+    public String item_id, user_id, folder_id, item_image, item_name, item_price, item_url, item_memo, cart_item_id, create_at, item_notification_type, item_notification_date;
 
     public WishItem() {
     }
@@ -28,20 +26,11 @@ public class WishItem {
         return item_id;
     }
 
-    public void setItem_id(String item_id) {
-        this.item_id = item_id;
-    }
-
     public String getItem_image() {
         return item_image;
     }
     public void setItem_image(String item_image) {
         this.item_image = item_image;
-    }
-
-    //@deprecated
-    public void setItem_image(int item_image) {
-        this.item_image2 = item_image;
     }
 
     public String getItem_name() {
@@ -72,6 +61,21 @@ public class WishItem {
         this.item_memo = item_memo;
     }
 
+    public String getCreate_at() {
+        return create_at;
+    }
+
+    public String getItem_notification_type() {
+        return item_notification_type;
+    }
+
+    public String getItem_notification_date() {
+        return item_notification_date;
+    }
+
+    public String getCart_item_id() {
+        return cart_item_id;
+    }
     public void setCart_item_id(String cart_item_id) {
         this.cart_item_id = cart_item_id;
     }
@@ -80,15 +84,11 @@ public class WishItem {
         this.folder_id = folder_id;
     }
 
-    public String getCart_item_id() {
-        return cart_item_id;
-    }
-
     @Override
     public String toString() {
         return "WishItem{" +
                 "item_id='" + item_id + '\'' +
-                "user_id='" + user_id + '\'' +
+                ", user_id='" + user_id + '\'' +
                 ", folder_id='" + folder_id + '\'' +
                 ", item_image='" + item_image + '\'' +
                 ", item_name='" + item_name + '\'' +
@@ -96,6 +96,8 @@ public class WishItem {
                 ", item_url='" + item_url + '\'' +
                 ", item_memo='" + item_memo + '\'' +
                 ", cart_item_id='" + cart_item_id + '\'' +
+                ", notification_type='" + item_notification_type + '\'' +
+                ", notification_date='" + item_notification_date + '\'' +
                 '}';
     }
 }
