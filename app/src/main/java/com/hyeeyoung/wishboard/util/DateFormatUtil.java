@@ -1,5 +1,7 @@
 package com.hyeeyoung.wishboard.util;
 
+import android.util.Log;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,5 +48,41 @@ public class Util {
         }
 
         return msg;
+    }
+
+    public static String shortDateYMD(String str_date){ // @brief : 년도 2자리, 월일을 한자리 수 허용, 구분자를 '.'으로 변경
+        DateFormat date_format1 = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat date_format2 = new SimpleDateFormat("yy.M.d");
+        Date date1 = null;
+        String date2 = "";
+
+        try {
+            date1 = date_format1.parse(str_date);
+            date2 = date_format2.format(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date2;
+    }
+
+    public static String shortDateMDHM(String str_date){ // @brief : 년도 2자리, 월일을 한자리 수 허용, 구분자를 '.'으로 변경
+        DateFormat date_format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        DateFormat date_format2 = new SimpleDateFormat("yy.M.d a h시 m분");
+        Date date1 = null;
+        String date2 = "";
+
+        try {
+            date1 = date_format1.parse(str_date);
+            date2 = date_format2.format(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(date2.substring(date2.length()-3).equals(" 0분")) {
+            date2 = date2.replace("0분", "");
+        }
+
+        return date2;
     }
 }

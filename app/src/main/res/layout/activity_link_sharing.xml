@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
@@ -13,7 +12,6 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/background_popup"
         android:padding="15dp">
-
         <ImageButton
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
@@ -28,16 +26,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp">
-
             <EditText
                 android:id="@+id/item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:background="@null"
                 android:fontFamily="@font/nanum_square_b"
                 android:inputType="text"
                 android:textColor="@color/black"
-                android:background="@null"
                 android:textSize="15dp" />
 
             <LinearLayout
@@ -47,65 +44,62 @@
                 android:layout_below="@id/item_name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp">
-
                 <EditText
                     android:id="@+id/item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/item_name"
-                    android:inputType="number"
-                    android:hint="가격을 입력해주세요."
                     android:background="@null"
-                    android:textAlignment="center"
                     android:fontFamily="@font/nanum_square_eb"
-                    android:textColorHint="@color/mediumGray"
+                    android:hint="가격을 입력해주세요."
+                    android:inputType="number"
+                    android:textAlignment="center"
                     android:textColor="@color/black"
+                    android:textColorHint="@color/mediumGray"
                     android:textSize="15dp" />
-<!-- @brief : 원 표시 추가할지 고민 중-->
-<!--                <TextView-->
-<!--                    android:id="@+id/won"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignTop="@id/item_price"-->
-<!--                    android:layout_marginLeft="2dp"-->
-<!--                    android:layout_toRightOf="@id/item_price"-->
-<!--                    android:fontFamily="@font/nanum_square_b"-->
-<!--                    android:text="원"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="15dp" />-->
+
+                <!-- @brief : 원 표시 추가할지 고민 중-->
+                <!--                <TextView-->
+                <!--                    android:id="@+id/won"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_alignTop="@id/item_price"-->
+                <!--                    android:layout_marginLeft="2dp"-->
+                <!--                    android:layout_toRightOf="@id/item_price"-->
+                <!--                    android:fontFamily="@font/nanum_square_b"-->
+                <!--                    android:text="원"-->
+                <!--                    android:textColor="@color/black"-->
+                <!--                    android:textSize="15dp" />-->
             </LinearLayout>
 
-            <LinearLayout
+            <FrameLayout
                 android:id="@+id/noti_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/content_price"
-                android:gravity="center_vertical">
+                android:layout_below="@id/content_price">
 
-                <!-- @param : android:background="@null" 기존 화살표 아이콘 제거 -->
-                <Spinner
-                    android:id="@+id/noti_type_spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_below="@id/content_price"
-                    android:layout_weight="1.5"
-                    android:background="@null" />
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="2">
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:paddingLeft="5dp">
 
                         <NumberPicker
+                            android:id="@+id/num_picker_type"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:selectionDividerHeight="0dp"
+                            android:theme="@style/AppTheme.NumberPicker" />
+
+                        <NumberPicker
                             android:id="@+id/num_picker_date"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="4"
+                            android:layout_weight="3"
                             android:selectionDividerHeight="0dp"
                             android:theme="@style/AppTheme.NumberPicker" />
 
@@ -144,32 +138,30 @@
                             android:layout_weight="1"
                             android:selectionDividerHeight="0dp"
                             android:theme="@style/AppTheme.NumberPicker" />
-
                     </LinearLayout>
+                </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="22.5dp"
-                        android:layout_gravity="top"
-                        android:background="@color/white" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="22.5dp"
-                        android:layout_gravity="bottom"
-                        android:background="@color/white" />
-                </FrameLayout>
-            </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="22.5dp"
+                    android:layout_gravity="top"
+                    android:background="@color/white" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="22.5dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/white" />
+            </FrameLayout>
 
             <EditText
                 android:id="@+id/item_memo"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@id/noti_content"
+                android:background="@null"
                 android:fontFamily="@font/nanum_square_b"
                 android:gravity="center_vertical"
                 android:hint="메모를 입력해보세요."
-                android:background="@null"
                 android:inputType="text"
                 android:paddingHorizontal="15dp"
                 android:textColorHint="@color/mediumGray"
@@ -189,7 +181,6 @@
             android:text="위시리스트에 추가"
             android:textColor="@color/black"
             android:textSize="14dp" />
-
     </RelativeLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
