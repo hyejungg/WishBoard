@@ -1,6 +1,7 @@
 package com.hyeeyoung.wishboard.folder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -12,13 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.FolderItem;
+import com.hyeeyoung.wishboard.model.SharedFolderVM;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 
@@ -33,39 +37,22 @@ public class DeleteFolderDialog extends DialogFragment implements View.OnClickLi
     public static final String TAG = "삭제 경고창";
     public static final String TAG_EVENT_DIALOG = "delete_diolog";
 
+    private Context context;
     private String folder_id;
+
+    private SharedFolderVM viewModel;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel = ViewModelProviders.of(getActivity()).get(SharedFolderVM.class);
+    }
 
     public DeleteFolderDialog(){}
 
     public static DeleteFolderDialog getInstance(){
         DeleteFolderDialog ddf = new DeleteFolderDialog();
         return ddf;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        try {
-            //@brief : 너비 지정
-            WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-            Display display = windowManager.getDefaultDisplay();
-            Point deviceSize = new Point();
-            display.getSize(deviceSize);
-
-            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
-            params.width = deviceSize.x;
-            params.horizontalMargin = 0.0f;
-            getDialog().getWindow().setAttributes(params);
-            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-            // clear dim behind
-//            Window window = getDialog().getWindow();
-//            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Nullable
@@ -87,7 +74,29 @@ public class DeleteFolderDialog extends DialogFragment implements View.OnClickLi
         confirm.setOnClickListener(this);
         // @brief : setCancelable(false); 를 설정해두지 않아서 검은 영역 터치 시 dismiss() 발생
         //setCancelable(false);
+        context = getContext();
+
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            //@brief : 너비 지정
+            WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            Display display = windowManager.getDefaultDisplay();
+            Point deviceSize = new Point();
+            display.getSize(deviceSize);
+
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = (int)(deviceSize.x * 0.9); // @brief : width는 전체 디바이스의 95%
+            getDialog().getWindow().setAttributes(params);
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -99,8 +108,10 @@ public class DeleteFolderDialog extends DialogFragment implements View.OnClickLi
                 break;
 
             case R.id.confirm :
-                deleteFolder(folder_id);
                 Log.i(TAG, "확인 버튼 클릭");
+
+                // @brief : 다이얼로그 종료 여부 FolderFragment에 전달
+                deleteFolder(folder_id);
                 dismiss(); // @brief : 다이얼로그 닫기
                 break;
         }
@@ -127,9 +138,12 @@ public class DeleteFolderDialog extends DialogFragment implements View.OnClickLi
                     }
                     Log.i(TAG, "Retrofit 통신 성공");
                     Log.i(TAG + "삭제", seq); //@deprecated : 성공여부 확인 test
+                    Toast.makeText(context, "삭제가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                    viewModel.setIsUpdated(true); //update여부 true
                 }else{
                     Log.i(TAG, "Retrofit 통신 실패");
                     Log.i(TAG, response.message());
+                    viewModel.setIsUpdated(false); //update여부 false
                 }
             }
             @Override

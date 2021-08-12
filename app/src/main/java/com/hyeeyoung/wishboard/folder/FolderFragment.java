@@ -1,6 +1,8 @@
 package com.hyeeyoung.wishboard.folder;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,15 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.FolderAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
 import com.hyeeyoung.wishboard.model.FolderItem;
+import com.hyeeyoung.wishboard.model.SharedFolderVM;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
@@ -69,17 +79,22 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
     }
 
     private static final String TAG = "폴더";
+    private static final int EDITFOLDERDILOG = 1;
+
     private View view;
     private RecyclerView recyclerView;
     private FolderAdapter adapter;
     private ArrayList<FolderItem> foldersList;
     private GridLayoutManager gridLayoutManager;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private Intent intent;
     private ImageButton cart, new_folder;
     private Context context;
 
     private String user_id = "";
+
+    private SharedFolderVM viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,6 +117,15 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    // @brief : 생성지점에 ViewModel 객체 생성
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel = ViewModelProviders.of(getActivity()).get(SharedFolderVM.class);
+        // @brief : ViewModel에 저장한 값을 가져와 true인 경우(변경된 경우) 재조회
+        viewModel.getIsUpdated().observe(this, aBoolean -> selectFolderInfo(user_id));
     }
 
     /**
@@ -158,6 +182,16 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
 
         cart.setOnClickListener(this);
         new_folder.setOnClickListener(this);
+
+
+        // @brief : 새로고침 화면 초기화
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
+        // @brief : 새로고침이 발생한다면 selectFolderInfo() 발생
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            selectFolderInfo(user_id); //swipe 시 서버 다시 조회
+            Log.i(TAG, "refresh__update 발생");
+            swipeRefreshLayout.setRefreshing(false); //update 종료 알림
+        });
     }
 
 
@@ -169,7 +203,7 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
                 intent = new Intent(v.getContext(), CartActivity.class);
                 v.getContext().startActivity(intent);
                 break;
-             // @brief : + 버튼 클릭 시 새폴더 추가에 관한 diolog 생성
+            // @brief : + 버튼 클릭 시 새폴더 추가에 관한 diolog 생성
             case R.id.new_folder:
                 // @brief : diolog에 전달 할 값 bundle에 담기
                 Bundle args = new Bundle();
@@ -179,9 +213,9 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
                 // @brief : diolog 생성
                 EditFolderDiolog efd = EditFolderDiolog.getInstance();
                 efd.setArguments(args);
-                efd.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), EditFolderDiolog.TAG_EVENT_DIALOG);
+//                efd.setTargetFragment(this, 1); //requestCode 전송
+                efd.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), EditFolderDiolog.TAG_EVENT_DIALOG);
                 break;
         }
     }
-
 }
