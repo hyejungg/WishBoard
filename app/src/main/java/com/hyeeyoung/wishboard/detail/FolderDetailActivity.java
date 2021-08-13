@@ -75,7 +75,6 @@ public class FolderDetailActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        // @TODO : 폴더프레그멘트로 갔으면 좋겠는데 홈프레그먼트로 이동함 ... 수정 필요
         finish();
     }
 

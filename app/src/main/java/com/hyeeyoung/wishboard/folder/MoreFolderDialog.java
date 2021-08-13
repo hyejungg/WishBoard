@@ -9,7 +9,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -35,29 +38,6 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
         return mfd;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // @TODO : 하단으로 내리는게 적용이 안된 상황
-        // @brief : 너비 지정
-        try {
-            WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-            Display display = windowManager.getDefaultDisplay();
-            Point deviceSize = new Point();
-            display.getSize(deviceSize);
-
-            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
-            params.width = deviceSize.x;
-            params.horizontalMargin = 0.0f;
-            getDialog().getWindow().setAttributes(params);
-            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme); //하단으로 내리기
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -80,15 +60,32 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
         cancel.setOnClickListener(this);
         btn_del.setOnClickListener(this);
         btn_upt.setOnClickListener(this);
-        setCancelable(false);
 
         builder.setView(v);
         Dialog dialog = builder.create();
 
-        // @brief : diolog 하단으로 고정 @TODO
-        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
-
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // @TODO : 하단으로 내리는게 적용이 안된 상황
+        // @brief : 너비 지정
+        try {
+            WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            Display display = windowManager.getDefaultDisplay();
+            Point deviceSize = new Point();
+            display.getSize(deviceSize);
+
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = deviceSize.x;
+            params.gravity = Gravity.BOTTOM; // @brief : 하단 지정
+            getDialog().getWindow().setAttributes(params);
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -109,7 +106,6 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
                 ddf.setArguments(args);
                 ddf.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),
                         MoreFolderDialog.TAG_EVENT_DIALOG);
-
                 dismiss(); //@brief : 다이얼로그 닫기
                 break;
 
@@ -126,7 +122,6 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
                 efd.setArguments(args);
                 efd.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),
                         EditFolderDiolog.TAG_EVENT_DIALOG);
-
                 dismiss(); //다이얼로그 닫기
                 break;
         }
