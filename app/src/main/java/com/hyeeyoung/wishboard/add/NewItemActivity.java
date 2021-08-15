@@ -1,9 +1,12 @@
 package com.hyeeyoung.wishboard.add;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -14,18 +17,20 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.RealPathUtil;
 import com.hyeeyoung.wishboard.config.WindowPermission;
 import com.hyeeyoung.wishboard.folder.FolderListActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
+import com.hyeeyoung.wishboard.noti.NotiSettingActivity;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.AwsS3Service;
+import com.hyeeyoung.wishboard.util.DateFormatUtil;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
@@ -40,11 +45,11 @@ public class NewItemActivity extends AppCompatActivity {
     private static final String TAG = "아이템 정보 수정";
     private ConstraintLayout item_image_layout;
     private LinearLayout btn_folder, btn_noti, layout;
-    private ImageButton save;
+    private TextView save, noti_type, noti_date;
     private ImageView item_image;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
-    private String time_stamp, image_path, current_photo_path, item_id;
+    private String time_stamp, image_path, current_photo_path, item_id, type, date;
     private WishItem wish_item;
 
     // @ brief : 카메라, 갤러리 접근
@@ -80,6 +85,8 @@ public class NewItemActivity extends AppCompatActivity {
         item_name = findViewById(R.id.item_name);
         item_price = findViewById(R.id.item_price);
         item_url = findViewById(R.id.item_url);
+        noti_type = findViewById(R.id.noti_type);
+        noti_date = findViewById(R.id.noti_date);
         item_memo = findViewById(R.id.item_memo);
         item_image = findViewById(R.id.item_image);
         layout = findViewById(R.id.layout);
@@ -95,7 +102,8 @@ public class NewItemActivity extends AppCompatActivity {
             item_price.setText(wish_item.getItem_price());
             item_url.setText(wish_item.getItem_url());
             item_memo.setText(wish_item.getItem_memo());
-
+            noti_type.setText(wish_item.getItem_notification_type());
+            noti_date.setText(wish_item.getItem_notification_date());
         }catch (Exception e){ // @brief : wish_item 정보가 없는 경우 예외처리
             e.printStackTrace();
         }
@@ -142,7 +150,7 @@ public class NewItemActivity extends AppCompatActivity {
     }
 
     /**
-     * 아이템 수정을 서버에 요청한다.
+     *  @brief : 아이템 수정을 서버에 요청한다.
      */
     public void updateItem() {
 
@@ -159,7 +167,6 @@ public class NewItemActivity extends AppCompatActivity {
         if (get_item_price.isEmpty()) {
             get_item_price = null;
         }
-
         // @brief : url데이터 예외처리
         if (get_item_url.isEmpty()) {
             get_item_url = null;
@@ -231,7 +238,11 @@ public class NewItemActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
 
-            case R.id.btn_noti: // @todo : 알림 구현 후 작성하기
+            case R.id.btn_noti:
+                Log.i(TAG, "onClick: " + "누름");
+                Intent intent_noti = new Intent(NewItemActivity.this, NotiSettingActivity.class);
+                someActivityResultLauncher.launch(intent_noti);
+                //startActivityForResult(intent_noti, 555);
                 break;
 
             case R.id.save: // @brief : 저장 버튼을 클릭한 경우
@@ -248,16 +259,27 @@ public class NewItemActivity extends AppCompatActivity {
                 setResult(RESULT_OK, return_intent); // @brief : itemDetailActivty로 복귀하면서 UI 업데이트를 위해 업데이트(RESULT_OK)결과 전송
 
                 // @brief : 변경사항 적용 후 0.7 초 뒤에 액티비티 종료하는 handler 설정
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish(); // @brief : 0.1 초 뒤에 액티비티 종료
-                    }
+                new Handler().postDelayed(() -> {
+                    finish(); // @brief : 0.1 초 뒤에 액티비티 종료
                 }, 700);
 
                 break;
         }
     }
+
+    // @brief : NotiSettingActivity에서 사용자가 입력한 알림 정보가 MainActivity를 거쳐서 이곳으로 전달 됨
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    type = result.getData().getStringExtra("type");
+                    date = result.getData().getStringExtra("date");
+                    noti_type.setText(type);
+                    noti_date.setText(DateFormatUtil.shortDateMDHM(date));
+                    noti_type.setVisibility(View.VISIBLE);
+                    noti_date.setVisibility(View.VISIBLE);
+                }
+            });
 
     // @todo : NewItemFragment와 중복되는 함수들로 추후 클래스로 따로 뺄 예정
     // @see : http://dailyddubby.blogspot.com/2018/04/107-tedpermission.html

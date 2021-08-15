@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.NotiAdapter;
@@ -26,7 +27,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// -------------------- https://youngest-programming.tistory.com/76 ---------------------------=
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link NotiFragment#newInstance} factory method to
@@ -78,6 +78,7 @@ public class NotiFragment extends Fragment {
     RecyclerView recyclerView;
     NotiAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
+    //private SwipeRefreshLayout swipeRefreshLayout;
 
     private String user_id = "";
     @Override
@@ -86,6 +87,7 @@ public class NotiFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_noti, container, false);
         if(SaveSharedPreferences.getUserId(this.getActivity()).length() != 0)
             user_id = SaveSharedPreferences.getUserId(this.getActivity());
+
         return view;
     }
 
@@ -117,6 +119,16 @@ public class NotiFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        // @TODO : 새로고침 적용 안 됨
+//        // @brief : 새로고침
+//        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+//        // @brief : 새로고침이 발생할 경우
+//        swipeRefreshLayout.setOnRefreshListener(() -> {
+//            selectNotiInfo(user_id); //swipe 시 서버 재조회
+//            Log.i(TAG, "refresh_update 발생");
+//            swipeRefreshLayout.setRefreshing(false); // @brief : update 종료 알림
+//        });
     }
 
     /**
