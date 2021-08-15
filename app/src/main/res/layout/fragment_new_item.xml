@@ -34,27 +34,18 @@
             android:text="저장"
             android:textColor="@color/black"
             android:textSize="15dp"/>
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/save"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="20dp"-->
-<!--            android:background="@android:color/transparent"-->
-<!--            android:onClick="onClick"-->
-<!--            android:src="@drawable/save" />-->
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/add_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/nanum_square_r"
-        android:text=""
-        android:textColor="@color/mediumGray"
-        android:textSize="13dp" />
+<!--    <TextView-->
+<!--        android:id="@+id/add_date"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginLeft="15dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:fontFamily="@font/nanum_square_r"-->
+<!--        android:text=""-->
+<!--        android:textColor="@color/mediumGray"-->
+<!--        android:textSize="13dp" />-->
     <!-- @ TODO : ConstraintLayout 로 ImageView를 통일하기 -->
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scroll_view"
@@ -81,16 +72,17 @@
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-                <!--@todo : 추후 레이아웃 클릭이 아닌 플러스버튼 클릭으로 변경-->
-                <ImageView
-                    android:id="@+id/plus_image"
+
+                <ImageButton
+                    android:id="@+id/add_photo_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/plus_image"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="@android:color/transparent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <!--    @see : java에서 linearlayout 클릭 시 (폴더 버튼)    -->
