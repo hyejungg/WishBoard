@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.adapter.FolderAdapter;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.model.FolderItem;
 import com.hyeeyoung.wishboard.model.WishItem;

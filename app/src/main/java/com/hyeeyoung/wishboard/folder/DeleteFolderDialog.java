@@ -1,7 +1,6 @@
 package com.hyeeyoung.wishboard.folder;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -18,11 +17,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.model.FolderItem;
-import com.hyeeyoung.wishboard.model.SharedFolderVM;
+import com.hyeeyoung.wishboard.config.SharedFolderVM;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 
@@ -42,10 +41,11 @@ public class DeleteFolderDialog extends DialogFragment implements View.OnClickLi
 
     private SharedFolderVM viewModel;
 
+    // @brief : 생성지점에 ViewModel 객체 생성
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewModel = ViewModelProviders.of(getActivity()).get(SharedFolderVM.class);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(getActivity()).get(SharedFolderVM.class);
     }
 
     public DeleteFolderDialog(){}

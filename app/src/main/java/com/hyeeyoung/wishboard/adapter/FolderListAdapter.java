@@ -41,7 +41,6 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Cu
                     lastCheckedPosition = getBindingAdapterPosition(); // @brief : 현재 버튼의 위치
                     btn_radio.setChecked(true);
                     notifyDataSetChanged();
-                    Log.i("CheckboxonClick","-------------------------------------"); //@deprecated : test용
                 }
             });
         }
@@ -54,14 +53,15 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Cu
         CustomViewHolder viewHolder = new CustomViewHolder(view);
         return viewHolder;
     }
+
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         FolderItem item = folderList.get(position);
         holder.folder_image.setImageResource(folder_images[item.getFolder_image()]);
         holder.folder_name.setText(item.getFolder_name());
         holder.btn_radio.setChecked(lastCheckedPosition == position);
-
     }
+
     @Override
     public int getItemCount() {
         return (null != folderList ? folderList.size() : 0);
