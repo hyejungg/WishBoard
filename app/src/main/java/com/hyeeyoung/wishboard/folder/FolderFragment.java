@@ -1,8 +1,6 @@
 package com.hyeeyoung.wishboard.folder;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,14 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,7 +21,7 @@ import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.FolderAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
 import com.hyeeyoung.wishboard.model.FolderItem;
-import com.hyeeyoung.wishboard.model.SharedFolderVM;
+import com.hyeeyoung.wishboard.config.SharedFolderVM;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
@@ -121,9 +116,9 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
 
     // @brief : 생성지점에 ViewModel 객체 생성
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewModel = ViewModelProviders.of(getActivity()).get(SharedFolderVM.class);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(getActivity()).get(SharedFolderVM.class);
         // @brief : ViewModel에 저장한 값을 가져와 true인 경우(변경된 경우) 재조회
         viewModel.getIsUpdated().observe(this, aBoolean -> selectFolderInfo(user_id));
     }

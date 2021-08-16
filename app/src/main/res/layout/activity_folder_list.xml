@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/noto_sans_kr_bold"
-            android:text="Folders"
+            android:text="폴더"
             android:textColor="@color/black"
             android:textSize="20dp" />
     </RelativeLayout>

@@ -35,7 +35,7 @@ public class CartActivity extends AppCompatActivity {
     private ImageButton cart;
     private ArrayList<CartItem> array_cart;
 
-    private static TextView total; // @params : total 변수
+    private static TextView total, item_cnt; // @params : total 변수
     private String user_id = "";
 
     Handler timerHandler; // @params : 장바구니 total 값 변경 핸들러
@@ -139,6 +139,7 @@ public class CartActivity extends AppCompatActivity {
      * @brief : 뷰 초기화
      */
     private void init() {
+        item_cnt = findViewById(R.id.item_cnt);
         total = findViewById(R.id.total);
         cart = findViewById(R.id.cart);
 
@@ -201,6 +202,7 @@ public class CartActivity extends AppCompatActivity {
             }
             total_price += temp_price;
         }
+        item_cnt.setText(String.valueOf(array_cart.size()));
         total.setText(total_price + "");
     }
 
