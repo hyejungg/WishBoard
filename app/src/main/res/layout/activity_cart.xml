@@ -25,63 +25,69 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/noto_sans_kr_bold"
-            android:text="cart"
+            android:text="장바구니"
             android:textColor="@color/black"
             android:textSize="20dp" />
 
-        <ImageButton
+        <!--        @TODO : 추후 구현-->
+        <TextView
             android:id="@+id/edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="2dp"
+            android:layout_marginLeft="20dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/edit" />
+            android:fontFamily="@font/nanum_square_eb"
+            android:onClick="onClick"
+            android:text="저장"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
 
     </RelativeLayout>
 
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="10dp"-->
-<!--        android:paddingHorizontal="15dp">-->
-<!--        &lt;!&ndash;@breif android:button="@null" : 커스텀 된 이미지가 체크박스의 크기에 맞게 들어간다.&ndash;&gt;-->
-<!--        <CheckBox-->
-<!--            android:id="@+id/check_box"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:background="@drawable/custom_checkbox"-->
-<!--            android:button="@null"-->
-<!--            android:checked="false" />-->
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginBottom="10dp"-->
+    <!--        android:paddingHorizontal="15dp">-->
+    <!--        &lt;!&ndash;@breif android:button="@null" : 커스텀 된 이미지가 체크박스의 크기에 맞게 들어간다.&ndash;&gt;-->
+    <!--        <CheckBox-->
+    <!--            android:id="@+id/check_box"-->
+    <!--            android:layout_width="20dp"-->
+    <!--            android:layout_height="20dp"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:background="@drawable/custom_checkbox"-->
+    <!--            android:button="@null"-->
+    <!--            android:checked="false" />-->
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginLeft="5dp"-->
-<!--            android:layout_toRightOf="@id/check_box"-->
-<!--            android:fontFamily="@font/nanum_square_r"-->
-<!--            android:text="전체선택"-->
-<!--            android:textColor="@color/mediumGray"-->
-<!--            android:textSize="13dp" />-->
+    <!--        <TextView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginLeft="5dp"-->
+    <!--            android:layout_toRightOf="@id/check_box"-->
+    <!--            android:fontFamily="@font/nanum_square_r"-->
+    <!--            android:text="전체선택"-->
+    <!--            android:textColor="@color/mediumGray"-->
+    <!--            android:textSize="13dp" />-->
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginLeft="5dp"-->
-<!--            android:fontFamily="@font/nanum_square_b"-->
-<!--            android:text="선택삭제"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textSize="13dp" />-->
-<!--    </RelativeLayout>-->
+    <!--        <TextView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_alignParentEnd="true"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginLeft="5dp"-->
+    <!--            android:fontFamily="@font/nanum_square_b"-->
+    <!--            android:text="선택삭제"-->
+    <!--            android:textColor="@color/black"-->
+    <!--            android:textSize="13dp" />-->
+    <!--    </RelativeLayout>-->
     <!--            <View-->
     <!--                android:layout_width="match_parent"-->
     <!--                android:layout_height="0.5dp"-->
     <!--                android:background="@color/black" />-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_cart_list"
         android:layout_width="match_parent"
@@ -95,10 +101,31 @@
         android:padding="15dp">
 
         <TextView
+            android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/nanum_square_r"
-            android:text="TOTAL"
+            android:fontFamily="@font/nanum_square_eb"
+            android:text="총"
+            android:textColor="@color/black"
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/item_cnt"
+            android:layout_toRightOf="@id/text"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanum_square_eb"
+            android:text="n"
+            android:textColor="@color/black"
+            android:textSize="17dp" />
+
+        <TextView
+            android:layout_toRightOf="@id/item_cnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanum_square_eb"
+            android:text="개"
             android:textColor="@color/black"
             android:textSize="17dp" />
 
