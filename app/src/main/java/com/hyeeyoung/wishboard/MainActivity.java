@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                         setFrag(1);
                         break;
                     case R.id.folder:
-                        fragTransaction.add(folderFragment, "FolderFragment");
                         setFrag(2);
                         break;
                     case R.id.noti:

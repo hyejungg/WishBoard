@@ -102,12 +102,27 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableRight="@drawable/detail"
                         android:fontFamily="@font/nanum_square_eb"
                         android:paddingVertical="12dp"
                         android:text="폴더"
                         android:textColor="@color/black"
                         android:textSize="13dp" />
+                    <TextView
+                        android:id="@+id/folder_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:fontFamily="@font/nanum_square_b"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="13dp"
+                        android:visibility="gone" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:src="@drawable/detail">
+                    </ImageView>
                 </LinearLayout>
 
                 <LinearLayout
