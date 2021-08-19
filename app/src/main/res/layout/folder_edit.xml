@@ -67,14 +67,15 @@
                     android:textColorHint="@color/mediumGray"
                     android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/folder_name_cnt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nanum_square_r"
-                    android:text="(0/10글자)"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
+<!--                @TODO : 추후 구현 -->
+<!--                <TextView-->
+<!--                    android:id="@+id/folder_name_cnt"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:fontFamily="@font/nanum_square_r"-->
+<!--                    android:text="(0/10글자)"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="15dp" />-->
             </LinearLayout>
         </RelativeLayout>
 

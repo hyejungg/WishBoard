@@ -74,7 +74,6 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
     }
 
     private static final String TAG = "폴더";
-    private static final int EDITFOLDERDILOG = 1;
 
     private View view;
     private RecyclerView recyclerView;
@@ -178,7 +177,6 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
         cart.setOnClickListener(this);
         new_folder.setOnClickListener(this);
 
-
         // @brief : 새로고침 화면 초기화
         swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
         // @brief : 새로고침이 발생한다면 selectFolderInfo() 발생
@@ -198,6 +196,7 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
                 intent = new Intent(v.getContext(), CartActivity.class);
                 v.getContext().startActivity(intent);
                 break;
+
             // @brief : + 버튼 클릭 시 새폴더 추가에 관한 diolog 생성
             case R.id.new_folder:
                 // @brief : diolog에 전달 할 값 bundle에 담기
@@ -205,10 +204,10 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
                 args.putInt("where", 1);
                 args.putString("user_id", user_id);
                 args.putString("folder_id", null);
+
                 // @brief : diolog 생성
                 EditFolderDiolog efd = EditFolderDiolog.getInstance();
                 efd.setArguments(args);
-//                efd.setTargetFragment(this, 1); //requestCode 전송
                 efd.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), EditFolderDiolog.TAG_EVENT_DIALOG);
                 break;
         }

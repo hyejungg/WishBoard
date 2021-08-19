@@ -143,7 +143,6 @@ public class FolderDetailActivity extends AppCompatActivity {
                 onBackPressed();
                 // @brief : 오른쪽 -> 왼쪽으로 화면 전환
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
-                onStop();
                 break;
 
             case R.id.search:

@@ -10,9 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -29,7 +27,8 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
     public static final String TAG_EVENT_DIALOG = "more_diolog";
 
     private Bundle args;
-    private String user_id, folder_id;
+    private String user_id, folder_id, res_folder_name;
+    private int res_folder_image;
 
     public MoreFolderDialog(){}
 
@@ -46,9 +45,13 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
         if(getArgs != null){
             user_id = getArgs.getString("user_id");
             folder_id = getArgs.getString("folder_id");
+            res_folder_name = getArgs.getString("folder_name");
+            res_folder_image = getArgs.getInt("folder_image");
         }else{
             user_id = "";
             folder_id = "";
+            res_folder_name = "";
+            res_folder_image = 0;
         }
 
         // @brief : 뷰 생성 및 뷰 내 아이템 초기화
@@ -70,7 +73,6 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
     @Override
     public void onResume() {
         super.onResume();
-        // @TODO : 하단으로 내리는게 적용이 안된 상황
         // @brief : 너비 지정
         try {
             WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -116,6 +118,8 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
                 args.putInt("where", 2);
                 args.putString("user_id", user_id);
                 args.putString("folder_id", folder_id);
+                args.putString("folder_name", res_folder_name);
+                args.putInt("folder_image", res_folder_image);
 
                 // @brief : 폴더명 수정에 관한 diolog 생성
                 EditFolderDiolog efd = EditFolderDiolog.getInstance();

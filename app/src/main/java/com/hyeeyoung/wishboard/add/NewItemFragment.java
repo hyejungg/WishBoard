@@ -99,7 +99,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private ConstraintLayout item_image_layout;
     private LinearLayout btn_folder, btn_noti;
     private ImageView item_image;
-    private TextView save, noti_type, noti_date;
+    private TextView save, noti_type, noti_date, folder_name;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
     private String time_stamp, image_path;
@@ -114,7 +114,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private static final int FROM_ALBUM = 1;
     private LinearLayout layout;
     private String user_id = "";
-    private String type, date;
+    private String type, date, f_name;
 //    private SharedItemVM viewModel;
 
     @Override
@@ -134,6 +134,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         btn_folder = view.findViewById(R.id.btn_folder);
         btn_noti = view.findViewById(R.id.btn_noti);
         save = view.findViewById(R.id.save);
+        folder_name = view.findViewById(R.id.folder_name);
         item_name = view.findViewById(R.id.item_name);
         item_price = view.findViewById(R.id.item_price);
         item_url = view.findViewById(R.id.item_url);
@@ -274,6 +275,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                         item_memo.setText("");
                         noti_type.setText("");
                         noti_date.setText("");
+                        folder_name.setText("");
 
                         // @brief : 저장 완료 후 사진 등록을 위한 플러스 버튼 보이도록 변경
                         add_photo_btn.setVisibility(View.VISIBLE);
@@ -340,7 +342,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
 
             case R.id.btn_folder:
                 Intent intent = new Intent(getActivity(), FolderListActivity.class);
-                startActivity(intent);
+                someActivityResultLauncher.launch(intent);
                 break;
 
             case R.id.btn_noti:
@@ -354,17 +356,23 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    // @brief : NotiSettingActivity에서 사용자가 입력한 알림 정보가 MainActivity를 거쳐서 이곳으로 전달 됨
+    // @brief : NotiSettingActivity에서 사용자가 입력한 알림 정보와 폴더 정보가 MainActivity를 거쳐서 이곳으로 전달 됨
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
+                if (result.getResultCode() == Activity.RESULT_OK) { // @brief : 알림 정보의 경우
                     type = result.getData().getStringExtra("type");
                     date = result.getData().getStringExtra("date");
                     noti_type.setText(type);
                     noti_date.setText(DateFormatUtil.shortDateMDHM(date));
                     noti_type.setVisibility(View.VISIBLE);
                     noti_date.setVisibility(View.VISIBLE);
+
+                } else if (result.getResultCode() == 1004) {  // @brief : 폴더 정보의 경우 //@TODO : 코드 번호 변경 필요
+                    f_name = result.getData().getStringExtra("folder_name");
+                    Log.i("폴", f_name);
+                    folder_name.setText(f_name);
+                    folder_name.setVisibility(View.VISIBLE);
                 }
             });
 
