@@ -134,7 +134,7 @@ public class EditItemActivity extends AppCompatActivity {
                 selectAlbum();
                 break;
 
-            case R.id.btn_folder: // @brief : 폴더 정보q를 변경한 경우
+            case R.id.btn_folder: // @brief : 폴더 정보를 변경한 경우
                 Intent intent = new Intent(EditItemActivity.this, FolderListActivity.class);
                 someActivityResultLauncher.launch(intent);
                 break;
