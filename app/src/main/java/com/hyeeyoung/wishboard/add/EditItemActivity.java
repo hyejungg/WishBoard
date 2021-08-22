@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -23,24 +22,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.RealPathUtil;
+import com.hyeeyoung.wishboard.config.ResultCode;
 import com.hyeeyoung.wishboard.config.WindowPermission;
 import com.hyeeyoung.wishboard.folder.FolderListActivity;
+import com.hyeeyoung.wishboard.model.NotiItem;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.noti.NotiSettingActivity;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.AwsS3Service;
+import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.hyeeyoung.wishboard.util.DateFormatUtil;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NewItemActivity extends AppCompatActivity {
+public class EditItemActivity extends AppCompatActivity {
 
     private static final String TAG = "아이템 정보 수정";
     private ConstraintLayout item_image_layout;
@@ -49,7 +52,7 @@ public class NewItemActivity extends AppCompatActivity {
     private ImageView item_image;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
-    private String time_stamp, image_path, current_photo_path, item_id, type, date;
+    private String time_stamp, image_path, current_photo_path, item_id, type, date, initial_type, initial_date;
     private WishItem wish_item;
 
     // @ brief : 카메라, 갤러리 접근
@@ -64,13 +67,13 @@ public class NewItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_new_item);
 
-        try{ // @brief : 상세조회화면에서 아이템아이디 값 받아와서 각 뷰에 디스플레이할 해당 아이템 정보를 가져옴.
+        try{ // @brief : 상세 조회 화면에서 아이템 아이디 값 받아와서 각 뷰에 디스플레이할 해당 아이템 정보를 가져옴
             Intent intent = getIntent();
             item_id = intent.getStringExtra("item_id");
             if(item_id != null)
                 selectItemInfo(item_id); // @brief : 서버에 아이템 정보를 요정
             else
-                Toast.makeText(NewItemActivity.this, "아이템 정보를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditItemActivity.this, "아이템 정보를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -91,6 +94,10 @@ public class NewItemActivity extends AppCompatActivity {
         item_image = findViewById(R.id.item_image);
         layout = findViewById(R.id.layout);
 
+        // @brief : NewItemFragment와 NewItemActivity 모두 동일한 레이아웃을 사용하므로 경우에 따라 상단 타이틀을 구분
+        TextView title = findViewById(R.id.title);
+        title.setText("아이템 수정");
+
         try{ // @brief : wish_item 정보가 있는 경우 해당 정보로 각종 뷰 초기화
             item_name.setText(wish_item.getItem_name());
             image_path = wish_item.getItem_image();
@@ -102,9 +109,13 @@ public class NewItemActivity extends AppCompatActivity {
             item_price.setText(wish_item.getItem_price());
             item_url.setText(wish_item.getItem_url());
             item_memo.setText(wish_item.getItem_memo());
-            noti_type.setText(wish_item.getItem_notification_type());
-            noti_date.setText(wish_item.getItem_notification_date());
-        }catch (Exception e){ // @brief : wish_item 정보가 없는 경우 예외처리
+
+            // @brief : 수정 전 초기 알림 정보를 저장
+            initial_type = wish_item.getItem_notification_type();
+            initial_date = DateFormatUtil.shortDateMDHM(wish_item.getItem_notification_date());
+            noti_type.setText(initial_type);
+            noti_date.setText(initial_date);
+        } catch (Exception e){ // @brief : wish_item 정보가 없는 경우 예외처리
             e.printStackTrace();
         }
 
@@ -112,6 +123,90 @@ public class NewItemActivity extends AppCompatActivity {
         new WindowPermission(this).setPermission(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA
         );
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.item_image_layout: // @brief : 이미지를 클릭한 경우
+                //makeDialog(); // @brief : 다이얼로그 디스플레이
+                selectAlbum();
+                break;
+
+            case R.id.btn_folder: // @todo : 폴더 구현 후 작성하기
+                Intent intent = new Intent(EditItemActivity.this, FolderListActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.btn_noti:
+                Intent intent_noti = new Intent(EditItemActivity.this, NotiSettingActivity.class);
+                someActivityResultLauncher.launch(intent_noti);
+                break;
+
+            case R.id.save: // @brief : 저장 버튼을 클릭한 경우
+                // @brief : 아이템 이름을 입력하지 않은 경우 저장을 중단
+                if (isNoName(item_name.getText().toString())) {
+                    Toast.makeText(this, "아이템 이름을 입력해주세요.", Toast.LENGTH_SHORT).show(); // @brief : 아이템 정보 입력을 요구
+                    return;
+                }
+
+                // @brief : 수정한 아이템 정보로 서버에 업데이트를 요청
+                updateItem();
+                Log.i(TAG, "is_modified_image : "+ is_modified_image);
+                Intent return_intent = new Intent();
+                setResult(RESULT_OK, return_intent); // @brief : itemDetailActivty로 복귀하면서 UI 업데이트를 위해 업데이트(RESULT_OK)결과 전송
+
+                if(initial_type== null && type!= null){
+                    String user_id = SaveSharedPreferences.getUserId(this);
+                    NotiItem noti_item = new NotiItem(user_id, item_id, type, date);
+                    noti_item.setToken(SaveSharedPreferences.getFCMToken(this));
+                    addNoti(noti_item);
+                }
+                else if(initial_type != null && type== null) { // @brief : 입력된 알림 정보와 초기 알림 정보를 비교해서 수정 여부를 판단, 수정 된 경우 알림정보 업데이트 요청
+                    deleteNoti(item_id);
+                }
+                else if(initial_type != null && type != null && !initial_type.equals(type)){
+                    updateNoti(new NotiItem(type, date));
+                }
+
+                // @brief : 변경사항 적용 후 1초 뒤에 액티비티 종료하는 handler 설정
+                new Handler().postDelayed(() -> {
+                    finish(); // @brief : 0.1 초 뒤에 액티비티 종료
+                }, 1000);
+
+                break;
+        }
+    }
+
+    // @brief : NotiSettingActivity에서 사용자가 입력한 알림 정보가 MainActivity를 거쳐서 이곳으로 전달 됨
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == ResultCode.NOTI_RESULT_CODE) {
+                    type = result.getData().getStringExtra("type");
+                    date = result.getData().getStringExtra("date");
+
+                    // @brief : 사용자가 알림 정보를 입력한 경우
+                    if(type != null && date != null) {
+                        noti_type.setText(type);
+                        noti_date.setText(DateFormatUtil.shortDateMDHM(date));
+                    }else{ // @brief : 사용자가 알림 정보를 입력하지 않은 경우
+                        noti_type.setText("");
+                        noti_date.setText("");
+                    }
+                }
+            });
+
+    /**
+     * @param : wish_item 사용자가 새로 입력한 아이템 객체
+     * @return : 입력하지 않았다면 true, 입력했다면 false
+     * @brief :사용자가 상품명을 입력했는지를 확인
+     */
+    private boolean isNoName(String item_name) {
+        if (item_name.trim().isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -124,7 +219,7 @@ public class NewItemActivity extends AppCompatActivity {
         call.enqueue(new Callback<WishItem>() {
             @Override
             public void onResponse(Call<WishItem> call, Response<WishItem> response) {
-                wish_item = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨.
+                wish_item = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨
                 // @brief : 가져온 아이템이 없는 경우
                 if (wish_item == null) {
                     Log.i(TAG, "가져온 아이템 없음");
@@ -143,14 +238,14 @@ public class NewItemActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<WishItem> call, Throwable t) {
-                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                // @brief : 통신 실패 시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
                 Log.e(TAG, "서버 연결 실패");
             }
         });
     }
 
     /**
-     *  @brief : 아이템 수정을 서버에 요청한다.
+     *  @brief : 아이템 수정을 서버에 요청
      */
     public void updateItem() {
 
@@ -176,7 +271,8 @@ public class NewItemActivity extends AppCompatActivity {
             get_item_memo = null;
         }
 
-        if (is_modified_image) { // @brief : 갤러리 이미지로 아이템 이미지가 수정된 경우
+        // @brief : 갤러리 이미지로 아이템 이미지가 수정된 경우
+        if (is_modified_image) {
             time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()); // @brief : 아이템 등록 시 파일명 중복 방지를 위해 파일명으로 등록 시간으로 지정, 추후 파일명도 추가할 예정
             String get_item_image = IRemoteService.IMAGE_URL + time_stamp;
             aws_s3 = new AwsS3Service(getApplicationContext()); // @param aws_s3 : @ s3에 이미지 업로드를 위한 s3 객체 생성
@@ -187,7 +283,10 @@ public class NewItemActivity extends AppCompatActivity {
              */
             aws_s3.uploadFile(new File(image_path), time_stamp);
             wish_item = new WishItem(item_id, null, null, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
-        } else { // @brief : 이미지를 수정하지 않은 경우
+        }
+
+        // @brief : 이미지를 수정하지 않은 경우
+        else {
             wish_item = new WishItem(item_id, null, null, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
         }
 
@@ -199,7 +298,7 @@ public class NewItemActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // @brief : 정상적으로 통신 성공한 경우
                     Log.i(TAG, "성공");
-                    Toast.makeText(NewItemActivity.this, "위시리스트가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditItemActivity.this, "위시리스트가 수정되었습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     // @brief : 통신에 실패한 경우
                     Log.e(TAG, "오류");
@@ -214,72 +313,96 @@ public class NewItemActivity extends AppCompatActivity {
     }
 
     /**
-     * @param : wish_item 사용자가 새로 입력한 아이템 객체
-     * @return : 입력하지 않았다면 true, 입력했다면 false
-     * @brief :사용자가 상품명을 입력했는지를 확인
+     * @brief : 사용자가 상품 알림을 설정한 경우 알림 저장을 서버에 요청
      */
-    private boolean isNoName(String item_name) {
-        if (item_name.trim().isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+    private void addNoti(NotiItem noti_item){
+        // Log.i(TAG, "addNoti : " + noti_item); // @deprecated : 테스트용
+        IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
+        Call<ResponseBody> call = remote_service.insertItemNoti(noti_item);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // @brief : 정상적으로 통신 성공한 경우
+                    String seq = null;
+                    try {
+                        seq = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "알림 등록 성공 : " + seq);
+
+                } else {
+                    // @brief : 통신에 실패한 경우
+                    Log.e(TAG, "알림 등록 오류" + response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통신 실패 시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e(TAG, "서버 연결 실패" + t.getMessage());
+            }
+        });
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.item_image_layout: // @brief : 이미지를 클릭한 경우
-                //makeDialog(); // @brief : 다이얼로그 디스플레이
-                selectAlbum();
-                break;
+    /**
+     * @brief : 사용자가 상품 알림을 변경한 경우 알림 정보 수정을 서버에 요청
+     */
+    private void updateNoti(NotiItem noti_item){
+        Log.i(TAG, "updateNoti : " + noti_item);
+        IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
+        Call<ResponseBody> call = remote_service.updateItemNoti(item_id, noti_item);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // @brief : 정상적으로 통신 성공한 경우
+                    String seq = null;
+                    try {
+                        seq = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "알림 업데이트 성공 : " + seq);
 
-            case R.id.btn_folder: // @todo : 폴더 구현 후 작성하기
-                Intent intent = new Intent(NewItemActivity.this, FolderListActivity.class);
-                startActivity(intent);
-                break;
-
-            case R.id.btn_noti:
-                Log.i(TAG, "onClick: " + "누름");
-                Intent intent_noti = new Intent(NewItemActivity.this, NotiSettingActivity.class);
-                someActivityResultLauncher.launch(intent_noti);
-                //startActivityForResult(intent_noti, 555);
-                break;
-
-            case R.id.save: // @brief : 저장 버튼을 클릭한 경우
-                // @brief : 아이템 이름을 입력하지 않은 경우
-                if (isNoName(item_name.getText().toString())) {
-                    //new CustumSnackbar(getView(), "아이템 이름을 입력해주세요.", Snackbar.LENGTH_SHORT).show(); // @brief : 스낵바 띄우기
-                    Toast.makeText(this, "아이템 이름을 입력해주세요.", Toast.LENGTH_SHORT).show(); // @brief : 아이템 정보 입력을 요구
-                    return;
+                } else {
+                    // @brief : 통신에 실패한 경우
+                    Log.e(TAG, "알림 업데이트 오류" + response.message());
                 }
-                // @brief : 수정한 아이템 정보로 서버에 업데이트를 요청
-                updateItem();
-                Log.i(TAG, "is_modified_image : "+is_modified_image);
-                Intent return_intent = new Intent();
-                setResult(RESULT_OK, return_intent); // @brief : itemDetailActivty로 복귀하면서 UI 업데이트를 위해 업데이트(RESULT_OK)결과 전송
-
-                // @brief : 변경사항 적용 후 0.7 초 뒤에 액티비티 종료하는 handler 설정
-                new Handler().postDelayed(() -> {
-                    finish(); // @brief : 0.1 초 뒤에 액티비티 종료
-                }, 700);
-
-                break;
-        }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통신 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e(TAG, "서버 연결 실패" + t.getMessage());
+            }
+        });
     }
 
-    // @brief : NotiSettingActivity에서 사용자가 입력한 알림 정보가 MainActivity를 거쳐서 이곳으로 전달 됨
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    type = result.getData().getStringExtra("type");
-                    date = result.getData().getStringExtra("date");
-                    noti_type.setText(type);
-                    noti_date.setText(DateFormatUtil.shortDateMDHM(date));
-                    noti_type.setVisibility(View.VISIBLE);
-                    noti_date.setVisibility(View.VISIBLE);
+    /**
+     * 아이템 삭제를 서버에 요청
+     * @param item_id 삭제하려는 아이템의 아이디
+     */
+    public void deleteNoti(String item_id) {
+        IRemoteService remoteService = ServiceGenerator.createService(IRemoteService.class);
+        Call<Void> call = remoteService.deleteItemNoti(item_id);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // @brief : 정상적으로 통신 성공한 경우
+                    Log.i(TAG, "알림 삭제 성공");
+                } else {
+                    // @brief : 통신에 실패한 경우
+                    Log.e(TAG, "알림 삭제 오류");
+                    Log.i(TAG, response.message());
                 }
-            });
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i(TAG, "아이템 삭제 실패 : "+ t.getMessage());
+            }
+        });
+    }
 
     // @todo : NewItemFragment와 중복되는 함수들로 추후 클래스로 따로 뺄 예정
     // @see : http://dailyddubby.blogspot.com/2018/04/107-tedpermission.html
@@ -421,6 +544,5 @@ public class NewItemActivity extends AppCompatActivity {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
-//        new CustumSnackbar(getView(), "사진이 저장되었습니다", Snackbar.LENGTH_SHORT).show();
     }
 }

@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".detail.ItemDetailActivity"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@color/white">
+    tools:context=".detail.ItemDetailActivity">
 
     <ImageButton
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="15dp"
-        android:layout_marginHorizontal="15dp"
-        android:src="@drawable/back"
         android:background="@android:color/transparent"
-        android:onClick="onClick"/>
+        android:onClick="onClick"
+        android:padding="15dp"
+        android:src="@drawable/back" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,42 +29,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="15dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_eb"
-            android:text="의류" />
-
-<!--        <TextView-->
-<!--            android:id="@+id/url"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:textAllCaps="false"-->
-<!--            android:textAlignment="textEnd"-->
-<!--            android:textSize="13dp"-->
-<!--            android:textColor="@color/mediumGray"-->
-<!--            android:fontFamily="@font/nanum_square_r"-->
-<!--            android:text="sfsdg" />-->
+            android:text="의류"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/create_at"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="right"
-            android:textSize="13dp"
-            android:textColor="@color/mediumGray"
             android:fontFamily="@font/nanum_square_r"
-            android:text="" />
+            android:gravity="right"
+            android:text=""
+            android:textColor="@color/mediumGray"
+            android:textSize="13dp" />
 
     </LinearLayout>
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -80,37 +66,19 @@
                     android:id="@id/item_image"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
+                    android:foreground="@color/ultraSemiTransparent"
                     android:scaleType="centerCrop"
-                    android:foreground="@color/ultraSemiTransparent"/>
-
-<!--                <TextView-->
-<!--                    android:id="@+id/url"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    app:layout_constraintEnd_toEndOf="@id/item_image"-->
-<!--                    app:layout_constraintBottom_toBottomOf="@id/item_image"-->
-<!--                    android:paddingVertical="2dp"-->
-<!--                    android:paddingHorizontal="10dp"-->
-<!--                    android:gravity="center_vertical"-->
-<!--                    android:layout_margin="15dp"-->
-<!--                    android:layout_gravity="right|bottom"-->
-<!--                    android:textAllCaps="false"-->
-<!--                    android:textSize="13dp"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:fontFamily="@font/nanum_square_r"-->
-<!--                    android:text="sfsdg"-->
-<!--                    android:background="@drawable/button_white"/>-->
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="@id/item_image"
-                    app:layout_constraintBottom_toBottomOf="@id/item_image"
+                    android:layout_gravity="right|bottom"
                     android:layout_margin="15dp"
-                    android:layout_gravity="right|bottom">
+                    app:layout_constraintBottom_toBottomOf="@id/item_image"
+                    app:layout_constraintEnd_toEndOf="@id/item_image">
 
                     <ImageView
                         android:layout_width="60dp"
@@ -122,42 +90,42 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textAllCaps="true"
-                        android:textSize="15dp"
-                        android:textColor="@color/black"
                         android:fontFamily="@font/nanum_square_b"
-                        android:text="D-15" />
+                        android:text="D-15"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textSize="15dp" />
 
                 </FrameLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:padding="15dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
 
                 <TextView
                     android:id="@+id/domain_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:visibility="gone"
-                    android:textAllCaps="false"
-                    android:textSize="13dp"
-                    android:textColor="@color/mediumGray"
                     android:fontFamily="@font/nanum_square_r"
-                    android:text="" />
+                    android:text=""
+                    android:textAllCaps="false"
+                    android:textColor="@color/mediumGray"
+                    android:textSize="13dp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    android:textSize="17dp"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/nanum_square_eb"
-                    android:text="name" />
+                    android:text="name"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="17dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -168,20 +136,20 @@
                         android:id="@+id/item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17dp"
-                        android:textColor="@color/black"
                         android:fontFamily="@font/nanum_square_eb"
-                        android:text="129,000" />
+                        android:text="129,000"
+                        android:textColor="@color/black"
+                        android:textSize="17dp" />
 
                     <TextView
                         android:id="@+id/won"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dp"
-                        android:textSize="17dp"
-                        android:textColor="@color/black"
                         android:fontFamily="@font/nanum_square_b"
-                        android:text="원" />
+                        android:text="원"
+                        android:textColor="@color/black"
+                        android:textSize="17dp" />
 
                 </LinearLayout>
 
@@ -190,70 +158,72 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/nanum_square_b"
-                    android:text="" />
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    tools:text="8월 22일 22시 재입고 " />
 
                 <TextView
                     android:id="@+id/tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/background_tag"
+                    android:fontFamily="@font/nanum_square_b"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="5dp"
-                    android:visibility="gone"
-                    android:background="@drawable/background_tag"
+                    android:text=""
                     android:textAllCaps="false"
-                    android:textSize="15dp"
                     android:textColor="@color/black"
-                    android:fontFamily="@font/nanum_square_b"
-                    android:text="" />
+                    android:textSize="15dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="15dp"
-        android:paddingHorizontal="15dp">
+        android:gravity="center_vertical"
+        android:padding="15dp">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_weight="1">
+
             <ImageButton
                 android:id="@+id/delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:src="@drawable/delete"
                 android:background="@android:color/transparent"
-                android:onClick="onClick"/>
+                android:onClick="onClick"
+                android:src="@drawable/delete" />
 
             <ImageButton
                 android:id="@+id/edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/edit"
                 android:background="@android:color/transparent"
-                android:onClick="onClick"/>
+                android:onClick="onClick"
+                android:src="@drawable/edit" />
         </LinearLayout>
-<!--        @brief : outlineProvider="none" 버튼 음영 없애기 위함-->
+
         <Button
             android:id="@+id/go_to_shop"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:outlineProvider="none"
             android:background="@drawable/button_green"
-            android:textSize="14dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/nanum_square_b"
+            android:onClick="onClick"
             android:text="쇼핑몰로 이동하기"
-            android:onClick="onClick"/>
+            android:textColor="@color/black"
+            android:textSize="14dp" />
+
     </LinearLayout>
 </LinearLayout>

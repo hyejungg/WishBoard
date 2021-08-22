@@ -1,4 +1,4 @@
-package com.hyeeyoung.wishboard.home;
+package com.hyeeyoung.wishboard.config;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
