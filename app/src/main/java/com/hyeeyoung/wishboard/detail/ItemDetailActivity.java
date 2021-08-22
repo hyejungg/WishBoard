@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.add.NewItemActivity;
+import com.hyeeyoung.wishboard.add.EditItemActivity;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
@@ -192,7 +192,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             // @brief : 좌측 하단 수정 버튼 클릭 시 DB에서 해당 아이템 수정
             case R.id.edit:
                 Log.i(TAG, "onClick: " + item_id);
-                Intent intent = new Intent(ItemDetailActivity.this, NewItemActivity.class);
+                Intent intent = new Intent(ItemDetailActivity.this, EditItemActivity.class);
                 intent.putExtra("item_id", item_id);
                 startActivity(intent);
                 break;

@@ -1,5 +1,6 @@
 package com.hyeeyoung.wishboard.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,10 +19,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
-import com.hyeeyoung.wishboard.model.SharedItemVM;
+import com.hyeeyoung.wishboard.config.SharedItemVM;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
-import com.hyeeyoung.wishboard.remote.RemoteLib;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.hyeeyoung.wishboard.sign.SigninActivity;
@@ -31,12 +30,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,12 +44,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment HomeFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -105,6 +92,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private SharedItemVM viewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    // @brief : 생성지점에 ViewModel 객체 생성
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(getActivity()).get(SharedItemVM.class);
+        // @brief : ViewModel에 저장한 값을 가져와 true인 경우(변경된 경우) 재조회
+        viewModel.getIsUpdated().observe(this, aBoolean -> selectItemInfo(user_id));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -117,15 +113,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         selectItemInfo(user_id);
         // @todo : 유저아이디를 가져오지 못하는 경우 예외처리하기
         return view;
-    }
-
-    // @brief : 생성지점에 ViewModel 객체 생성
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewModel = new ViewModelProvider(getActivity()).get(SharedItemVM.class);
-        // @brief : ViewModel에 저장한 값을 가져와 true인 경우(변경된 경우) 재조회
-        viewModel.getIsUpdated().observe(this, aBoolean -> selectItemInfo(user_id));
     }
 
     /**

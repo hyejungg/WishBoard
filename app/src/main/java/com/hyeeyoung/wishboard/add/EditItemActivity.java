@@ -43,7 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NewItemActivity extends AppCompatActivity {
+public class EditItemActivity extends AppCompatActivity {
 
     private static final String TAG = "아이템 정보 수정";
     private ConstraintLayout item_image_layout;
@@ -73,7 +73,7 @@ public class NewItemActivity extends AppCompatActivity {
             if(item_id != null)
                 selectItemInfo(item_id); // @brief : 서버에 아이템 정보를 요정
             else
-                Toast.makeText(NewItemActivity.this, "아이템 정보를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditItemActivity.this, "아이템 정보를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -133,12 +133,12 @@ public class NewItemActivity extends AppCompatActivity {
                 break;
 
             case R.id.btn_folder: // @todo : 폴더 구현 후 작성하기
-                Intent intent = new Intent(NewItemActivity.this, FolderListActivity.class);
+                Intent intent = new Intent(EditItemActivity.this, FolderListActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.btn_noti:
-                Intent intent_noti = new Intent(NewItemActivity.this, NotiSettingActivity.class);
+                Intent intent_noti = new Intent(EditItemActivity.this, NotiSettingActivity.class);
                 someActivityResultLauncher.launch(intent_noti);
                 break;
 
@@ -298,7 +298,7 @@ public class NewItemActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // @brief : 정상적으로 통신 성공한 경우
                     Log.i(TAG, "성공");
-                    Toast.makeText(NewItemActivity.this, "위시리스트가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditItemActivity.this, "위시리스트가 수정되었습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     // @brief : 통신에 실패한 경우
                     Log.e(TAG, "오류");
