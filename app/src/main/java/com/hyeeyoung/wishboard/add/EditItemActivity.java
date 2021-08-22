@@ -52,7 +52,7 @@ public class EditItemActivity extends AppCompatActivity {
     private ImageView item_image;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
-    private String time_stamp, image_path, current_photo_path, item_id, type, date, initial_type, initial_date, initial_f_id, initial_f_name, f_id, f_name;
+    private String time_stamp, image_path, current_photo_path, item_id, type, date, initial_type, initial_date, f_id, f_name;
     private WishItem wish_item;
 
     // @ brief : 카메라, 갤러리 접근
@@ -134,7 +134,7 @@ public class EditItemActivity extends AppCompatActivity {
                 selectAlbum();
                 break;
 
-            case R.id.btn_folder: // @brief : 폴더 정보를 변경한 경우
+            case R.id.btn_folder: // @brief : 폴더 정보q를 변경한 경우
                 Intent intent = new Intent(EditItemActivity.this, FolderListActivity.class);
                 someActivityResultLauncher.launch(intent);
                 break;
