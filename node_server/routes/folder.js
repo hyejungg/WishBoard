@@ -6,17 +6,9 @@ var router = express.Router(); // @brief : express.Router() : router 객체를 �
 router.get("/:user_id", function (req, res) {
   var user_id = Number(req.params.user_id);
 
-//  var select_sql = `SELECT f.user_id, f.folder_id, f.folder_name, f.folder_image, count(i.folder_id) AS "item_count" FROM items i JOIN folders f ON i.folder_id = f.folder_id WHERE i.user_id = ? GROUP BY i.folder_id ORDER BY f.folder_id`;
-
   // @TODO : 임시 sql. item_count가 현재 이상하게 보임. 수정해야 할 부분
-  var select_sql = `select f.user_id, f.folder_name, f.folder_image, f.folder_id, ifnull(i.folder_id, 0) as "i.folder_id" , count(i.folder_id) as "item_count"
-from folders f left outer join (
-    select user_id, folder_id, count(*)
-    from items
-    group by user_id, folder_id
-)as i
-on f.folder_id = i.folder_id where f.user_id = ?
-group by i.folder_id, f.folder_id`;
+  var select_sql = `select f.user_id, f.folder_name, f.folder_image, f.folder_id, ifnull(i.item_count, 0) item_count from folders f left outer join (select folder_id, count(*) item_count from items where user_id = 64 group by folder_id) i 
+on f.folder_id = i.folder_id where f.user_id = ?`;
 
   console.log(select_sql, user_id);
 
@@ -43,11 +35,6 @@ group by i.folder_id, f.folder_id`;
 // @brief : 폴더 리스트 조회
 router.get("/list/:user_id", function (req, res) {
   var user_id = Number(req.params.user_id);
-
- // var select_sql = `SELECT f.folder_id, f.folder_name, f.folder_image
- // FROM items i JOIN folders f
- // ON i.folder_id = f.folder_id WHERE i.user_id = ?
- // GROUP BY i.folder_id ORDER BY f.folder_id; `;
  
   var select_sql = `SELECT folder_id, folder_name, folder_image FROM folders WHERE user_id = ?`;
 
@@ -83,7 +70,7 @@ router.get("/item/:user_id/:folder_id", function (req, res) {
   i.item_price, i.item_url, i.item_memo, b.item_id cart_item_id
   FROM items i left outer join basket b ON i.item_id = b.item_id
   WHERE i.user_id = ? AND i.folder_id = ?
-  ORDER BY i.item_id DESC`;
+  ORDER BY i.create_at DESC`;
 
   var parmas = [user_id, folder_id];
 
@@ -116,7 +103,6 @@ router.post("/", function (req, res) {
   var user_id = Number(req.body.user_id);
 
   var insert_sql =
-   // "INSERT INTO folders(folder_name, folder_image) VALUES (?, ?)";
   `insert into folders(folder_name, folder_image, user_id) values (?, ?, ?)`;
 
   var params = [folder_name, folder_image, user_id];
@@ -151,9 +137,7 @@ router.put("/", function (req, res) {
   var folder_name = req.body.folder_name;
   var folder_image = req.body.folder_image;
   var folder_id = Number(req.body.folder_id);
-
- // var update_sql = "UPDATE folders SET folder_name = ?, folder_image = ? WHERE folder_id = ?";
-
+  
   var update_sql = `UPDATE folders SET folder_name = ?, folder_image = ? WHERE folder_id = ? and user_id = ?`;	
 
   var params = [folder_name, folder_image, folder_id, user_id];
@@ -185,12 +169,8 @@ router.put("/", function (req, res) {
 router.delete("/", function (req, res) {
   var folder_id = Number(req.body.folder_id);
 
-//  var delete_sql = "DELETE FROM folders WHERE folder_id = ?";
-
   //@see : folder_id는pk 값이니까 이거 하나로 충분히 삭제 ok
   var delete_sql = `DELETE FROM folders WHERE folder_id = ?`;	
-
- // var params = [folder_id, user_id];
 
   console.log("delete_sql : " + delete_sql);	
 
