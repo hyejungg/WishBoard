@@ -24,10 +24,7 @@ import retrofit2.Response;
 
 public class ItemDetailActivity extends AppCompatActivity {
     private static final String TAG = "아이템 상세정보 조회";
-    static final int UPDATE_REQUEST = 1;
-    private boolean is_updated = false;
-    private String item_id;
-    WishItem wish_item;
+    private String item_id, url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,25 +41,6 @@ public class ItemDetailActivity extends AppCompatActivity {
     protected void onStart() { //@brief : item_id에 해당하는 아이템의 정보를 가져옴
         super.onStart();
         selectItemDetails(item_id);
-        Log.i(TAG, "onStart: " + "");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume: " + "");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG, "onStop: " + "");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onDestroy: " + "");
     }
 
     // @brief domain : 쇼핑몰 url을 도메인네임으로 변경한 것
@@ -77,7 +55,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         return domain.startsWith("www.") ? domain.substring(4) : domain;
     }
 
-    private void init(){ // WishItem wish_item
+    private void init(WishItem wish_item){ // WishItem wish_item
         //TextView item_folder = findViewById(R.id.folder_name); // @TODO : 폴더 연동 후 작업하기
         ImageView item_image = findViewById(R.id.item_image);
         TextView item_price = findViewById(R.id.item_price);
@@ -91,39 +69,46 @@ public class ItemDetailActivity extends AppCompatActivity {
         item_name.setText(wish_item.getItem_name());
         create_at.setText(DateFormatUtil.shortDateYMD(wish_item.getCreate_at()));
 
+        String img = wish_item.getItem_image();
+        String memo = wish_item.getItem_memo();
+        url = wish_item.getItem_url();
+        String type = wish_item.getItem_notification_type();
+        String date = wish_item.getItem_notification_date();
+
         try { // @brief : 아이템 이미지 디스플레이
-            Log.i(TAG, "init: " + wish_item.getItem_image());
-            Picasso.get().load(wish_item.getItem_image()).error(R.mipmap.ic_main).into(item_image); // @brief : 이미지 가져올 떄 에러 발생 시 기본 이미지 적용
+            Log.i(TAG, "init: " + img);
+            Picasso.get().load(img).error(R.mipmap.ic_main).into(item_image); // @brief : 이미지 가져올 떄 에러 발생 시 기본 이미지 적용
         } catch (IllegalArgumentException i) {
             Log.d(TAG, "아이템 사진 없음");
         }
 
         // @brief : 메모가 있는 경우에만 태그를 디스플레이
-        if(wish_item.getItem_memo()!=null){
+        if(memo!=null){
             item_memo.setVisibility(View.VISIBLE);
-            item_memo.setText(wish_item.getItem_memo());
+            item_memo.setText(memo);
         }
 
         // @brief : 쇼핑몰 url을 도메인네임으로 변경하여 디스플레이
-        if (wish_item.getItem_url() != null) {
+        if (url != null) {
             item_url.setVisibility(View.VISIBLE);
             try {
-                String domain = getDomainName(wish_item.getItem_url()); // @brief domain : 쇼핑몰 url을 도메인네임으로 변경한 것
+                String domain = getDomainName(url); // @brief domain : 쇼핑몰 url을 도메인네임으로 변경한 것
 
                 // @brief : 도메인 주소로 바꾼 경우
                 if(!domain.equals(""))
                     item_url.setText(domain); // @brief : 해당 도메인으로 디스플레이
                 else // @brief : 도메인 주소로 바꾸지 못한 경우
-                    item_url.setText(wish_item.getItem_url()); // @brief : 기존 url로 디스플레이
+                    item_url.setText(url); // @brief : 기존 url로 디스플레이
             } catch (URISyntaxException e) {
                 Log.e(TAG, "url 없음");
             }
         }
 
         // @brief : 알림이 지정된 경우에만 태그를 디스플레이
-        if(wish_item.getItem_notification_type()!=null){
-            noti_info.setVisibility(View.VISIBLE);
-            noti_info.setText(DateFormatUtil.shortDateMDHM(wish_item.getItem_notification_date()) + " " + wish_item.getItem_notification_type());
+        if(type!=null){
+            noti_info.setText(DateFormatUtil.shortDateMDHM(date) + " " + type);
+        } else{
+            noti_info.setVisibility(View.GONE);
         }
     }
 
@@ -137,7 +122,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         call.enqueue(new Callback<WishItem>() {
             @Override
             public void onResponse(Call<WishItem> call, Response<WishItem> response) {
-                wish_item = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨.
+                WishItem wish_item = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨.
                 // @brief : 가져온 아이템이 없는 경우
                 if (wish_item == null) {
                     Log.i(TAG, "가져온 아이템 없음");
@@ -147,7 +132,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 // @brief : 서버연결 성공한 경우
                 if(response.isSuccessful()){
                     Log.i(TAG, "Retrofit 통신 성공" + wish_item);
-                    init();
+                    init(wish_item);
                 } else { // @brief : 통신에 실패한 경우
                     Log.e(TAG, "Retrofit 통신 실패");
                     Log.i(TAG, response.message());
@@ -209,29 +194,19 @@ public class ItemDetailActivity extends AppCompatActivity {
                 Log.i(TAG, "onClick: " + item_id);
                 Intent intent = new Intent(ItemDetailActivity.this, NewItemActivity.class);
                 intent.putExtra("item_id", item_id);
-                startActivityForResult(intent, 1);
+                startActivity(intent);
                 break;
 
             // @brief : 쇼핑몰로 이동하기 버튼 클릭 시 해당쇼핑몰로 이동
             case R.id.go_to_shop:
                 try {
-                    Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(wish_item.getItem_url()));
+                    Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent2);
                 } catch (Exception e){
-                    Toast.makeText(ItemDetailActivity.this, "해당 쇼핑몰로 이동할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ItemDetailActivity.this, "쇼핑몰 링크를 등록해주세요!", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
-    }
-
-    // @brief : 아이템 수정 후 복귀할 때 UI 업데이트 처리
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG,  "onBackPressed: " + is_updated);
-        if (requestCode == UPDATE_REQUEST && resultCode == RESULT_OK)
-            is_updated = true;
-        Log.i(TAG,  "onBackPressed: " + is_updated);
     }
 
     // @todo : 아이템이 수정된 경우에 HomeFragment UI를 수정하도록 구현

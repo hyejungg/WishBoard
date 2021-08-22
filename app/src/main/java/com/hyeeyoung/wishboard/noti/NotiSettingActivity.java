@@ -1,6 +1,5 @@
 package com.hyeeyoung.wishboard.noti;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.Switch;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.hyeeyoung.wishboard.R;
+import com.hyeeyoung.wishboard.config.ResultCode;
 import com.hyeeyoung.wishboard.util.NumberPickerUtil;
 
 public class NotiSettingActivity extends AppCompatActivity {
@@ -90,15 +90,15 @@ public class NotiSettingActivity extends AppCompatActivity {
                     noti_type = np_util.noti_types_array[np_util.type.getValue()];
                     noti_date = np_util.dates_server[np_util.date.getValue()] + " " + np_util.hour.getValue() + ":" + np_util.minute.getValue() * 5 + ":00";
                 }
+
                 Intent intent = new Intent();
                 intent.putExtra("type", noti_type);
                 intent.putExtra("date", noti_date);
-                setResult(Activity.RESULT_OK, intent);
+                setResult(ResultCode.NOTI_RESULT_CODE, intent);
                 onBackPressed();
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
                 break;
         }
-
     }
 
     // @brief : 알림 설정 레이아웃 펼치기 애니메이션 적용

@@ -93,6 +93,14 @@ public interface IRemoteService {
     @POST("/noti")
     Call<ResponseBody> insertItemNoti(@Body NotiItem noti_item);
 
+    // @brief : 아이템 상세조회에서 상품 알림 정보 삭제 요청
+    @DELETE("/noti/detail/{item_id}")
+    Call<Void> deleteItemNoti(@Path("item_id") String item_id);
+
+    // @brief : 아이템 상세조회에서 상품 알림 정보 수정 요청
+    @PUT("/noti/detail/{item_id}")
+    Call<ResponseBody> updateItemNoti(@Path("item_id") String item_id, @Body NotiItem noti_item);
+
     // @brief : 알림화면에서 사용자가 조회한 알림은 읽은 알림으로 수정 요청
     @PUT("/noti/{item_id}")
     Call<ResponseBody> updateNotiRead(@Path("item_id") String item_id);
