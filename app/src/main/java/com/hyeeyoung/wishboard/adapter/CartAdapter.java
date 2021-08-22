@@ -108,27 +108,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CustomViewHold
         }
 
         // @brief : - 버튼 기능 처리
-        holder.minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(listener != null)
-                    listener.onMinusClick(position, holder);
-            }
+        holder.minus.setOnClickListener(view -> {
+            if(listener != null)
+                listener.onMinusClick(position, holder);
         });
         // @brief :  + 버튼 기능 처리
-        holder.plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(listener != null)
-                    listener.onPlusClick(position, holder);
-            }
+        holder.plus.setOnClickListener(view -> {
+            if(listener != null)
+                listener.onPlusClick(position, holder);
         });
-        holder.x.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(listener != null)
-                    listener.onXbtnClick(position);
-            }
+        holder.x.setOnClickListener(view -> {
+            if(listener != null)
+                listener.onXbtnClick(position);
         });
     }
     @Override
