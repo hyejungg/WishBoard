@@ -1,7 +1,6 @@
 package com.hyeeyoung.wishboard.add;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -26,6 +25,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.RealPathUtil;
+import com.hyeeyoung.wishboard.config.ResultCode;
 import com.hyeeyoung.wishboard.config.WindowPermission;
 import com.hyeeyoung.wishboard.folder.FolderListActivity;
 import com.hyeeyoung.wishboard.model.NotiItem;
@@ -47,11 +47,6 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NewItemFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NewItemFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,14 +62,6 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewItemFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static NewItemFragment newInstance(String param1, String param2) {
         NewItemFragment fragment = new NewItemFragment();
@@ -115,7 +102,6 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private LinearLayout layout;
     private String user_id = "";
     private String type, date, f_name;
-//    private SharedItemVM viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,6 +135,10 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
         btn_folder.setOnClickListener(this);
         btn_noti.setOnClickListener(this);
         save.setOnClickListener(this);
+
+        // @brief : NewItemFragment와 NewItemActivity 모두 동일한 레이아웃을 사용하므로 경우에 따라 상단 타이틀을 구분
+        TextView title = view.findViewById(R.id.title);
+        title.setText("새 아이템");
 
         // @brief : TedPermission 라이브러리를 통해 카메라 권한 획득
         new WindowPermission(getContext()).setPermission(
@@ -207,7 +197,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
      * @return : 입력하지 않았다면 true, 입력했다면 false
      * @brief :사용자가 상품명과 이미지를 입력했는지를 확인
      */
-    private boolean isNoData(WishItem wish_item) {
+    boolean isNoData(WishItem wish_item) {
         String name = wish_item.item_name.trim();
         String img = wish_item.item_image;
 
@@ -231,12 +221,10 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private void save() {
         wish_item = getWishItem();
 
-        // @brief : 아이템 이름을 입력하지 않은 경우
+        // @brief : 아이템 이름을 입력하지 않은 경우 저장 취소
         if (isNoData(wish_item)) {
-            //Toast.makeText(getContext(), "아이템 이름을 입력해주세요.", Toast.LENGTH_SHORT).show(); // @brief : 아이템 정보 입력을 요구
             return;
         }
-
 
         else{
             // @param : @ s3에 이미지 업로드를 위한 s3 객체
@@ -257,7 +245,8 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                         String seq = null;
                         try {
                             seq = response.body().string();
-                            if(!noti_type.equals(null)) {
+                            if(type!=null) {
+                                Log.i(TAG, "onResponse: " + "hello");
                                 noti_item = new NotiItem(user_id, seq, type, date);
                                 noti_item.setToken(SaveSharedPreferences.getFCMToken(getContext()));
                                 addNoti();
@@ -276,16 +265,13 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                         noti_type.setText("");
                         noti_date.setText("");
                         folder_name.setText("");
-
                         // @brief : 저장 완료 후 사진 등록을 위한 플러스 버튼 보이도록 변경
                         add_photo_btn.setVisibility(View.VISIBLE);
 
-                        //viewModel.setIsUpdated(true); // @brief : update 여부 true
                         Toast.makeText(getContext(), "위시리스트에 추가했습니다.", Toast.LENGTH_SHORT).show(); // @brief : 아이템 정보 입력을 요구
 
                     } else { // @brief : 통신에 실패한 경우
                         Log.e(TAG, "Retrofit 통신 실패");
-                        //viewModel.setIsUpdated(false); // @brief : update 여부 false
                     }
                 }
 
@@ -327,7 +313,7 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                // @brief : 통신 실패 시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
                 Log.e(TAG, "서버 연결 실패" + t.getMessage());
             }
         });
@@ -360,13 +346,17 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) { // @brief : 알림 정보의 경우
+                if (result.getResultCode() == ResultCode.NOTI_RESULT_CODE) { // @brief : 알림 정보의 경우
                     type = result.getData().getStringExtra("type");
                     date = result.getData().getStringExtra("date");
-                    noti_type.setText(type);
-                    noti_date.setText(DateFormatUtil.shortDateMDHM(date));
-                    noti_type.setVisibility(View.VISIBLE);
-                    noti_date.setVisibility(View.VISIBLE);
+
+                    if(type != null && date != null) { // @brief : 사용자가 알림 정보를 입력한 경우
+                        noti_type.setText(type);
+                        noti_date.setText(DateFormatUtil.shortDateMDHM(date));
+                    }else{ // @brief : 사용자가 알림 정보를 입력하지 않은 경우
+                        noti_type.setText("");
+                        noti_date.setText("");
+                    }
 
                 } else if (result.getResultCode() == 1004) {  // @brief : 폴더 정보의 경우 //@TODO : 코드 번호 변경 필요
                     f_name = result.getData().getStringExtra("folder_name");

@@ -8,6 +8,11 @@ public class NotiItem {
     public NotiItem() {
     }
 
+    public NotiItem(String item_notification_type, String item_notification_date) {
+        this.item_notification_type = item_notification_type;
+        this.item_notification_date = item_notification_date;
+    }
+
     public NotiItem(String user_id, String item_id, String item_notification_type, String item_notification_date) {
         this.user_id = user_id;
         this.item_id = item_id;
@@ -70,7 +75,9 @@ public class NotiItem {
     @Override
     public String toString() {
         return "NotiItem{" +
-                "item_notification_type='" + item_notification_type + '\'' +
+                "user_id='" + user_id + '\'' +
+                ", item_id='" + item_id + '\'' +
+                ", item_notification_type='" + item_notification_type + '\'' +
                 ", item_notification_date='" + item_notification_date + '\'' +
                 ", is_read='" + is_read + '\'' +
                 '}';
