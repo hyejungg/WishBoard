@@ -106,27 +106,17 @@
     <!--        </LinearLayout>-->
     <!--    </LinearLayout>-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_noti_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbarFadeDuration="0"
-        android:scrollbarSize="5dp"
-        android:scrollbarThumbVertical="@android:color/darker_gray"
-        android:scrollbars="vertical"/>
-
-    <!-- @brief : 밑으로 당겨서 refresh -->
-<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:id="@+id/swipe_refresh">-->
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/recyclerview_noti_list"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:scrollbarFadeDuration="0"-->
-<!--            android:scrollbarSize="5dp"-->
-<!--            android:scrollbarThumbVertical="@android:color/darker_gray"-->
-<!--            android:scrollbars="vertical"/>-->
-<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+        android:id="@+id/swipe_refresh">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_noti_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarFadeDuration="0"
+            android:scrollbarSize="5dp"
+            android:scrollbarThumbVertical="@android:color/darker_gray"
+            android:scrollbars="vertical"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
