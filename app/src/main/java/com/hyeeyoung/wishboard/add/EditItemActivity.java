@@ -48,11 +48,11 @@ public class EditItemActivity extends AppCompatActivity {
     private static final String TAG = "아이템 정보 수정";
     private ConstraintLayout item_image_layout;
     private LinearLayout btn_folder, btn_noti, layout;
-    private TextView save, noti_type, noti_date;
+    private TextView save, noti_type, noti_date, folder_name;
     private ImageView item_image;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
-    private String time_stamp, image_path, current_photo_path, item_id, type, date, initial_type, initial_date;
+    private String time_stamp, image_path, current_photo_path, item_id, type, date, initial_type, initial_date, initial_f_id, initial_f_name, f_id, f_name;
     private WishItem wish_item;
 
     // @ brief : 카메라, 갤러리 접근
@@ -85,6 +85,7 @@ public class EditItemActivity extends AppCompatActivity {
         btn_noti = findViewById(R.id.btn_noti);
         save = findViewById(R.id.save);
 
+        folder_name = findViewById(R.id.folder_name);
         item_name = findViewById(R.id.item_name);
         item_price = findViewById(R.id.item_price);
         item_url = findViewById(R.id.item_url);
@@ -109,6 +110,7 @@ public class EditItemActivity extends AppCompatActivity {
             item_price.setText(wish_item.getItem_price());
             item_url.setText(wish_item.getItem_url());
             item_memo.setText(wish_item.getItem_memo());
+            folder_name.setText(wish_item.getFolder_name()); // @brief : 폴더명 가져옴
 
             // @brief : 수정 전 초기 알림 정보를 저장
             initial_type = wish_item.getItem_notification_type();
@@ -132,9 +134,9 @@ public class EditItemActivity extends AppCompatActivity {
                 selectAlbum();
                 break;
 
-            case R.id.btn_folder: // @todo : 폴더 구현 후 작성하기
+            case R.id.btn_folder: // @brief : 폴더 정보를 변경한 경우
                 Intent intent = new Intent(EditItemActivity.this, FolderListActivity.class);
-                startActivity(intent);
+                someActivityResultLauncher.launch(intent);
                 break;
 
             case R.id.btn_noti:
@@ -193,6 +195,15 @@ public class EditItemActivity extends AppCompatActivity {
                         noti_type.setText("");
                         noti_date.setText("");
                     }
+                } else if (result.getResultCode() == ResultCode.FOLDER_RESULT_CODE) {  // @brief : 폴더 정보의 경우
+                    f_id = result.getData().getStringExtra("folder_id");
+                    f_name = result.getData().getStringExtra("folder_name");
+                    Log.i(TAG + "폴더명", f_id + " / " + f_name); //@deprecated
+
+                    if (f_id != null && f_name != null) // @brief : 사용자가 폴더 정보를 입력한 경우
+                        folder_name.setText(f_name);
+                    else // @brief : 사용자가 폴더 정보를 입력하지 않은 경우
+                        folder_name.setText("");
                 }
             });
 
@@ -248,12 +259,12 @@ public class EditItemActivity extends AppCompatActivity {
      *  @brief : 아이템 수정을 서버에 요청
      */
     public void updateItem() {
-
         // @brief : 사용자가 입력한 아이템데이터 가져오기
         String get_item_name = item_name.getText().toString();
         String get_item_price = item_price.getText().toString();
         String get_item_url = item_url.getText().toString().replace(" ", ""); //@ @brief : 링크로 이동 시 공백에 의한 예외를 방지하기위해 공백 처리
         String get_item_memo = item_memo.getText().toString();
+        String get_folder_id = f_id;
 
         /**
          * @brief : 아이템 가격, url, 메모에 대한 null값 예외처리
@@ -270,6 +281,10 @@ public class EditItemActivity extends AppCompatActivity {
         if (get_item_memo.isEmpty()) {
             get_item_memo = null;
         }
+        // @brief : 폴더데이터 예외처리
+        if (get_folder_id.isEmpty()) {
+            get_folder_id = null;
+        }
 
         // @brief : 갤러리 이미지로 아이템 이미지가 수정된 경우
         if (is_modified_image) {
@@ -282,12 +297,14 @@ public class EditItemActivity extends AppCompatActivity {
              * @param time_stamp : 이미지파일명 중복 방지를 위한 현재 시간 값을 추가해서 파일명 지정함
              */
             aws_s3.uploadFile(new File(image_path), time_stamp);
-            wish_item = new WishItem(item_id, null, null, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
+            wish_item = new WishItem(item_id, null, get_folder_id, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
+            Log.i(TAG, wish_item.toString());
         }
 
         // @brief : 이미지를 수정하지 않은 경우
         else {
-            wish_item = new WishItem(item_id, null, null, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
+            wish_item = new WishItem(item_id, null, get_folder_id, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
+            Log.i(TAG, wish_item.toString());
         }
 
         IRemoteService remoteService = ServiceGenerator.createService(IRemoteService.class);

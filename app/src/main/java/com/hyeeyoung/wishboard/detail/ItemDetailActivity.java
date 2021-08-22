@@ -56,7 +56,7 @@ public class ItemDetailActivity extends AppCompatActivity {
     }
 
     private void init(WishItem wish_item){ // WishItem wish_item
-        //TextView item_folder = findViewById(R.id.folder_name); // @TODO : 폴더 연동 후 작업하기
+        TextView item_folder = findViewById(R.id.folder_name); // @TODO : 폴더 연동 후 작업하기
         ImageView item_image = findViewById(R.id.item_image);
         TextView item_price = findViewById(R.id.item_price);
         TextView item_name = findViewById(R.id.item_name);
@@ -68,12 +68,19 @@ public class ItemDetailActivity extends AppCompatActivity {
         item_price.setText(wish_item.getItem_price());
         item_name.setText(wish_item.getItem_name());
         create_at.setText(DateFormatUtil.shortDateYMD(wish_item.getCreate_at()));
+        item_folder.setText(wish_item.getFolder_name());
 
         String img = wish_item.getItem_image();
         String memo = wish_item.getItem_memo();
         url = wish_item.getItem_url();
         String type = wish_item.getItem_notification_type();
         String date = wish_item.getItem_notification_date();
+        String f_name = wish_item.getFolder_name();
+
+        if(f_name != null)
+            item_folder.setText(wish_item.getFolder_name());
+        else
+            item_folder.setText("모든 항목");
 
         try { // @brief : 아이템 이미지 디스플레이
             Log.i(TAG, "init: " + img);

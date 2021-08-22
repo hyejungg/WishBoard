@@ -32,7 +32,7 @@ public class FolderListActivity extends AppCompatActivity {
     private ArrayList<FolderItem> foldersList;
     private LinearLayoutManager linearLayoutManager;
 
-    private String user_id = "", f_name = "";
+    private String user_id = "";
 
     private Intent intent;
 
@@ -108,16 +108,16 @@ public class FolderListActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter.setOnRadioClickListener(response -> {
-            if(response != null){
-                Log.i(TAG, response);
-                f_name = response;
+        adapter.setOnRadioClickListener((f_id, f_name) -> {
+            if (f_id != null && f_name != null) {
+                Log.i(TAG, f_id + " / " + f_name);
 
                 // @brief : 폴더명을 이전 화면으로 전달
                 intent = new Intent();
+                intent.putExtra("folder_id", f_id);
                 intent.putExtra("folder_name", f_name);
-                setResult(1004, intent);
-            }else
+                FolderListActivity.this.setResult(1004, intent);
+            } else
                 Log.i(TAG, "f_name은 null");
         });
     }
