@@ -8,6 +8,13 @@ public class NotiItem {
     public NotiItem() {
     }
 
+    public NotiItem(String user_id, String item_id, String item_notification_type, String item_notification_date) {
+        this.user_id = user_id;
+        this.item_id = item_id;
+        this.item_notification_type = item_notification_type;
+        this.item_notification_date = item_notification_date;
+    }
+
     public String getUser_id() {
         return user_id;
     }

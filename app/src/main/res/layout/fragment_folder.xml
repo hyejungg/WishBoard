@@ -1,61 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:padding="15dp">
 
-        <TextView
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_kr_bold"
+                android:text="폴더"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+        <ImageButton
+            android:id="@+id/cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/noto_sans_kr_bold"
-            android:text="Folder"
-            android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/new_folder"
+            android:background="@android:color/transparent"
+            android:src="@drawable/cart" />
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/cart_item_cnt"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:id="@+id/cart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:src="@drawable/cart" />
-
-            <!-- @ TODO : 장바구니 아이템 수 표시하는 이미지 뷰 위치 조정 해결 못함 -->
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/item_cnt_circle"
-                android:visibility="invisible" />
-        </FrameLayout>
+            android:layout_height="15dp"
+            android:layout_marginRight="10dp"
+            android:paddingHorizontal="5dp"
+            android:gravity="center"
+            android:layout_alignTop="@id/title"
+            android:layout_toLeftOf="@id/new_folder"
+            android:fontFamily="@font/noto_sans_kr_bold"
+            android:text="5"
+            android:textColor="@color/black"
+            android:textSize="10dp"
+            android:background="@drawable/background_cart_item_cnt" />
 
         <ImageButton
             android:id="@+id/new_folder"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:src="@drawable/new_folder" />
-    </LinearLayout>
+    </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_folders_list"
+    <!--    @brief : 밑으로 당겨서 refresh를 위해 추가 -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="7.5dp"
-        android:scrollbarFadeDuration="0"
-        android:scrollbarSize="5dp"
-        android:scrollbarThumbVertical="@android:color/darker_gray"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_folders_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="7.5dp"
+            android:scrollbarFadeDuration="0"
+            android:scrollbarSize="5dp"
+            android:scrollbarThumbVertical="@android:color/darker_gray"
+            android:scrollbars="vertical" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </LinearLayout>

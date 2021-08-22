@@ -8,8 +8,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/item_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
         android:src="@drawable/sample" />
     <TextView
         android:id="@+id/noti_title"
@@ -20,15 +20,16 @@
         android:textSize="15dp"
         android:textColor="@color/black"
         android:fontFamily="@font/nanum_square_b"
-        android:text="[오픈일 알림] 21SS KEILY JACHKT 1234578srt9/"/>
+        android:text="[알림] 상품명"/>
 
     <TextView
         android:id="@+id/noti_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/noti_title"
-        android:layout_alignBottom="@id/item_image"
-        android:textSize="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/noti_title"
+        android:textSize="13dp"
         android:textColor="@color/mediumGray"
         android:fontFamily="@font/nanum_square_r"
         android:text="1시간 전" />

@@ -34,8 +34,6 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".detail.FolderDetailActivity"></activity>
-        <activity android:name=".add.NewItemActivity" />
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,6 +41,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".detail.FolderDetailActivity"></activity>
+        <activity android:name=".sign.SigninActivity" />
+        <activity android:name=".sign.SignupActivity" />
+        <activity android:name=".MainActivity" /> <!-- @ brief : kakao 로그인을 위해 Redirect URI 접근 -->
+        <activity android:name=".detail.ItemDetailActivity" />
         <activity
             android:name=".add.LinkSharingActivity"
             android:theme="@style/AppThemePopup">
@@ -52,17 +55,10 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".sign.SigninActivity" />
-        <activity android:name=".sign.SignupActivity" />
-
-        <service
-            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
-            android:enabled="true" />
-
-        <activity android:name=".detail.ItemDetailActivity" />
         <activity android:name=".cart.CartActivity" />
+        <activity android:name=".add.NewItemActivity" />
         <activity android:name=".folder.FolderListActivity" />
-        <activity android:name=".MainActivity" /> <!-- @ brief : kakao 로그인을 위해 Redirect URI 접근 -->
+        <activity android:name=".noti.NotiSettingActivity" />
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -75,6 +71,7 @@
                     android:scheme="kakaoe5c80a93a90709e1f697d50166b62b30" />
             </intent-filter>
         </activity> <!-- @brief: 이미지의 캐시가 저장될 수 있는 경로를 지정 -->
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.hyeeyoung.wishboard"
@@ -84,6 +81,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+
+        <!-- @brief : AWS S3 service -->
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
 
         <!-- @brief : FCM service -->
         <service android:name=".service.FireBaseMessagingService">

@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +32,9 @@ public class FolderListActivity extends AppCompatActivity {
     private ArrayList<FolderItem> foldersList;
     private LinearLayoutManager linearLayoutManager;
 
-    private String user_id = "";
+    private String user_id = "", f_name = "";
+
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,11 @@ public class FolderListActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         selectFolderListInfo(user_id);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     /**
@@ -98,12 +107,26 @@ public class FolderListActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL)); // @brief : 아이템 간 구분선 넣기
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter.setOnRadioClickListener(response -> {
+            if(response != null){
+                Log.i(TAG, response);
+                f_name = response;
+
+                // @brief : 폴더명을 이전 화면으로 전달
+                intent = new Intent();
+                intent.putExtra("folder_name", f_name);
+                setResult(1004, intent);
+            }else
+                Log.i(TAG, "f_name은 null");
+        });
     }
 
     public void onClick(View v){
         switch (v.getId()){
             // @brief : back 버튼 클릭 시 이전 화면으로 돌아가기
             case R.id.back :
+                // @brief : 폴더명을 이전 화면으로 전달
                 onBackPressed();
                 // @brief : 오른쪽 -> 왼쪽으로 화면 전환
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);

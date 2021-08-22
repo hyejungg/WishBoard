@@ -33,7 +33,8 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
 
     private Intent intent;
     protected Context context;
-    private String user_id = "", folder_id = "";
+    private String user_id, folder_id, req_folder_name;
+    private int req_folder_image;
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView folder_image;
@@ -72,41 +73,42 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         FolderItem item = folderList.get(position);
 
+        folder_id = item.getFolder_id();
+        req_folder_name = item.getFolder_name();
+        req_folder_image = item.getFolder_image();
+
         holder.folder_image.setImageResource(folder_images[item.getFolder_image()]);
         holder.folder_name.setText(item.getFolder_name());
         holder.item_count.setText(item.getItem_count()+"");
 
         // @brief : 더보기 버튼 클릭 시 더보기 diolog 생성
-        holder.more_folder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                folder_id = item.getFolder_id();
-                Log.i(TAG, "더보기 클릭");
+        holder.more_folder.setOnClickListener(view -> {
+            folder_id = item.getFolder_id();
+            req_folder_name = item.getFolder_name();
+            req_folder_image = item.getFolder_image();
 
-                // @brief : 다이얼로그에 전달할 값 bundle 담기
-                Bundle args = new Bundle();
-                args.putString("user_id", user_id);
-                args.putString("folder_id", folder_id);
-                // @brief : 다이얼로그 생성하여 전달 후 보여줌
-                MoreFolderDialog mfd = MoreFolderDialog.getInstance();
-                mfd.setArguments(args);
-                mfd.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),
-                        MoreFolderDialog.TAG_EVENT_DIALOG);
-            }
+            // @brief : 다이얼로그에 전달할 값 bundle 담기
+            Bundle args = new Bundle();
+            args.putString("user_id", user_id);
+            args.putString("folder_id", folder_id);
+            args.putString("folder_name", req_folder_name);
+            args.putInt("folder_image", req_folder_image);
+            // @brief : 다이얼로그 생성하여 전달 후 보여줌
+            MoreFolderDialog mfd = MoreFolderDialog.getInstance();
+            mfd.setArguments(args);
+            mfd.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),
+                    MoreFolderDialog.TAG_EVENT_DIALOG);
         });
 
         // @brief : 아이템 버튼 클릭 시 상세조회로 이동
         // @see : item view 클릭 시 넘어가도록 할 경우 더보기 버튼 클릭이 어려워서 folder_image 클릭 시로 변경
-        holder.folder_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "폴더 상세조회 이동");
-                intent = new Intent(v.getContext(), FolderDetailActivity.class);
-                Log.i(TAG, "folderItem send : " + item); //@deprecated 확인용
-                Log.i(TAG, "folder_id send : " + item.getFolder_id()); //@deprecated 확인용
-                intent.putExtra("FolderItem", item);
-                v.getContext().startActivity(intent);
-            }
+        holder.folder_image.setOnClickListener(v -> {
+            Log.i(TAG, "폴더 상세조회 이동");
+            intent = new Intent(v.getContext(), FolderDetailActivity.class);
+            Log.i(TAG, "folderItem send : " + item); //@deprecated 확인용
+            Log.i(TAG, "folder_id send : " + item.getFolder_id()); //@deprecated 확인용
+            intent.putExtra("FolderItem", item);
+            v.getContext().startActivity(intent);
         });
     }
 

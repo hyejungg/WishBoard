@@ -68,6 +68,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:19.0.0'
     implementation 'androidx.work:work-runtime:2.7.0-alpha04'
 
+//    // @brief : 프레그먼트간 데이터 전달에서 사용
+    implementation 'androidx.fragment:fragment:1.4.0-alpha06'
+
+    // @brief : 크롬(Chrome)브라우저를 이용한 디버깅 툴 (잠시 보류)
+//    implementation 'com.facebook.stetho:stetho:1.6.0'
+//    implementation 'com.facebook.stetho:stetho-js-rhino:1.6.0'
+//    implementation 'com.facebook.stetho:stetho-okhttp3:1.6.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -91,6 +99,13 @@ dependencies {
     implementation 'gun0912.ted:tedpermission:2.2.3'
 
     // @brief : MoreFolderDialog 밑에서 올라오는 diolog 구현을 위해 추가
-    implementation 'com.google.android.material:material:1.2.0-alpha06'
+    implementation 'com.google.android.material:material:1.1.0'
 
+    // @brief : 당겨서 새로고침 기능을 구현해주는 라이브러리
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    // @brief : ViewModel을 사용하기 위한 라이브러리 추가
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
 }

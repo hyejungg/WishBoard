@@ -1,65 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    app:behavior_hideable="true"
-    app:behavior_peekHeight="56dp"
-    android:id="@+id/layout"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-<!--    android:layout_gravity="bottom">-->
-    <!-- @brief : app:behavior_hideable="false" 화면에 안보일 때까지 내릴건지-->
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/background_popup"
-        android:padding="18dp">
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        android:padding="18dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageButton
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:src="@drawable/x" />
 
         <LinearLayout
+            android:id="@+id/btn_del"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:orientation="vertical">
+            android:onClick="onClick">
 
-            <ImageButton
-                android:id="@+id/cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@android:color/transparent"
-                android:onClick="onClick"
-                android:src="@drawable/x" />
-            <LinearLayout
-                android:id="@+id/btn_del"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onClick"
-                android:layout_marginTop="15dp">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nanum_square_b"
-                    android:paddingVertical="12dp"
-                    android:text="폴더 삭제"
-                    android:textColor="@color/black"
-                    android:textSize="17dp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/btn_upt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClick">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nanum_square_b"
-                    android:paddingVertical="12dp"
-                    android:text="폴더명 수정"
-                    android:textColor="@color/black"
-                    android:textSize="17dp" />
-            </LinearLayout>
+                android:fontFamily="@font/nanum_square_b"
+                android:paddingVertical="12dp"
+                android:text="폴더 삭제"
+                android:textColor="@color/black"
+                android:textSize="17dp" />
         </LinearLayout>
-    </RelativeLayout>
-</FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_upt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanum_square_b"
+                android:paddingVertical="12dp"
+                android:text="폴더명 수정"
+                android:textColor="@color/black"
+                android:textSize="17dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

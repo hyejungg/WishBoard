@@ -8,21 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-
+import android.widget.TextView;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.cart.CartActivity;
+import com.hyeeyoung.wishboard.model.SharedItemVM;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
+import com.hyeeyoung.wishboard.remote.RemoteLib;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.hyeeyoung.wishboard.sign.SigninActivity;
-
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,17 +55,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -79,7 +76,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        selectItemInfo(user_id);
+        //selectItemInfo(user_id);
     }
 
     // @todo : 아이템 정보를 수정하는 경우에만 수정된 내용을 반영해서 UI 업데이트하기 (2번 방법)
@@ -102,10 +99,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ArrayList<WishItem> wish_list;
     private GridLayoutManager grid_layout_manager;
     private Intent intent;
-    private ImageButton cart, more;
+    private ImageButton cart;
     private Button[] buttons;
     private String user_id;
-//    private Boolean is_updated = false;
+    private SharedItemVM viewModel;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,8 +114,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             user_id = SaveSharedPreferences.getUserId(this.getActivity());
             Log.i(TAG, "user_id = " + user_id); // @deprecated : test용
         }
+        selectItemInfo(user_id);
         // @todo : 유저아이디를 가져오지 못하는 경우 예외처리하기
         return view;
+    }
+
+    // @brief : 생성지점에 ViewModel 객체 생성
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel = new ViewModelProvider(getActivity()).get(SharedItemVM.class);
+        // @brief : ViewModel에 저장한 값을 가져와 true인 경우(변경된 경우) 재조회
+        viewModel.getIsUpdated().observe(this, aBoolean -> selectItemInfo(user_id));
     }
 
     /**
@@ -171,9 +179,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         grid_layout_manager = new GridLayoutManager(this.getActivity(), 2);
         recycler_view.setLayoutManager(grid_layout_manager);
 
-        // @brief : 우측 상단의 장바구니와 더보기 버튼
+        // @brief : 우측 상단의 장바구니 버튼
         cart = view.findViewById(R.id.cart);
-        more = view.findViewById(R.id.more);
+        //TextView cart_item_cnt = view.findViewById(R.id.cart_item_cnt);
+
+        // @todo : 카트 아이템 개수 출력
+//        String cnt = RemoteLib.selectCartItemCnt(user_id);
+//        Log.i(TAG, "init: " + cnt);
+//        if(!cnt.equals("0")){
+//            cart_item_cnt.setText(cnt);
+//        }else{
+//            cart_item_cnt.setVisibility(View.GONE);
+//        }
 
         // @param : 폴더리스트가 있는 가로 스크롤 뷰 내 버튼들
         buttons = new Button[]{view.findViewById(R.id.all), view.findViewById(R.id.folder1), view.findViewById(R.id.folder2),
@@ -182,10 +199,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         // @brief : 상단 폴더 버튼 별 리스너 등록
         cart.setOnClickListener(this);
-        more.setOnClickListener(this);
+
         for(int i = 0; i < buttons.length; i++){
             buttons[i].setOnClickListener(this);
         }
+
+        // @brief : 새로고침
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+        // @brief : 새로고침이 발생할 경우
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            selectItemInfo(user_id); //swipe 시 서버 재조회
+            Log.i(TAG, "refresh__update 발생");
+            swipeRefreshLayout.setRefreshing(false); // @brief : update 종료 알림
+        });
     }
 
     /**

@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -26,36 +27,14 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
     public static final String TAG_EVENT_DIALOG = "more_diolog";
 
     private Bundle args;
-    private String user_id, folder_id;
+    private String user_id, folder_id, res_folder_name;
+    private int res_folder_image;
 
     public MoreFolderDialog(){}
 
     public static MoreFolderDialog getInstance(){
         MoreFolderDialog mfd = new MoreFolderDialog();
         return mfd;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // @TODO : 하단으로 내리는게 적용이 안된 상황
-        // @brief : 너비 지정
-        try {
-            WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-            Display display = windowManager.getDefaultDisplay();
-            Point deviceSize = new Point();
-            display.getSize(deviceSize);
-
-            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
-            params.width = deviceSize.x;
-            params.horizontalMargin = 0.0f;
-            getDialog().getWindow().setAttributes(params);
-            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme); //하단으로 내리기
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @NonNull
@@ -66,9 +45,13 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
         if(getArgs != null){
             user_id = getArgs.getString("user_id");
             folder_id = getArgs.getString("folder_id");
+            res_folder_name = getArgs.getString("folder_name");
+            res_folder_image = getArgs.getInt("folder_image");
         }else{
             user_id = "";
             folder_id = "";
+            res_folder_name = "";
+            res_folder_image = 0;
         }
 
         // @brief : 뷰 생성 및 뷰 내 아이템 초기화
@@ -80,15 +63,31 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
         cancel.setOnClickListener(this);
         btn_del.setOnClickListener(this);
         btn_upt.setOnClickListener(this);
-        setCancelable(false);
 
         builder.setView(v);
         Dialog dialog = builder.create();
 
-        // @brief : diolog 하단으로 고정 @TODO
-        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
-
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // @brief : 너비 지정
+        try {
+            WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            Display display = windowManager.getDefaultDisplay();
+            Point deviceSize = new Point();
+            display.getSize(deviceSize);
+
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = deviceSize.x;
+            params.gravity = Gravity.BOTTOM; // @brief : 하단 지정
+            getDialog().getWindow().setAttributes(params);
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -109,7 +108,6 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
                 ddf.setArguments(args);
                 ddf.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),
                         MoreFolderDialog.TAG_EVENT_DIALOG);
-
                 dismiss(); //@brief : 다이얼로그 닫기
                 break;
 
@@ -120,13 +118,14 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
                 args.putInt("where", 2);
                 args.putString("user_id", user_id);
                 args.putString("folder_id", folder_id);
+                args.putString("folder_name", res_folder_name);
+                args.putInt("folder_image", res_folder_image);
 
                 // @brief : 폴더명 수정에 관한 diolog 생성
                 EditFolderDiolog efd = EditFolderDiolog.getInstance();
                 efd.setArguments(args);
                 efd.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),
                         EditFolderDiolog.TAG_EVENT_DIALOG);
-
                 dismiss(); //다이얼로그 닫기
                 break;
         }

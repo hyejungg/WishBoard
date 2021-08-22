@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.util.Util;
+import com.hyeeyoung.wishboard.util.DateFormatUtil;
 import com.hyeeyoung.wishboard.model.NotiItem;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class NotiAdapter extends RecyclerView.Adapter<NotiAdapter.CustomViewHold
             viewholder.noti_layout.setBackgroundColor(noti_layout_color);
         }
         viewholder.noti_title.setText("[" + item.getItem_notification_type() + "] " + item.getItem_name());
-        viewholder.noti_date.setText(Util.beforeTime(item.getItem_notification_date()));
+        viewholder.noti_date.setText(DateFormatUtil.beforeTime(item.getItem_notification_date()));
     }
     @Override
     public int getItemCount() {

@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.adapter.FolderAdapter;
 import com.hyeeyoung.wishboard.adapter.ItemAdapter;
 import com.hyeeyoung.wishboard.model.FolderItem;
 import com.hyeeyoung.wishboard.model.WishItem;
@@ -75,7 +74,6 @@ public class FolderDetailActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        // @TODO : 폴더프레그멘트로 갔으면 좋겠는데 홈프레그먼트로 이동함 ... 수정 필요
         finish();
     }
 
@@ -145,7 +143,6 @@ public class FolderDetailActivity extends AppCompatActivity {
                 onBackPressed();
                 // @brief : 오른쪽 -> 왼쪽으로 화면 전환
                 overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
-                onStop();
                 break;
 
             case R.id.search:
