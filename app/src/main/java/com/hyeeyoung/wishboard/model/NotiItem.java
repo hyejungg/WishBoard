@@ -15,6 +15,10 @@ public class NotiItem {
         this.item_notification_date = item_notification_date;
     }
 
+    public String getItem_id() {
+        return item_id;
+    }
+
     public String getUser_id() {
         return user_id;
     }

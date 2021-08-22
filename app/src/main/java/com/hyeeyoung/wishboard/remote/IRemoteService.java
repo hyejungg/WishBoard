@@ -94,8 +94,8 @@ public interface IRemoteService {
     Call<ResponseBody> insertItemNoti(@Body NotiItem noti_item);
 
     // @brief : 알림화면에서 사용자가 조회한 알림은 읽은 알림으로 수정 요청
-    @PUT("/noti/{user_id}")
-    Call<ResponseBody> updateNotiRead(@Path("user_id") String user_id);
+    @PUT("/noti/{item_id}")
+    Call<ResponseBody> updateNotiRead(@Path("item_id") String item_id);
 
     // @brief : 홈화면에서 로그인한 사용자의 폴더 정보를 요청
    @GET("/folder/{user_id}")
