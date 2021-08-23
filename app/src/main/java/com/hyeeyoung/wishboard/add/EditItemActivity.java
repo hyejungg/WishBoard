@@ -264,7 +264,6 @@ public class EditItemActivity extends AppCompatActivity {
         String get_item_price = item_price.getText().toString();
         String get_item_url = item_url.getText().toString().replace(" ", ""); //@ @brief : 링크로 이동 시 공백에 의한 예외를 방지하기위해 공백 처리
         String get_item_memo = item_memo.getText().toString();
-        String get_folder_id = f_id;
 
         /**
          * @brief : 아이템 가격, url, 메모에 대한 null값 예외처리
@@ -282,8 +281,8 @@ public class EditItemActivity extends AppCompatActivity {
             get_item_memo = null;
         }
         // @brief : 폴더데이터 예외처리
-        if (get_folder_id.isEmpty()) {
-            get_folder_id = null;
+        if (f_id.isEmpty()) {
+            f_id = null;
         }
 
         // @brief : 갤러리 이미지로 아이템 이미지가 수정된 경우
@@ -297,13 +296,13 @@ public class EditItemActivity extends AppCompatActivity {
              * @param time_stamp : 이미지파일명 중복 방지를 위한 현재 시간 값을 추가해서 파일명 지정함
              */
             aws_s3.uploadFile(new File(image_path), time_stamp);
-            wish_item = new WishItem(item_id, null, get_folder_id, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
+            wish_item = new WishItem(item_id, null, f_id, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
             Log.i(TAG, wish_item.toString());
         }
 
         // @brief : 이미지를 수정하지 않은 경우
         else {
-            wish_item = new WishItem(item_id, null, get_folder_id, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
+            wish_item = new WishItem(item_id, null, f_id, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
             Log.i(TAG, wish_item.toString());
         }
 

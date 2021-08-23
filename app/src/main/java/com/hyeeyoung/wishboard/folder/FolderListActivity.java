@@ -13,11 +13,13 @@ import android.view.View;
 
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.adapter.FolderListAdapter;
+import com.hyeeyoung.wishboard.config.ResultCode;
 import com.hyeeyoung.wishboard.model.FolderItem;
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -116,7 +118,7 @@ public class FolderListActivity extends AppCompatActivity {
                 intent = new Intent();
                 intent.putExtra("folder_id", f_id);
                 intent.putExtra("folder_name", f_name);
-                FolderListActivity.this.setResult(1004, intent);
+                FolderListActivity.this.setResult(ResultCode.FOLDER_RESULT_CODE, intent);
             } else
                 Log.i(TAG, "f_name은 null");
         });
