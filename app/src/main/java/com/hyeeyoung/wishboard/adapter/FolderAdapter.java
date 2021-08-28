@@ -20,6 +20,7 @@ import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.detail.FolderDetailActivity;
 import com.hyeeyoung.wishboard.folder.MoreFolderDialog;
 import com.hyeeyoung.wishboard.model.FolderItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -28,8 +29,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
     private ArrayList<FolderItem> folderList;
 
     // @param : 폴더이미지 사진
-    private int[] folder_images = {R.mipmap.ic_main_round, R.drawable.bag, R.drawable.sofa, R.drawable.shoes, R.drawable.twinkle,
-            R.drawable.ring, R.drawable.orange, R.drawable.clothes, R.drawable.camera, R.drawable.bubble};
+    private int default_folder_image = R.mipmap.ic_main_round;
 
     private Intent intent;
     protected Context context;
@@ -75,9 +75,27 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
 
         folder_id = item.getFolder_id();
         req_folder_name = item.getFolder_name();
-        req_folder_image = item.getFolder_image();
 
-        holder.folder_image.setImageResource(folder_images[item.getFolder_image()]);
+        int item_count = item.getItem_count();
+
+        /**
+          * @see : 폴더 이미지는 가장 최근에 추가한 아이템의 사진으로 보여준다.
+          *        폴더 내 아이템이 있다 = 폴더에 아이템을 추가하여 folder_image가 기본이 아니라는 의미
+          *        폴더 아이템 카운트 값에 따라 다르게 이미지 디스플레이
+          */
+        if(item_count != 0) {
+            try {
+                Picasso.get().load(item.getFolder_image()).into(holder.folder_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
+            } catch (IllegalArgumentException i) {
+                Log.d("checkings", "아이템 사진 없음");
+                i.printStackTrace();
+            }
+        }
+        else
+            holder.folder_image.setImageResource(default_folder_image);
+
+
+//        holder.folder_image.setImageResource(folder_images[item.getFolder_image()]);
         holder.folder_name.setText(item.getFolder_name());
         holder.item_count.setText(item.getItem_count()+"");
 
@@ -85,14 +103,14 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.CustomView
         holder.more_folder.setOnClickListener(view -> {
             folder_id = item.getFolder_id();
             req_folder_name = item.getFolder_name();
-            req_folder_image = item.getFolder_image();
+//            req_folder_image = item.getFolder_image();
 
             // @brief : 다이얼로그에 전달할 값 bundle 담기
             Bundle args = new Bundle();
             args.putString("user_id", user_id);
             args.putString("folder_id", folder_id);
             args.putString("folder_name", req_folder_name);
-            args.putInt("folder_image", req_folder_image);
+//            args.putInt("folder_image", req_folder_image);
             // @brief : 다이얼로그 생성하여 전달 후 보여줌
             MoreFolderDialog mfd = MoreFolderDialog.getInstance();
             mfd.setArguments(args);

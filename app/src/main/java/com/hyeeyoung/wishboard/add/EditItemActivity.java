@@ -25,6 +25,7 @@ import com.hyeeyoung.wishboard.RealPathUtil;
 import com.hyeeyoung.wishboard.config.ResultCode;
 import com.hyeeyoung.wishboard.config.WindowPermission;
 import com.hyeeyoung.wishboard.folder.FolderListActivity;
+import com.hyeeyoung.wishboard.model.FolderItem;
 import com.hyeeyoung.wishboard.model.NotiItem;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.noti.NotiSettingActivity;
@@ -48,11 +49,11 @@ public class EditItemActivity extends AppCompatActivity {
     private static final String TAG = "아이템 정보 수정";
     private ConstraintLayout item_image_layout;
     private LinearLayout btn_folder, btn_noti, layout;
-    private TextView save, noti_type, noti_date;
+    private TextView save, noti_type, noti_date, folder_name;
     private ImageView item_image;
     private EditText item_name, item_price, item_url, item_memo;
     public AwsS3Service aws_s3;
-    private String time_stamp, image_path, current_photo_path, item_id, type, date, initial_type, initial_date;
+    private String time_stamp, image_path, current_photo_path, item_id, type, date, initial_type, initial_date, f_id, f_name;
     private WishItem wish_item;
 
     // @ brief : 카메라, 갤러리 접근
@@ -60,7 +61,7 @@ public class EditItemActivity extends AppCompatActivity {
     private Uri img_uri, photo_uri, album_uri;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
-    private boolean is_modified_image = false;
+    private boolean is_modified_image = false, is_modified_folder = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class EditItemActivity extends AppCompatActivity {
         btn_noti = findViewById(R.id.btn_noti);
         save = findViewById(R.id.save);
 
+        folder_name = findViewById(R.id.folder_name);
         item_name = findViewById(R.id.item_name);
         item_price = findViewById(R.id.item_price);
         item_url = findViewById(R.id.item_url);
@@ -109,6 +111,7 @@ public class EditItemActivity extends AppCompatActivity {
             item_price.setText(wish_item.getItem_price());
             item_url.setText(wish_item.getItem_url());
             item_memo.setText(wish_item.getItem_memo());
+            folder_name.setText(wish_item.getFolder_name()); // @brief : 폴더명 가져옴
 
             // @brief : 수정 전 초기 알림 정보를 저장
             initial_type = wish_item.getItem_notification_type();
@@ -132,9 +135,9 @@ public class EditItemActivity extends AppCompatActivity {
                 selectAlbum();
                 break;
 
-            case R.id.btn_folder: // @todo : 폴더 구현 후 작성하기
+            case R.id.btn_folder: // @brief : 폴더 정보를 변경한 경우
                 Intent intent = new Intent(EditItemActivity.this, FolderListActivity.class);
-                startActivity(intent);
+                someActivityResultLauncher.launch(intent);
                 break;
 
             case R.id.btn_noti:
@@ -168,6 +171,13 @@ public class EditItemActivity extends AppCompatActivity {
                     updateNoti(new NotiItem(type, date));
                 }
 
+                // @brief : 폴더 정보 변경 시
+                if(is_modified_folder){
+                    String get_folder_id = wish_item.getFolder_id();
+                    String get_item_image = wish_item.getItem_image();
+                    updateFolder(get_folder_id, get_item_image);
+                }
+
                 // @brief : 변경사항 적용 후 1초 뒤에 액티비티 종료하는 handler 설정
                 new Handler().postDelayed(() -> {
                     finish(); // @brief : 0.1 초 뒤에 액티비티 종료
@@ -193,6 +203,17 @@ public class EditItemActivity extends AppCompatActivity {
                         noti_type.setText("");
                         noti_date.setText("");
                     }
+                } else if (result.getResultCode() == ResultCode.FOLDER_RESULT_CODE) {  // @brief : 폴더 정보의 경우
+                    f_id = result.getData().getStringExtra("folder_id");
+                    f_name = result.getData().getStringExtra("folder_name");
+                    Log.i(TAG + "폴더명", f_id + " / " + f_name); //@deprecated
+
+                    if (f_id != null && f_name != null){ // @brief : 사용자가 폴더 정보를 입력한 경우
+                        is_modified_folder = true;
+                        folder_name.setText(f_name);
+                    }
+                    else // @brief : 사용자가 폴더 정보를 입력하지 않은 경우
+                        folder_name.setText("");
                 }
             });
 
@@ -248,7 +269,6 @@ public class EditItemActivity extends AppCompatActivity {
      *  @brief : 아이템 수정을 서버에 요청
      */
     public void updateItem() {
-
         // @brief : 사용자가 입력한 아이템데이터 가져오기
         String get_item_name = item_name.getText().toString();
         String get_item_price = item_price.getText().toString();
@@ -256,7 +276,7 @@ public class EditItemActivity extends AppCompatActivity {
         String get_item_memo = item_memo.getText().toString();
 
         /**
-         * @brief : 아이템 가격, url, 메모에 대한 null값 예외처리
+         * @brief : 아이템 가격, url, 메모, 폴더 id에 대한 null값 예외처리
          */
         // @brief : 가격데이터 예외처리
         if (get_item_price.isEmpty()) {
@@ -270,6 +290,10 @@ public class EditItemActivity extends AppCompatActivity {
         if (get_item_memo.isEmpty()) {
             get_item_memo = null;
         }
+        // @brief : 폴더데이터 예외처리
+        if (f_id == null) {
+            f_id = null;
+        }
 
         // @brief : 갤러리 이미지로 아이템 이미지가 수정된 경우
         if (is_modified_image) {
@@ -282,12 +306,14 @@ public class EditItemActivity extends AppCompatActivity {
              * @param time_stamp : 이미지파일명 중복 방지를 위한 현재 시간 값을 추가해서 파일명 지정함
              */
             aws_s3.uploadFile(new File(image_path), time_stamp);
-            wish_item = new WishItem(item_id, null, null, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
+            wish_item = new WishItem(item_id, null, f_id, get_item_image, get_item_name, get_item_price, get_item_url, get_item_memo);
+            Log.i(TAG, wish_item.toString());
         }
 
         // @brief : 이미지를 수정하지 않은 경우
         else {
-            wish_item = new WishItem(item_id, null, null, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
+            wish_item = new WishItem(item_id, null, f_id, image_path, get_item_name, get_item_price, get_item_url, get_item_memo);
+            Log.i(TAG, wish_item.toString());
         }
 
         IRemoteService remoteService = ServiceGenerator.createService(IRemoteService.class);
@@ -400,6 +426,43 @@ public class EditItemActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.i(TAG, "아이템 삭제 실패 : "+ t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * @param : 폴더 이미지 변경 함수 (폴더명을 지정할 경우, 해당 아이템 사진으로 폴더이미지 변경) //최신순
+     *          NewItem-에서도 사용해서 protected static으로 선언.
+     *          @tiodo : 보안상 문제 있다고 생각되면 -> 그냥 함수 또 만드는 식으로 변경해야 하나? ....
+     */
+    protected static void updateFolder(String req_folder_id, String req_folder_image){
+        FolderItem req_item = new FolderItem();
+        req_item.setFolder_id(req_folder_id);
+        req_item.setFolder_image(req_folder_image);
+        IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
+        Call<ResponseBody> call = remote_service.updateFolderImage(req_item);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // @brief : 정상적으로 통신 성공한 경우
+                    String seq = null;
+                    try {
+                        seq = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "폴더 사진 업데이트 성공 : " + seq);
+
+                } else {
+                    // @brief : 통신에 실패한 경우
+                    Log.e(TAG, "폴더 사진 업데이트 오류" + response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통신 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e(TAG, "서버 연결 실패" + t.getMessage());
             }
         });
     }

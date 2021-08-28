@@ -121,7 +121,7 @@ public class DeleteFolderDialog extends DialogFragment implements View.OnClickLi
      * @param folder_id
      */
     private void deleteFolder(String folder_id){
-        FolderItem item = new FolderItem(folder_id, 0, null, 0); //@brief : folder_id만 필요
+        FolderItem item = new FolderItem(folder_id, null, null, 0); //@brief : folder_id만 필요
 
         // @brief : 서버와 연동하여 폴더명 수정
         IRemoteService remoteService = ServiceGenerator.createService(IRemoteService.class);

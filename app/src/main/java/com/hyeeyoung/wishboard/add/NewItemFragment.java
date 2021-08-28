@@ -101,7 +101,8 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private static final int FROM_ALBUM = 1;
     private LinearLayout layout;
     private String user_id = "";
-    private String type, date, f_name;
+    private String type, date, f_name, f_id;
+    private boolean is_modifed_folder = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -153,7 +154,6 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
     private WishItem getWishItem() {
         WishItem wish_item = new WishItem();
         wish_item.user_id = user_id;
-        wish_item.setFolder_id(null);
 
         // @brief : 사용자가 입력한 아이템데이터 가져오기
         wish_item.item_name = item_name.getText().toString();
@@ -187,6 +187,16 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
             wish_item.item_memo = null;
         } else {
             wish_item.item_memo = get_item_memo;
+        }
+
+        // @brief: 폴더 id 예외처리 및 폴더 정보 변경 시
+        if(is_modifed_folder){
+            wish_item.setFolder_id(f_id);
+            String get_folder_id = wish_item.getFolder_id();
+            String get_item_image = wish_item.getItem_image();
+            EditItemActivity.updateFolder(get_folder_id, get_item_image);
+        }else{
+            wish_item.setFolder_id(null);
         }
 
         return wish_item;
@@ -358,11 +368,17 @@ public class NewItemFragment extends Fragment implements View.OnClickListener {
                         noti_date.setText("");
                     }
 
-                } else if (result.getResultCode() == 1004) {  // @brief : 폴더 정보의 경우 //@TODO : 코드 번호 변경 필요
+                } else if (result.getResultCode() == ResultCode.FOLDER_RESULT_CODE) {  // @brief : 폴더 정보의 경우
+                    f_id = result.getData().getStringExtra("folder_id");
                     f_name = result.getData().getStringExtra("folder_name");
-                    Log.i("폴", f_name);
-                    folder_name.setText(f_name);
-                    folder_name.setVisibility(View.VISIBLE);
+
+                    Log.i(TAG + "폴더명", f_id + " / " + f_name); //@deprecated
+
+                    if (f_id != null && f_name != null){ // @brief : 사용자가 폴더 정보를 입력한 경우
+                        is_modifed_folder = true;
+                        folder_name.setText(f_name);
+                    } else // @brief : 사용자가 폴더 정보를 입력하지 않은 경우
+                        folder_name.setText("");
                 }
             });
 
