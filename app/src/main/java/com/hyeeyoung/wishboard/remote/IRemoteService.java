@@ -106,7 +106,7 @@ public interface IRemoteService {
     Call<ResponseBody> updateNotiRead(@Path("item_id") String item_id);
 
     // @brief : 홈화면에서 로그인한 사용자의 폴더 정보를 요청
-   @GET("/folder/{user_id}")
+    @GET("/folder/{user_id}")
     Call<ArrayList<FolderItem>> selectFolderInfo(@Path("user_id") String user_id);
 
     // @brief : 폴더명을 추가 요청
@@ -128,4 +128,8 @@ public interface IRemoteService {
     // @brief : 폴더화면 내 아이템 정보 요청
     @GET("/folder/item/{user_id}/{folder_id}")
     Call<ArrayList<WishItem>> selectFolderItemInfo(@Path("user_id") String user_id, @Path("folder_id") String folder_id);
+
+    // @brief : 아이템 수정, 추가 시 폴더 이미지 변경 요청 (최신순으로 보이기 위함)
+    @PUT("/folder/item/image")
+    Call<ResponseBody> updateFolderImage(@Body FolderItem folderItem);
 }
