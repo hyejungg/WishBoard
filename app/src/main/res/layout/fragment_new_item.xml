@@ -98,7 +98,8 @@
                 <LinearLayout
                     android:id="@+id/btn_folder"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:onClick="onClick" >
 
                     <TextView
                         android:layout_width="0dp"
@@ -115,10 +116,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"
                         android:fontFamily="@font/nanum_square_b"
-                        android:text=""
                         android:textColor="@color/black"
-                        android:textSize="13dp"
-                        android:visibility="gone" />
+                        android:textSize="13dp" />
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

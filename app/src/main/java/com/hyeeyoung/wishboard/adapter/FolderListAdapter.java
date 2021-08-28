@@ -19,7 +19,9 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Cu
 
     private int lastCheckedPosition = -1;
     private ArrayList<FolderItem> folderList;
-    private String f_name;
+
+    // @parma : 폴더리스트 내 폴더id와 폴더명 정보를 아이템 등록, 수정 시 사용 하므로 f_* 이름으로 표기
+    private String f_id,  f_name;
 
     // @param : 폴더이미지 사진
     private int[] folder_images = {R.mipmap.ic_main_round, R.drawable.bag, R.drawable.sofa, R.drawable.shoes, R.drawable.twinkle,
@@ -29,7 +31,7 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Cu
     private FolderListAdapter.OnRadioClickListener listener;
 
     public interface OnRadioClickListener {
-        void onRadioClick(String f_name);
+        void onRadioClick(String f_id, String f_name);
     }
     public void setOnRadioClickListener(FolderListAdapter.OnRadioClickListener listener) {
         this.listener = listener;
@@ -56,23 +58,25 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Cu
                 lastCheckedPosition = getBindingAdapterPosition(); // @brief : 현재 버튼의 위치
                 btn_radio.setChecked(true);
                 notifyDataSetChanged();
+                f_id = folderList.get(lastCheckedPosition).getFolder_id();
                 f_name = folderList.get(lastCheckedPosition).getFolder_name(); // @brief : 클릭한 폴더명
 
                 // @brief : FolderListAdatper.java의 폴더명을 FolderListActivity.java로 전달하기 위해 listener로 연결
                 if(listener != null)
-                    listener.onRadioClick(f_name);
-                Log.i(TAG, f_name); //@deprecated
+                    listener.onRadioClick(f_id, f_name);
+                Log.i(TAG, f_id + " / " + f_name); //@deprecated
             });
             btn_radio.setOnClickListener(v -> {
                 lastCheckedPosition = getBindingAdapterPosition(); // @brief : 현재 버튼의 위치
                 btn_radio.setChecked(true);
                 notifyDataSetChanged();
+                f_id = folderList.get(lastCheckedPosition).getFolder_id();
                 f_name = folderList.get(lastCheckedPosition).getFolder_name(); // @brief : 클릭한 폴더명
 
                 // @brief : FolderListAdatper.java의 폴더명을 FolderListActivity.java로 전달하기 위해 listener로 연결
                 if(listener != null)
-                    listener.onRadioClick(f_name);
-                Log.i(TAG, f_name); //@deprecated
+                    listener.onRadioClick(f_id, f_name);
+                Log.i(TAG, f_id + " / " + f_name); //@deprecated
             });
         }
     }

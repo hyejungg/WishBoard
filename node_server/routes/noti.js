@@ -127,5 +127,70 @@ router.put('/:item_id', function(req, res){
     db.releaseConn();
   });
 });
+
+// @brief : 알림정보 수정하기
+router.put('/detail/:item_id', function(req, res){
+  var item_id = Number(req.params.item_id);
+  var item_notification_type = req.body.item_notification_type;
+  var item_notification_date = req.body.item_notification_date;
+
+  console.log( "item_id : " + item_id);
+
+  var sql = "UPDATE notification SET item_notification_type = ?, item_notification_date = ? WHERE item_id = ?";
+  console.log("sql_update : " + sql);
+
+  db.get().query(sql, [item_notification_type, item_notification_date, item_id], function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (result.length === 0) {
+        console.log("Failed to updated the notification for data.");
+        res.status(500).json({
+          success: false,
+          message: "wish boarad 서버 에러",
+        });
+      } else {
+        console.log("Successfully updated data into the notification!!");
+        res.status(200).json({
+          success: true,
+          message: "알림 수정 성공",
+        });
+      }
+    }
+    db.releaseConn();
+  });
+});
+
+//noti/detail/:item_id
+router.delete('/detail/:item_id', function(req, res){
+  var item_id = Number(req.params.item_id);
+  console.log("item_id : " + item_id)
+
+  var sql = "DELETE FROM notification WHERE item_id = ?";
+
+  console.log("sql_delete : " + sql);
+
+  db.get().query(sql, [item_id], function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (result.length === 0) {
+        console.log("Failed to deleted the items for data.");
+        res.status(500).json({
+          success: false,
+          message: "wish boarad 서버 에러",
+        });
+      } else {
+        console.log("Successfully deleted data into the items!!");
+        res.status(200).json({
+          success: true,
+          message: "알림 삭제 성공",
+        });
+      }
+    }
+    db.releaseConn();
+  });
+});
+
 module.exports = router;
 
