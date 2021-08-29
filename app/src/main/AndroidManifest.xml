@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- @brief : 저장소 접근 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 카메라 권한 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!--잠금 시에도 알림 받기-->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -22,17 +23,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="Instantiatable">
-        <!-- @brief : 알림 아이콘과 색상 지정 -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_main" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/pastelGreen" />
-        <!-- @brief : 수신 메시지에 명시적으로 설정된 알림 채널이 없으면 FCM에서 항상 이 값을 사용-->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
 
         <activity android:name=".IntroActivity">
             <intent-filter>
@@ -87,8 +77,20 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <!-- @brief : FCM service -->
-        <service android:name=".service.FireBaseMessagingService">
+        <!-- @brief : 수신 메시지에 명시적으로 설정된 알림 채널이 없으면 FCM에서 항상 이 값을 사용-->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_main" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/pastelGreen" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <!-- @brief : FCM -->
+        <service android:name=".service.FireBaseMessagingService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -100,6 +102,8 @@
                 android:name="firebase_analytics_collection_enabled"
                 android:value="false" />
         </service>
+        <receiver android:name=".noti.NotificationBroadcastReceiver" />
+
     </application>
 
 </manifest>

@@ -2,45 +2,47 @@ var express = require("express");
 var db = require("../db");
 var router = express.Router(); // @brief : express.Router() : router 객체를 생성
 
-//const admin = require('firebase-admin');
-
-//let serAccount = require('../private/serviceAccountKey.json');
-/*
+// @breif : fcm 알림 설정
+const admin = require('firebase-admin');
+let serAccount = require('../private/serviceAccountKey.json');
 admin.initializeApp({
   credential: admin.credential.cert(serAccount)
-});*/
+});
+
+// @brief : router 핸들링 함수(비동기)를 async함수로 리턴하는 랩핑함수
+const wrapper = asyncFn => { return (async (req, res, next) => { try { return await asyncFn(req, res, next); } catch (error) { return next(error); } }); };
+
+//@param ms : 밀리초 만큼 시간 지연
+function sleep(ms) {
+  return new Promise(resolve=>setTimeout(resolve, ms));
+}
 
 // @brief : 알림 등록
-router.post("/", function(req, res) {
+router.post("/", function(req, res){
     var user_id = Number(req.body.user_id);
     var item_id = Number(req.body.item_id);
     var item_notification_type = req.body.item_notification_type;
     var item_notification_date = req.body.item_notification_date;
-    // fcm 알림 서버에 사용자가 지정한 알림 정보 보내기 및 알림 요청
-    var token = req.body.token;
-    
-    //console.log("token : " + token);
-/*
-    var message = {
-    notification: {
-      title: item_notification_type,
-      body: item_notification_date + '에 상품 알림이 있습니다.'
-    },
+    var token = req.body.token; // @param : fcm 토큰
+
+   // @brief : FCM 데이터 페이로드
+   var message = {
     data: {
-      title: item_notification_type,
-      body: item_notification_date + '에 상품 알림이 있습니다.',
-      style: ''
+      title: '상품일정알림',
+      message: item_notification_type + ' 알림이 있습니다.',
+      isScheduled : 'true',
+      scheduledTime: item_notification_date
     },
     token: token
-  };
-   console.log(messeage);*/
+    };
+    console.log(message);
+
     var sql_insert = "INSERT INTO notification (user_id, item_id, item_notification_type, item_notification_date) VALUES(?,?,?,?)";
-
     var params = [user_id, item_id, item_notification_type, item_notification_date];
-
     console.log("sql_insert : " + sql_insert);
 
-    db.get().query(sql_insert, params, function(err, result){
+    // @brief : DB에 알림정보 저장
+    db.get().query(sql_insert, params, wrapper(async(err, result)=>{
         if(err) {
             console.log(err);
         } else {
@@ -52,28 +54,32 @@ router.post("/", function(req, res) {
                   });
                 } else {
                   console.log("Successfully inserted data into the notification!!");
+
+                  await sleep(2000, message);
+                // @brief : DB에 알림이 성공적으로 추가된 경우 fcm 알림 전송
+                 admin.messaging().send(message)
+                    .then(function (response) {
+                      console.log('[fcm] Successfully sent message: : ' + response)
+                    })
+                    .catch(function (err) {
+                      console.log('[fcm] Error Sending message!!! : ' + err)
+                    });
+
                   res.status(200).json({
                     success: true,
                     message: "알림 데이터베이스 추가 성공",
                   });
                 }
-                db.releaseConn();
               }
-    });
-  /*admin.messaging().send(message)
-    .then(function (response) {
-      console.log('Successfully sent message: : ', response)
-    })
-    .catch(function (err) {
-      console.log('Error Sending message!!! : ', err)
-    });*/
+         db.releaseConn();
+    }));
 });
 
 // @brief : 알림 조회
 router.get('/:user_id', function(req, res, next) {
     var user_id = req.params.user_id;
     console.log("user_id : " + user_id);
-    
+
     var sql = "SELECT i.item_id, i.item_image, item_name, item_notification_type, CAST(item_notification_date AS CHAR(19)) item_notification_date, is_read FROM notification n JOIN items i ON n.item_id = i.item_id WHERE n.user_id = ? and item_notification_date <= NOW() ORDER BY item_notification_date DESC";
 
     console.log("sql : " + sql);
@@ -91,7 +97,7 @@ router.get('/:user_id', function(req, res, next) {
                  });
                } else {
                  console.log("rows : " + JSON.stringify(rows));
-		 res.status(200).json(rows);
+                 res.status(200).json(rows);
                }
              }
          db.releaseConn();
@@ -161,7 +167,7 @@ router.put('/detail/:item_id', function(req, res){
   });
 });
 
-//noti/detail/:item_id
+// @brief : 알림 삭제
 router.delete('/detail/:item_id', function(req, res){
   var item_id = Number(req.params.item_id);
   console.log("item_id : " + item_id)
@@ -193,4 +199,3 @@ router.delete('/detail/:item_id', function(req, res){
 });
 
 module.exports = router;
-

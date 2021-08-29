@@ -126,7 +126,7 @@ public class LinkSharingActivity extends AppCompatActivity {
             wish_item.setItem_memo(get_item_memo);
         }
 
-        // @brief : 알림 시간 예외처리
+        // @todo : 알림 시간 예외처리
 //        int cur_hour = now.get(Calendar.HOUR_OF_DAY) * 60;
 //        int cur_minute = now.get(Calendar.MINUTE);
 //        if(cur_hour + cur_minute >= hour.getValue()*60 + minute.getValue()){
@@ -150,7 +150,7 @@ public class LinkSharingActivity extends AppCompatActivity {
      */
     private void save() {
         wish_item = getWishItem(); // @brief : 생성된 아이템 객체 가져오기
-//        if (wish_item == null){ // @brief : 알림 시간 예외처리
+//        if (wish_item == null){ // @todo : 알림 시간 예외처리
 //            return;
 //        }
 
@@ -171,10 +171,7 @@ public class LinkSharingActivity extends AppCompatActivity {
                             noti_item.setItem_id(seq);
 
                             // @brief : FCM 디바이스 토큰 가져오기
-                            //noti_item.setToken(FirebaseMessaging.getInstance().getToken() + "");
                             noti_item.setToken(SaveSharedPreferences.getFCMToken(LinkSharingActivity.this));
-                            //Log.i(TAG, "onResponse: " + SaveSharedPreferences.getFCMToken(LinkSharingActivity.this));
-
                             addNoti(); // @brief : 알림 등록 요청
                         }
                         else
@@ -190,7 +187,7 @@ public class LinkSharingActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                // @brief : 통신 실패 시 callback (예외 발생, 인터넷 끊김 등의 시스템 적 이유로 실패)
                 Log.e(TAG, "서버 연결 실패");
             }
         });
@@ -201,7 +198,7 @@ public class LinkSharingActivity extends AppCompatActivity {
      */
 
     private void addNoti(){
-        Log.i(TAG, "addNoti : " + noti_item);
+        Log.i(TAG, "addNoti : " + noti_item); // @deprecated : 테스트용
         IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
         Call<ResponseBody> call = remote_service.insertItemNoti(noti_item);
 
@@ -225,7 +222,7 @@ public class LinkSharingActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                // @brief : 통신 실패 시 callback (예외 발생, 인터넷 끊김 등의 시스템 적 이유로 실패)
                 Log.e(TAG, "서버 연결 실패" + t.getMessage());
             }
         });
@@ -258,6 +255,7 @@ public class LinkSharingActivity extends AppCompatActivity {
     // @brief : 오픈그래프 메타태그 파싱을 통해 아이템 정보 가져오기
     @SuppressLint("StaticFieldLeak")
     public class JsoupAsyncTask extends AsyncTask {
+
         String this_url;
         String get_title, get_image, get_price; // @brief : 메타태그 내에서 가져올 content 속성값
 
