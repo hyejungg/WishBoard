@@ -55,7 +55,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         return domain.startsWith("www.") ? domain.substring(4) : domain;
     }
 
-    private void init(WishItem wish_item){ // WishItem wish_item
+    private void init(WishItem wish_item){
         TextView item_folder = findViewById(R.id.folder_name);
         ImageView item_image = findViewById(R.id.item_image);
         TextView item_price = findViewById(R.id.item_price);
@@ -65,10 +65,6 @@ public class ItemDetailActivity extends AppCompatActivity {
         TextView create_at = findViewById(R.id.create_at);
         TextView noti_info = findViewById(R.id.noti_info);
 
-        item_price.setText(wish_item.getItem_price());
-        item_name.setText(wish_item.getItem_name());
-        create_at.setText(DateFormatUtil.shortDateYMD(wish_item.getCreate_at()));
-
         String img = wish_item.getItem_image();
         String memo = wish_item.getItem_memo();
         url = wish_item.getItem_url();
@@ -76,14 +72,23 @@ public class ItemDetailActivity extends AppCompatActivity {
         String date = wish_item.getItem_notification_date();
         String f_name = wish_item.getFolder_name();
 
+        // @brief : 상품명 디스플레이
+        item_name.setText(wish_item.getItem_name());
+
+        // @brief : 상품 가격, 가격이 존재하지 않는 경우 0원으로 디스플레이
+        item_price.setText((wish_item.getItem_price() != null) ? wish_item.getItem_price() : "0");
+
+        // @brief : 상품명 등록일 디스플레이
+        create_at.setText(DateFormatUtil.shortDateYMD(wish_item.getCreate_at()));
+
         // @brief : 폴더명 디스플레이
         if(f_name != null)
             item_folder.setText(wish_item.getFolder_name());
         else
             item_folder.setText("모든 항목");
 
-        try { // @brief : 아이템 이미지 디스플레이
-            Log.i(TAG, "init: " + img);
+        // @brief : 아이템 이미지 디스플레이
+        try {
             Picasso.get().load(img).error(R.mipmap.ic_main).into(item_image); // @brief : 이미지 가져올 떄 에러 발생 시 기본 이미지 적용
         } catch (IllegalArgumentException i) {
             Log.d(TAG, "아이템 사진 없음");
@@ -100,12 +105,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             item_url.setVisibility(View.VISIBLE);
             try {
                 String domain = getDomainName(url); // @brief domain : 쇼핑몰 url을 도메인네임으로 변경한 것
-
-                // @brief : 도메인 주소로 바꾼 경우
-                if(!domain.equals(""))
-                    item_url.setText(domain); // @brief : 해당 도메인으로 디스플레이
-                else // @brief : 도메인 주소로 바꾸지 못한 경우
-                    item_url.setText(url); // @brief : 기존 url로 디스플레이
+                item_url.setText((!domain.equals("")) ? domain : url); // @brief : 도메인 주소로 바꾼 경우 해당 도메인으로 디스플레이하고, 바꾸지 못한 경우 기존 url로 디스플레이
             } catch (URISyntaxException e) {
                 Log.e(TAG, "url 없음");
             }
@@ -129,7 +129,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         call.enqueue(new Callback<WishItem>() {
             @Override
             public void onResponse(Call<WishItem> call, Response<WishItem> response) {
-                WishItem wish_item = response.body(); // @brief : body()는, json 으로 컨버팅되어 객체에 담겨 지정되로 리턴됨.
+                WishItem wish_item = response.body();
                 // @brief : 가져온 아이템이 없는 경우
                 if (wish_item == null) {
                     Log.i(TAG, "가져온 아이템 없음");
@@ -148,7 +148,7 @@ public class ItemDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<WishItem> call, Throwable t) {
-                // @brief : 통식 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                // @brief : 통신 실패 시 callback
                 Log.e(TAG, "서버 연결 실패");
             }
         });
@@ -177,6 +177,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                // @brief : 통신 실패 시 callback
                 Log.i(TAG, "아이템 삭제 실패 : "+ t.getMessage());
             }
         });
@@ -215,25 +216,4 @@ public class ItemDetailActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    // @todo : 아이템이 수정된 경우에 HomeFragment UI를 수정하도록 구현
-    //@Override
-//    public void onBackPressed() {
-//        HomeFragment fragment = new HomeFragment();
-//        Bundle bundle2 = new Bundle(1);
-//        bundle2.putBoolean("is_updated", is_updated);
-//        fragment.setArguments(bundle2);
-//        Log.i("홈 test",  "onBackPressed: " + is_updated);
-
-//        if(is_updated){
-//            Intent intent = new Intent();
-//            intent.putExtra("is_update", true);
-//            setResult(Activity.RESULT_OK, intent);
-//        } else{
-//            setResult(RESULT_OK);
-//        }
-
-        // @see : https://ddolcat.tistory.com/461
-//        super.onBackPressed();
-//    }
 }

@@ -9,23 +9,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.hyeeyoung.wishboard.R;
 import com.hyeeyoung.wishboard.detail.ItemDetailActivity;
-
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.model.CartItem;
-
 import com.hyeeyoung.wishboard.remote.IRemoteService;
 import com.hyeeyoung.wishboard.remote.ServiceGenerator;
 import com.hyeeyoung.wishboard.service.SaveSharedPreferences;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,11 +42,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
 
         public CustomViewHolder(View view) {
             super(view);
-            this.item_image = (ImageView) view.findViewById(R.id.item_image);
-            this.item_name = (TextView) view.findViewById(R.id.item_name);
-            this.item_price = (TextView) view.findViewById(R.id.item_price);
-            this.cart = (Button) view.findViewById(R.id.cart);
-            this.item = (ConstraintLayout) view.findViewById(R.id.item);
+            this.item_image = view.findViewById(R.id.item_image);
+            this.item_name = view.findViewById(R.id.item_name);
+            this.item_price = view.findViewById(R.id.item_price);
+            this.cart = view.findViewById(R.id.cart);
+            this.item = view.findViewById(R.id.item);
         }
     }
 
@@ -76,56 +71,41 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.CustomViewHold
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, final int position) {
         WishItem item = wish_list.get(position);
 
-        /**
-         * @brief : 아이템 이미지를 화면에 보여준다.
-         */
+        // @brief : 상품 이미지
         try {
             Picasso.get().load(item.getItem_image()).into(viewholder.item_image); // @brief : 가져온 이미지경로값으로 이미지뷰 디스플레이
         } catch (IllegalArgumentException i) {
             Log.d("checkings", "아이템 사진 없음");
         }
 
+        // @brief : 상품명
         viewholder.item_name.setText(item.getItem_name());
-        viewholder.item_price.setText(item.getItem_price());
 
-        /**
-         * @brief : 장바구니에 저장된 아이템은 장바구니 버튼을 활성화(그린컬러 적용)
-         */
-        if (item.getCart_item_id() == null) {
-            viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
-        }else{
-            viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
-        }
+        // @brief : 상품 가격, 가격이 존재하지 않는 경우 0원으로 디스플레이
+        viewholder.item_price.setText((item.getItem_price() != null) ? item.getItem_price() : "0");
 
-        /**
-         * @param : 아이템 클릭 시 아이템 상세조회로 이동
-         */
-        viewholder.item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent = new Intent(v.getContext(), ItemDetailActivity.class);
-                intent.putExtra("item_id",item.getItem_id()+"");
-                v.getContext().startActivity(intent);
-            }
+        // @brief : 장바구니 저장 여부, 장바구니에 저장된 아이템은 장바구니 버튼을 활성화(그린컬러 적용)
+        viewholder.cart.setBackgroundResource((item.getCart_item_id() == null) ? R.drawable.round_sticker_white : R.drawable.round_sticker);
+
+        // @brief : 아이템 클릭 시 아이템 상세조회로 이동
+        viewholder.item.setOnClickListener(v -> {
+            intent = new Intent(v.getContext(), ItemDetailActivity.class);
+            intent.putExtra("item_id",item.getItem_id()+"");
+            v.getContext().startActivity(intent);
         });
 
-        /**
-         *  @brief : 아이템을 장바구니에 추가/제거
-         */
-        viewholder.cart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isClicked == true){ // @brief : 추가하는 경우
-                    viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
-                    isClicked = false;
-                    SaveSharedPreferences.setCheckedCart(context, true);
-                    addCart(user_id, item.getItem_id());
-                }else{ // @brief : 제거하는 경우
-                    viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
-                    isClicked = true;
-                    SaveSharedPreferences.setCheckedCart(context, false);
-                    deleteCart(user_id, item.getItem_id());
-                }
+        // @brief : 아이템을 장바구니에 추가/제거
+        viewholder.cart.setOnClickListener(v -> {
+            if (isClicked == true){ // @brief : 추가하는 경우
+                viewholder.cart.setBackgroundResource(R.drawable.round_sticker);
+                isClicked = false;
+                SaveSharedPreferences.setCheckedCart(context, true);
+                addCart(user_id, item.getItem_id());
+            }else{ // @brief : 제거하는 경우
+                viewholder.cart.setBackgroundResource(R.drawable.round_sticker_white);
+                isClicked = true;
+                SaveSharedPreferences.setCheckedCart(context, false);
+                deleteCart(user_id, item.getItem_id());
             }
         });
     }
