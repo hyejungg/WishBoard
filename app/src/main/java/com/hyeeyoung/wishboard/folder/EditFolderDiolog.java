@@ -47,15 +47,15 @@ public class EditFolderDiolog extends DialogFragment implements View.OnClickList
     private FolderItem folderItem = new FolderItem();
     private String user_id, folder_id, res_folder_name, text_folder_name = "";
     private int where; // @param : 수정과 추가 시 동일한 UI를 사용하므로 해당 변수를 이용하여 타이틀 이름 변경
-    private int num = 0, res_folder_image;
+    private int num = 0;
     private boolean isClickImage = false;
 
     private Context context;
     private SharedFolderVM viewModel;
 
     // @param : 폴더이미지 사진
-    private int[] folder_images = {R.mipmap.ic_main_round, R.drawable.bag, R.drawable.sofa, R.drawable.shoes, R.drawable.twinkle,
-            R.drawable.ring, R.drawable.orange, R.drawable.clothes, R.drawable.camera, R.drawable.bubble};
+    private int default_folder_image = R.mipmap.ic_main_round;
+
     // @param : 해당 다이어로그 타이틀
     private String[] titles = {"", "새폴더 추가", "폴더명 수정"};
 
@@ -74,13 +74,13 @@ public class EditFolderDiolog extends DialogFragment implements View.OnClickList
             user_id = getArgs.getString("user_id");
             folder_id = getArgs.getString("folder_id");
             res_folder_name = getArgs.getString("folder_name");
-            res_folder_image = getArgs.getInt("folder_image");
+//            res_folder_image = getArgs.getInt("folder_image");
         } else {
             where = 0;
             user_id = "";
             folder_id = "";
             res_folder_name = "";
-            res_folder_image = 0;
+//            res_folder_image = 0;
         }
 
         // @brief : 뷰 생성 및 뷰 내 아이템 초기화
@@ -95,17 +95,19 @@ public class EditFolderDiolog extends DialogFragment implements View.OnClickList
         Log.i(TAG + "onCreateView()", where + user_id + folder_id + res_folder_name + folder_name); // @deprecated
 
         // @brief : 호출 위치에 따라 다르게 display
+        folder_image.setImageResource(default_folder_image); // @brief : 폴더이미지 그대로 보여줌
         if (where == 1)
             title.setText(titles[where]);
         else if (where == 2){
             title.setText(titles[where]);
             folder_name.setText(res_folder_name); // @brief : 폴더명 그대로 보여줌
-            folder_image.setImageResource(folder_images[res_folder_image]);; // @brief : 폴더이미지 그대로 보여줌
+//            folder_image.setImageResource(folder_images[res_folder_image]);;
         }
         else
             title.setText(titles[where]);
+        folder_image.setImageResource(default_folder_image); // @brief : 폴더이미지 그대로 보여줌
 
-        folder_image.setOnClickListener(this);
+//        folder_image.setOnClickListener(this);
         folder_name.setOnClickListener(this);
         cancel.setOnClickListener(this);
         add.setOnClickListener(this);
@@ -144,16 +146,16 @@ public class EditFolderDiolog extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.folder_image:
-                /** @brief : 해당 이미지뷰 클릭 시 랜덤으로 대표이미지 아이콘 변경
-                 *  @see : 대표이미지 파일들은 배열에 담아두고 클릭 시 난수 발생시켜서 변경
-                 *         저장될 이미지를 무작위로 리턴. 배열 크기 = 9 **/
-                Random random = new Random();
-                num = random.nextInt(9); // @brief : 1~9사이의 난수 발생
-                folder_image.setImageResource(folder_images[num]);
-                isClickImage = true;
-                Log.i(TAG, "이미지뷰 클릭"); //@deprecated 확인용
-                break;
+//            case R.id.folder_image:
+//                /** @brief : 해당 이미지뷰 클릭 시 랜덤으로 대표이미지 아이콘 변경
+//                 *  @see : 대표이미지 파일들은 배열에 담아두고 클릭 시 난수 발생시켜서 변경
+//                 *         저장될 이미지를 무작위로 리턴. 배열 크기 = 9 **/
+//                Random random = new Random();
+//                num = random.nextInt(9); // @brief : 1~9사이의 난수 발생
+//                folder_image.setImageResource(folder_images[num]);
+//                isClickImage = true;
+//                Log.i(TAG, "이미지뷰 클릭"); //@deprecated 확인용
+//                break;
 
             case R.id.cancel:
                 dismiss(); // @brief : 다이얼로그 닫기
@@ -186,14 +188,15 @@ public class EditFolderDiolog extends DialogFragment implements View.OnClickList
      */
     private void setData(int where) {
         folderItem.setUser_id(user_id);
-        folderItem.setFolder_image(num); // idx번호로 저장 및 수정
+        folderItem.setFolder_image(null); //default 이미지 == null(기본 값)// idx번호로 저장 및 수정
         folderItem.setFolder_name(text_folder_name); //새 입력 값으로 저장 및 수정
 
         // @brief : 다이얼로그를 호출한 위치에 따라(수정/추가) data를 다르게 지정
         if (where == 1) {
             folderItem.setItem_count(0); // @brief : default;
-        } else {
-            if(!isClickImage) folderItem.setFolder_image(res_folder_image); // @brief : 폴더명과 폴더 사진값 가져온 그 값으로
+        } else if(where == 2) {
+//            if(!isClickImage) folderItem.setFolder_image(res_folder_image); // @brief : 폴더명과 폴더 사진값 가져온 그 값으로
+//            folderItem.setFolder_image(String.valueOf(res_folder_image));
             folderItem.setFolder_id(folder_id);
             folderItem.getItem_count(); // @brief : 별도의 수정 없이 그대로
         }

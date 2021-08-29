@@ -5,20 +5,18 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.io.Serializable;
 
-
-public class FolderItem implements Parcelable {
+public class FolderItem implements Parcelable{
     private String user_id; // @param : user_id
     private String folder_id; // @param : db에 저장될 폴더 번호
-    private int folder_image; // @param : 카테고리 사진
+    private String folder_image; // @param : 카테고리 사진
     private String folder_name; // @param : 카테고리명
     private int item_count; // @param : 카테고리 내 아이템 항목 수
 
     public FolderItem() {
     }
 
-    public FolderItem(String folder_id, int folder_image, String folder_item, int folder_count) {
+    public FolderItem(String folder_id, String folder_image, String folder_item, int folder_count) {
         this.folder_id = folder_id;
         this.folder_image = folder_image;
         this.folder_name = folder_item;
@@ -29,7 +27,7 @@ public class FolderItem implements Parcelable {
         return folder_id;
     }
 
-    public int getFolder_image() {
+    public String getFolder_image() {
         return folder_image;
     }
 
@@ -45,7 +43,7 @@ public class FolderItem implements Parcelable {
         this.folder_id = folder_id;
     }
 
-    public void setFolder_image(int folder_image) {
+    public void setFolder_image(String folder_image) {
         this.folder_image = folder_image;
     }
 
@@ -57,7 +55,6 @@ public class FolderItem implements Parcelable {
         this.item_count = item_count;
     }
 
-
     public String getUser_id() {
         return user_id;
     }
@@ -65,7 +62,6 @@ public class FolderItem implements Parcelable {
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
-
 
     @NonNull
     @Override
@@ -91,7 +87,7 @@ public class FolderItem implements Parcelable {
 
     protected FolderItem(Parcel in) {
         folder_id = in.readString();
-        folder_image = in.readInt();
+        folder_image = in.readString();
         folder_name = in.readString();
         item_count = in.readInt();
     }
@@ -99,7 +95,7 @@ public class FolderItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.folder_id);
-        parcel.writeInt(this.folder_image);
+        parcel.writeString(this.folder_image);
         parcel.writeString(this.folder_name);
         parcel.writeInt(this.item_count);
     }
