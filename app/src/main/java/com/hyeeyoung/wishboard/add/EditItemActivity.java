@@ -25,6 +25,7 @@ import com.hyeeyoung.wishboard.RealPathUtil;
 import com.hyeeyoung.wishboard.config.ResultCode;
 import com.hyeeyoung.wishboard.config.WindowPermission;
 import com.hyeeyoung.wishboard.folder.FolderListActivity;
+import com.hyeeyoung.wishboard.model.FolderItem;
 import com.hyeeyoung.wishboard.model.NotiItem;
 import com.hyeeyoung.wishboard.model.WishItem;
 import com.hyeeyoung.wishboard.noti.NotiSettingActivity;
@@ -60,7 +61,7 @@ public class EditItemActivity extends AppCompatActivity {
     private Uri img_uri, photo_uri, album_uri;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
-    private boolean is_modified_image = false;
+    private boolean is_modified_image = false, is_modified_folder = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +171,13 @@ public class EditItemActivity extends AppCompatActivity {
                     updateNoti(new NotiItem(type, date));
                 }
 
+                // @brief : 폴더 정보 변경 시
+                if(is_modified_folder){
+                    String get_folder_id = wish_item.getFolder_id();
+                    String get_item_image = wish_item.getItem_image();
+                    updateFolder(get_folder_id, get_item_image);
+                }
+
                 // @brief : 변경사항 적용 후 1초 뒤에 액티비티 종료하는 handler 설정
                 new Handler().postDelayed(() -> {
                     finish(); // @brief : 0.1 초 뒤에 액티비티 종료
@@ -200,8 +208,10 @@ public class EditItemActivity extends AppCompatActivity {
                     f_name = result.getData().getStringExtra("folder_name");
                     Log.i(TAG + "폴더명", f_id + " / " + f_name); //@deprecated
 
-                    if (f_id != null && f_name != null) // @brief : 사용자가 폴더 정보를 입력한 경우
+                    if (f_id != null && f_name != null){ // @brief : 사용자가 폴더 정보를 입력한 경우
+                        is_modified_folder = true;
                         folder_name.setText(f_name);
+                    }
                     else // @brief : 사용자가 폴더 정보를 입력하지 않은 경우
                         folder_name.setText("");
                 }
@@ -266,7 +276,7 @@ public class EditItemActivity extends AppCompatActivity {
         String get_item_memo = item_memo.getText().toString();
 
         /**
-         * @brief : 아이템 가격, url, 메모에 대한 null값 예외처리
+         * @brief : 아이템 가격, url, 메모, 폴더 id에 대한 null값 예외처리
          */
         // @brief : 가격데이터 예외처리
         if (get_item_price.isEmpty()) {
@@ -281,7 +291,7 @@ public class EditItemActivity extends AppCompatActivity {
             get_item_memo = null;
         }
         // @brief : 폴더데이터 예외처리
-        if (f_id.isEmpty()) {
+        if (f_id == null) {
             f_id = null;
         }
 
@@ -416,6 +426,43 @@ public class EditItemActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.i(TAG, "아이템 삭제 실패 : "+ t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * @param : 폴더 이미지 변경 함수 (폴더명을 지정할 경우, 해당 아이템 사진으로 폴더이미지 변경) //최신순
+     *          NewItem-에서도 사용해서 protected static으로 선언.
+     *          @tiodo : 보안상 문제 있다고 생각되면 -> 그냥 함수 또 만드는 식으로 변경해야 하나? ....
+     */
+    protected static void updateFolder(String req_folder_id, String req_folder_image){
+        FolderItem req_item = new FolderItem();
+        req_item.setFolder_id(req_folder_id);
+        req_item.setFolder_image(req_folder_image);
+        IRemoteService remote_service = ServiceGenerator.createService(IRemoteService.class);
+        Call<ResponseBody> call = remote_service.updateFolderImage(req_item);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // @brief : 정상적으로 통신 성공한 경우
+                    String seq = null;
+                    try {
+                        seq = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, "폴더 사진 업데이트 성공 : " + seq);
+
+                } else {
+                    // @brief : 통신에 실패한 경우
+                    Log.e(TAG, "폴더 사진 업데이트 오류" + response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // @brief : 통신 실패 ()시 callback (예외 발생, 인터넷 끊김 등의 시스템적 이유로 실패)
+                Log.e(TAG, "서버 연결 실패" + t.getMessage());
             }
         });
     }

@@ -7,12 +7,12 @@ router.get("/:user_id", function (req, res) {
   var user_id = Number(req.params.user_id);
 
   // @TODO : 임시 sql. item_count가 현재 이상하게 보임. 수정해야 할 부분
-  var select_sql = `select f.user_id, f.folder_name, f.folder_image, f.folder_id, ifnull(i.item_count, 0) item_count from folders f left outer join (select folder_id, count(*) item_count from items where user_id = 64 group by folder_id) i 
+  var select_sql = `select f.user_id, f.folder_name, f.folder_image, f.folder_id, ifnull(i.item_count, 0) item_count from folders f left outer join (select folder_id, count(*) item_count from items group by folder_id) i 
 on f.folder_id = i.folder_id where f.user_id = ?`;
 
   console.log(select_sql, user_id);
 
-  db.get().query(select_sql, [user_id], function (err, result) {
+  db.get().query(select_sql, user_id, function (err, result) {
     if (err) {
       console.log(err);
     } else {
@@ -36,7 +36,9 @@ on f.folder_id = i.folder_id where f.user_id = ?`;
 router.get("/list/:user_id", function (req, res) {
   var user_id = Number(req.params.user_id);
  
-  var select_sql = `SELECT folder_id, folder_name, folder_image FROM folders WHERE user_id = ?`;
+ // var select_sql = `SELECT folder_id, folder_name, folder_image FROM folders WHERE user_id = ?`;
+
+  var select_sql = `SELECT f.folder_id, f.folder_name, f.folder_image, ifnull(i.item_count, 0) item_count FROM folders f LEFT OUTER JOIN (SELECT folder_id, count(*) item_count FROM items GROUP BY folder_id) i ON f.folder_id = i.folder_id WHERE f.user_id = ?`;
 
   console.log(select_sql);
 
@@ -189,6 +191,38 @@ router.delete("/", function (req, res) {
         res.status(200).json({
           success: true,
           message: "폴더 데이터베이스의 값 삭제 성공",
+        });
+      }
+      db.releaseConn();
+    }
+  });
+});
+
+//@brief : 아이템 수정에서 폴더이미지 수정
+router.put("/item/image", function (req, res) {
+  var folder_id = Number(req.body.folder_id);
+  var folder_image = req.body.folder_image; //@TODO : varchar니까 그대로. 수정?
+
+  var update_sql =`UPDATE folders SET folder_image = ? WHERE folder_id = ?`;
+  var params = [folder_image, folder_id];
+
+  console.log(update_sql);
+
+  db.get().query(update_sql, params, function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (result.length === 0) {
+        console.log("Failed to inserted the folders for data.");
+        res.status(500).json({
+          success: false,
+          message: "wish boarad 서버 에러",
+        });
+      } else {
+        console.log("Successfully updated data into the folders!!");
+        res.status(200).json({
+          success: true,
+          message: "폴더 이미지 수정 성공",
         });
       }
       db.releaseConn();

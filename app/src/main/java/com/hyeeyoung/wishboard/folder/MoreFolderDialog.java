@@ -28,7 +28,7 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
 
     private Bundle args;
     private String user_id, folder_id, res_folder_name;
-    private int res_folder_image;
+//    private int res_folder_image;
 
     public MoreFolderDialog(){}
 
@@ -46,12 +46,12 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
             user_id = getArgs.getString("user_id");
             folder_id = getArgs.getString("folder_id");
             res_folder_name = getArgs.getString("folder_name");
-            res_folder_image = getArgs.getInt("folder_image");
+//            res_folder_image = getArgs.getInt("folder_image");
         }else{
             user_id = "";
             folder_id = "";
             res_folder_name = "";
-            res_folder_image = 0;
+//            res_folder_image = 0;
         }
 
         // @brief : 뷰 생성 및 뷰 내 아이템 초기화
@@ -119,7 +119,7 @@ public class MoreFolderDialog extends BottomSheetDialogFragment implements View.
                 args.putString("user_id", user_id);
                 args.putString("folder_id", folder_id);
                 args.putString("folder_name", res_folder_name);
-                args.putInt("folder_image", res_folder_image);
+//                args.putInt("folder_image", res_folder_image);
 
                 // @brief : 폴더명 수정에 관한 diolog 생성
                 EditFolderDiolog efd = EditFolderDiolog.getInstance();
