@@ -1,49 +1,65 @@
 package com.hyeeyoung.wishboard.service;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.RemoteViews;
-
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.hyeeyoung.wishboard.MainActivity;
 import com.hyeeyoung.wishboard.R;
-import com.hyeeyoung.wishboard.noti.NotiFragment;
+import com.hyeeyoung.wishboard.noti.NotificationBroadcastReceiver;
+import com.hyeeyoung.wishboard.util.NotificationUtil;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import static com.hyeeyoung.wishboard.util.NotificationUtil.NOTIFICATION_MESSAGE;
+import static com.hyeeyoung.wishboard.util.NotificationUtil.NOTIFICATION_TITLE;
 
+// @see : https://triest.tistory.com/40
+// @see : https://github.com/PatilShreyas/FCM-OnDeviceNotificationScheduler
 public class FireBaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "파이어베이스 푸시알림 서비스";
 
+    // @brief : 사용자 디바이스의 시스템 설정에서 '날짜 및 시간'이 자동으로 되어 있는지 확인 (그렇지 않으면 알림이 잘못된 시간에 표시될 수 있음)
+    private Boolean isTimeAutomatic(Context context) {
+        return Settings.Global.getInt(
+                context.getContentResolver(),
+                Settings.Global.AUTO_TIME,
+                0
+        ) == 1;
+    }
+
      // @brief : 포그라운드 상태인 앱에서 알림 메시지 또는 데이터 메시지를 수신할 때 호출되는 메소드
     public void onMessageReceived(@NonNull RemoteMessage msg) {
+        String title = msg.getData().get("title");
+        String message = msg.getData().get("message");
 
-        // @brief : 메세지 유형이 데이타 메세지일 경우
-        if (msg.getData().size() > 0) {
-            Log.i(TAG, "onMessageReceived(msg): " + msg.getData().toString()); // 데이터 방식
-            sendNotification(msg.getData().get("title"), msg.getData().get("content"));
-            if (true) {
-                scheduleJob();
-            } else {
-                handleNow();
-            }
+        if (!isTimeAutomatic(getApplicationContext())) {
+            Log.d(TAG, "`Automatic Date and Time` is not enabled");
+            return;
         }
 
-        // @brief : 메세지 유형이 알림 메세지일 경우
-        if (msg.getNotification() != null) {
-            Log.i(TAG, "onMessageReceived(notification): " + msg.getNotification().getBody());
-            sendNotification(msg.getNotification().getTitle(), msg.getNotification().getBody());
+        // @param : 알림 예약 여부
+        Boolean isScheduled =  (msg.getData().get("isScheduled") != null) ? true: false;
+
+        if(isScheduled) { // @brief : 사용자가 지정한 상품 알림(예약됨)인 경우
+            String scheduledTime = msg.getData().get("scheduledTime");
+            scheduleAlarm(scheduledTime, title, message);
+
+        } else { // @brief : 예약되지 않고 바로 전송될 알림 인 경우 (사용자 전체에게 공지 알림을 보낼 경우 사용)
+            showNotification(title, message);
         }
+    }
+
+    // @breif : 푸시알림을 생성하는 메소드
+    private void showNotification(String title, String message) {
+        new NotificationUtil(getApplicationContext()).showNotification(title, message);
     }
 
     // @brief : FCM이 보낸 메시지가 전송되지 못할 때 호출되는 콜백 메소드
@@ -52,17 +68,29 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         super.onDeletedMessages();
     }
 
-
-    // @brief : WorkManager를 사용해서 비동기 작업 예약
-    private void scheduleJob() {
-        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(NotiWorker.class)
-                .build();
-        WorkManager.getInstance().beginWith(work).enqueue();
+    // @brief : 새로운 토큰이 생성될 때 호출되는 메서드, 갱신을 위함
+    @Override
+    public void onNewToken(@NonNull String token) {
+        super.onNewToken(token);
+        Log.d(TAG, "Refreshed token: " + token);
     }
 
-    // @brief : BroadcastReceivers에 할당된 시간을 처리
-    private void handleNow() {
-        Log.d(TAG, "Short lived task is done.");
+// @brief : 일회성 알람 설정
+    private void scheduleAlarm(String scheduledTimeString, String title, String message) {
+        AlarmManager alarmMgr = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent alarmIntent = new Intent(getApplicationContext(), NotificationBroadcastReceiver.class);
+        alarmIntent.putExtra(NOTIFICATION_TITLE, title);
+        alarmIntent.putExtra(NOTIFICATION_MESSAGE, message);
+
+        // @brief : 알림 날짜 포맷 설정
+        Date date = null;
+        DateFormat scheduledTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        try {
+            date = scheduledTime.parse(scheduledTimeString);
+            alarmMgr.set(AlarmManager.RTC_WAKEUP, date.getTime(), PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, 0));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     // @brief : 상태바 푸시 알림 레이아웃 커스텀 처리
@@ -74,56 +102,4 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         remoteViews.setImageViewResource(R.id.noti_icon, R.mipmap.ic_launcher);
         return remoteViews;
     }
-
-    // @breif : 푸시알림을 생성하는 메소드
-    private void sendNotification(String title, String message) {
-        Log.i(TAG, "showNotification: ");
-        String channel_id = "channel";
-
-        // @todo : 상태바에서 알림 클릭 시 알림화면(프래그먼트)이 바로 실행되도록 해야함
-        Intent intent = new Intent(this, MainActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //Bundle bundle = new Bundle();
-        //bundle.putInt("flag", 3);
-        //intent.putExtras(bundle);
-
-        // @brief : 푸시알림 부가 설정
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT); // PendingIntent.FLAG_UPDATE_CURRENT,
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channel_id)
-                //.setSmallIcon(R.mipmap.ic_main)
-                .setSound(uri)
-                .setAutoCancel(true)
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                .setOnlyAlertOnce(true)
-                .setContentIntent(pendingIntent);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            builder = builder.setContent(getCustomDesign(title, message));
-        }
-        else {
-            builder = builder.setContentTitle(title)
-                    .setContentText(message);
-                    //.setSmallIcon(R.mipmap.ic_main);
-        }
-
-        // @brief : NotificationChannel 생성, 오레오(8.0) 이상일 경우 채널을 반드시 생성해야 함
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(channel_id, "web_app", NotificationManager.IMPORTANCE_HIGH);
-            notificationChannel.setSound(uri, null);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-
-        notificationManager.notify(0, builder.build());
-    }
-
-    // @brief : 새로운 토큰이 생성될 때 호출되는 메서드, 갱신을 위함
-    @Override
-    public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
-        Log.d(TAG, "Refreshed token: " + token);
-    }
-
-    // @see : https://triest.tistory.com/40
 }
