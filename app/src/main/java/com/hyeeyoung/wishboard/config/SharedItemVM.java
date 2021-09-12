@@ -11,6 +11,7 @@ public class SharedItemVM extends ViewModel {
     private MutableLiveData<Boolean> isUpdated = new MutableLiveData<Boolean>();
     private MutableLiveData<String> item_name = new MutableLiveData<String>();
     private MutableLiveData<String> item_price = new MutableLiveData<String>();
+    private MutableLiveData<String> cartItemCount = new MutableLiveData<String>();
     public LiveData<String> getItem_name() {
         return item_name;
     }
@@ -20,10 +21,17 @@ public class SharedItemVM extends ViewModel {
     public LiveData<Boolean> getIsUpdated(){ // @param : getter
         return isUpdated;
     }
+    public LiveData<String> getCartItemCount() {
+        return cartItemCount;
+    }
     public void setItem_name(String name) {
         item_name.setValue(name);
     }
     public void setItem_price(String price) {
         item_price.setValue(price);
     }
+    public void setCartItemCount(String count) {
+        cartItemCount.setValue(count);
+    }
+
 }

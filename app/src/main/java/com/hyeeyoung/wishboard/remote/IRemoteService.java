@@ -65,6 +65,12 @@ public interface IRemoteService {
     // @brief : 장바구니 데이터 수정 요청
     @PUT("/basket")
     Call<ResponseBody> updateCartInfo(@Body ArrayList<CartItem> cartItem);
+
+
+    // @brief : 장바구니 아이템 개수 요청
+    @GET("/basket/cnt/{user_id}")
+    Call<String> selectCartCnt(@Path("user_id") String user_id);
+
     /*
     @brief :
         @GET( EndPoint-자원위치(URI) )  ET 방식, BASE_URL/home/{user_id} 호출
