@@ -92,11 +92,11 @@ public class DateFormatUtil {
     // @brief : D-day 계산
     public static String countDday(int year, int month, int day) {
         try {
-            Calendar todaCal = Calendar.getInstance(); // @brief : 오늘날짜
+            Calendar todayCal = Calendar.getInstance(); // @brief : 오늘날짜
             Calendar ddayCal = Calendar.getInstance(); // @brief : dday날짜
             ddayCal.set(year, month-1, day);
 
-            long today = todaCal.getTimeInMillis()/86400000; //@brief 86400000 : (24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
+            long today = todayCal.getTimeInMillis()/86400000; //@brief 86400000 : (24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
             long dday = ddayCal.getTimeInMillis()/86400000;
             int count = (int)(dday - today);
             return (count > 0) ? "-" + count : (count < 0) ? "None" : "-Day";
