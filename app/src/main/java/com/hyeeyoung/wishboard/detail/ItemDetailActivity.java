@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +65,8 @@ public class ItemDetailActivity extends AppCompatActivity {
         TextView item_url = findViewById(R.id.domain_name);
         TextView create_at = findViewById(R.id.create_at);
         TextView noti_info = findViewById(R.id.noti_info);
+        FrameLayout dday_layout = findViewById(R.id.dday_layout);
+        TextView item_dday = findViewById(R.id.d_day);
 
         String img = wish_item.getItem_image();
         String memo = wish_item.getItem_memo();
@@ -114,6 +117,17 @@ public class ItemDetailActivity extends AppCompatActivity {
         // @brief : 알림이 지정된 경우에만 태그를 디스플레이
         if(type!=null){
             noti_info.setText(DateFormatUtil.shortDateMDHM(date) + " " + type);
+
+            int year = Integer.parseInt(date.substring(0,4));
+            int month = Integer.parseInt(date.substring(5,7));
+            int day = Integer.parseInt(date.substring(8,10));
+            String dday = DateFormatUtil.countDday(year, month, day);
+
+            if(!dday.equals("None")) {
+                dday_layout.setVisibility(View.VISIBLE);
+                item_dday.setText("D" + dday);
+            }
+
         } else{
             noti_info.setVisibility(View.GONE);
         }
