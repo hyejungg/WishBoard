@@ -69,159 +69,176 @@
         android:id="@+id/category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="7.5dp"
         android:paddingBottom="10dp"
         android:scrollbars="none">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/category_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/nanum_square_b"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingHorizontal="7.5dp"
+        android:text="빈 항목"
+        android:textAllCaps="false"
+        android:textColor="@color/darkGray"
+        android:textSize="13dp"
+        android:orientation="horizontal" />
 
-            <!--@brief : 디폴트 폴더는 all, all만 폰트컬러를 블랙으로 지정-->
-            <Button
-                android:id="@+id/all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="모든항목"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="13dp" />
-
-            <Button
-                android:id="@+id/folder1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="의류"
-                android:textAllCaps="false"
-                android:textColor="@color/darkGray"
-                android:textSize="13dp" />
-
-            <Button
-                android:id="@+id/folder2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="가방"
-                android:textAllCaps="false"
-                android:textColor="@color/darkGray"
-                android:textSize="13dp" />
-
-            <Button
-                android:id="@+id/folder3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="신발"
-                android:textAllCaps="false"
-                android:textColor="@color/darkGray"
-                android:textSize="13dp" />
-
-            <Button
-                android:id="@+id/folder4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="주얼리"
-                android:textAllCaps="false"
-                android:textColor="@color/darkGray"
-                android:textSize="13dp" />
-
-            <Button
-                android:id="@+id/folder5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="화장품"
-                android:textAllCaps="false"
-                android:textColor="@color/darkGray"
-                android:textSize="13dp" />
-
-            <Button
-                android:id="@+id/folder6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="가구"
-                android:textAllCaps="false"
-                android:textColor="@color/darkGray"
-                android:textSize="13dp" />
-
-            <Button
-                android:id="@+id/folder7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="전자제품"
-                android:textAllCaps="false"
-                android:textColor="@color/darkGray"
-                android:textSize="13dp" />
-
-            <Button
-                android:id="@+id/folder8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nanum_square_b"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="7.5dp"
-                android:text="빈 항목"
-                android:textAllCaps="false"
-                android:textColor="@color/darkGray"
-                android:textSize="13dp" />
-
-        </LinearLayout>
     </HorizontalScrollView>
+
+    <!--@brief : 디폴트 폴더는 all, all만 폰트컬러를 블랙으로 지정-->
+    <!--                <Button-->
+    <!--                    android:id="@+id/all"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/black"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="모든항목"-->
+    <!--                    />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/folder1"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/darkGray"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="의류"-->
+    <!--                    />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/folder2"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/darkGray"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="가방"-->
+    <!--                    />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/folder3"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/darkGray"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="신발"-->
+    <!--                    />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/folder4"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/darkGray"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="주얼리"-->
+    <!--                    />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/folder5"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/darkGray"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="화장품"-->
+    <!--                    />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/folder6"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/darkGray"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="가구"-->
+    <!--                    />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/folder7"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/darkGray"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="전자제품"-->
+    <!--                    />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/folder8"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginRight="15dp"-->
+    <!--                    android:minWidth="0dp"-->
+    <!--                    android:minHeight="0dp"-->
+    <!--                    android:background="@android:color/transparent"-->
+    <!--                    android:textSize="13dp"-->
+    <!--                    android:textColor="@color/darkGray"-->
+    <!--                    android:textAllCaps="false"-->
+    <!--                    android:fontFamily="@font/nanum_square_b"-->
+    <!--                    android:text="빈 항목"-->
+    <!--                    />-->
 
 
     <!-- @brief : 밑으로 당겨서 refresh -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:id="@+id/swipe_refresh"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_wish_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarFadeDuration="0"
-            android:scrollbarSize="5dp"
-            android:scrollbarThumbVertical="@android:color/darker_gray"
-            android:scrollbars="vertical" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_wish_list"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="5dp"
+        android:scrollbarThumbVertical="@android:color/darker_gray"
+        android:scrollbars="vertical" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
