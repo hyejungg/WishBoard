@@ -146,12 +146,13 @@ public class FolderFragment extends Fragment implements View.OnClickListener {
                     if (foldersList.size() > 0) { // @brief : 가져온 폴더 정보가 하나 이상인 경우
                         Log.i(TAG, "Retrofit 통신 성공");
                         Log.i(TAG, foldersList + ""); // @deprecated : 테스트용
-                        init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김. selectFolderInfo()에서는 return
+                        init(); // @brief : onCreateView 메서드에서 해당 위치로 옮김.
                     }
                 } else { // @brief : 통신에 실패한 경우
                     Log.e(TAG, "Retrofit 통신 실패");
                     Log.i(TAG, response.message());
-                    selectFolderInfo(user_id); //실패시 다시 호출
+//                    selectFolderInfo(user_id); //실패시 다시 호출
+                    init();
                 }
             }
 
