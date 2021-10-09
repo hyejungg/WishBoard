@@ -18,11 +18,11 @@ jobs:
       # 직업폴더를 설정 한 수 의존 파일을 설치한다.
       - name: Install Dependencies
         working-directory: ./server
-        run: npm install --frozen-lockfile
+        run: yarn install --frozen-lockfile
       # Build한다
       - name: Build # Fastify Build and Start
         working-directory: ./server
-        run: npm build
+        run: yarn build
       # S3에 올리기 전에 zip으로 압축한다.
       - name: zip create
         working-directory: ./server/dist
